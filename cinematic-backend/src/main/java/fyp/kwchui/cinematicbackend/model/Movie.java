@@ -16,18 +16,19 @@ public class Movie {
     @Id
     @SequenceGenerator(
         name = "movie_sequence", sequenceName = "movie_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_sequence")
     private Long id;
     private String title;
     private String genre;
     private String language;
     private String category;
     private String director;
-    private String starring;
+    /* private String starring;
     private String distributor;
     private String description;
     private String imgLink;
     private LocalDate release_date;
     private float duration;
-    private float rating;
+    private float rating; */
+    // Movie reviews
 }

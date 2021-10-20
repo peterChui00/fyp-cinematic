@@ -12,12 +12,8 @@ import fyp.kwchui.cinematicbackend.repository.MovieRepository;
 @Service
 public class MovieService {
 
-    private final MovieRepository movieRepository;
-
     @Autowired
-    public MovieService(MovieRepository movieRepository) {
-        this.movieRepository = movieRepository;
-    }
+    MovieRepository movieRepository;
 
     public List<Movie> getMovies() {
         return movieRepository.findAll();
@@ -37,12 +33,25 @@ public class MovieService {
     }
 
     @Transactional
-    public void updateMovie(Long movieId, String title, String genre) {
+    public void updateMovie(Long movieId, String title, String genre, String language, String category, String director) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalStateException("Movie with id " + movieId + " does not exists."));
 
-        movie.setTitle(title);    
-        movie.setGenre(genre);    
+        if(title!=null && title.length()>0){
+            movie.setTitle(title); 
+        }        
+        if(genre!=null && genre.length()>0){
+            movie.setGenre(genre); 
+        }   
+        if(language!=null && language.length()>0){
+            movie.setLanguage(language);  
+        }
+        if(category!=null && category.length()>0){
+            movie.setCategory(category); 
+        }
+        if(director!=null && director.length()>0){
+            movie.setDirector(director); 
+        }  
         movieRepository.save(movie);
     }
 }
