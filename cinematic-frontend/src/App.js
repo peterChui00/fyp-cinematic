@@ -1,21 +1,19 @@
-import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from "./components/Header";
-import Container from "@mui/material/Container";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import ResponsiveDrawer from "./components/ResponsiveDrawer";
 
 function App() {
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
   return (
-    <div className="App">
-      <Router>
-        <Header />
-        <Container>
-          <Switch>
-            <Route path="/" exact component={Header}></Route>
-            <Route path="/movie" component={Header}></Route>
-          </Switch>
-        </Container>
-      </Router>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <div className="App">
+        <ResponsiveDrawer />
+      </div>
+    </ThemeProvider>
   );
 }
 
