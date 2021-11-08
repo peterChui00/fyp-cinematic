@@ -44,14 +44,11 @@ public class MovieController {
         movieService.deleteMovie(movieId);
     }
 
+    // chagne to request body
     @PutMapping(path = "/movie/{movieID}")
     public void updateMovie(
             @PathVariable("movieID") Long movieId,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String genre,
-            @RequestParam(required = false) String language,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String director) {
-        movieService.updateMovie(movieId, title, genre, language, category, director);
+            @RequestBody Movie newMovie) {
+        movieService.updateMovie(movieId, newMovie);
     }
 }

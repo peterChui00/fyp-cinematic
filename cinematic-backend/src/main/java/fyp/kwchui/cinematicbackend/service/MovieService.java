@@ -33,24 +33,24 @@ public class MovieService {
     }
 
     @Transactional
-    public void updateMovie(Long movieId, String title, String genre, String language, String category, String director) {
+    public void updateMovie(Long movieId, Movie newMovie) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalStateException("Movie with id " + movieId + " does not exists."));
 
-        if(title!=null && title.length()>0){
-            movie.setTitle(title); 
+        if(newMovie.getTitle()!=null && newMovie.getTitle().length()>0){
+            movie.setTitle(newMovie.getTitle()); 
         }        
-        if(genre!=null && genre.length()>0){
-            movie.setGenre(genre); 
+        if(newMovie.getGenre()!=null && newMovie.getGenre().length()>0){
+            movie.setGenre(newMovie.getGenre()); 
         }   
-        if(language!=null && language.length()>0){
-            movie.setLanguage(language);  
+        if(newMovie.getLanguage()!=null && newMovie.getLanguage().length()>0){
+            movie.setLanguage(newMovie.getLanguage());  
         }
-        if(category!=null && category.length()>0){
-            movie.setCategory(category); 
+        if(newMovie.getCategory()!=null && newMovie.getCategory().length()>0){
+            movie.setCategory(newMovie.getCategory()); 
         }
-        if(director!=null && director.length()>0){
-            movie.setDirector(director); 
+        if(newMovie.getDirector()!=null && newMovie.getDirector().length()>0){
+            movie.setDirector(newMovie.getDirector()); 
         }  
         movieRepository.save(movie);
     }

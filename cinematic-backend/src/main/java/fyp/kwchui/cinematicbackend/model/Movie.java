@@ -26,9 +26,11 @@ public class Movie {
     /* private String starring;
     private String distributor;
     private String description;
-    private String imgLink;
+    private String posterUri;
+    private String streamingUri;
     private LocalDate release_date;
     private float duration;
-    private float rating; */
+    private float rating;
+    private List<MovieReview> movieReviews */
     // Movie reviews
 }
