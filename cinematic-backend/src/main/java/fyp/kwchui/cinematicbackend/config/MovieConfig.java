@@ -17,7 +17,7 @@ public class MovieConfig {
         return args -> {
             Movie m1 = new Movie();
             m1.setTitle("My Hero Academia: World Heroes' Mission");
-            m1.setGenre("ANIMATION");
+            m1.setGenre("Animation");
             m1.setLanguage("Japanese");
             m1.setCategory("IIA");
             m1.setDirector("Kenji Nagasaki");
@@ -29,7 +29,14 @@ public class MovieConfig {
             m2.setCategory("IIB");
             m2.setDirector("Andy Serkis");
 
-            movieRepository.saveAll(List.of(m1, m2));
+            Movie m3 = new Movie();
+            m3.setTitle("Dune");
+            m3.setGenre("Action, Sci-Fi, Adventure");
+            m3.setLanguage("English");
+            m3.setCategory("IIA");
+            m3.setDirector("Denis Villeneuve");
+
+            movieRepository.saveAll(List.of(m1, m2, m3));
         };
     }
 }
