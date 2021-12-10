@@ -1,9 +1,12 @@
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 function Home() {
   return (
-    <Typography paragraph>
+    
+    <Box>
       <h1>Home</h1>
+      <Typography paragraph>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus
       non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
@@ -17,6 +20,8 @@ function Home() {
       varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt.
       Lorem donec massa sapien faucibus et molestie ac.
     </Typography>
+    </Box>
+    
   );
 }
 

@@ -35,7 +35,7 @@ import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 
-const drawerWidth = 210;
+const drawerWidth = 195;
 
 function ResponsiveDrawer(props) {
   const { window } = props;
@@ -69,11 +69,28 @@ function ResponsiveDrawer(props) {
     <div>
       <List
         sx={{
-          mt: 5,
+          mt: { sm: 4 },
         }}
       >
+        <ListItem>
+          <Typography
+            variant="h6"
+            noWrap
+            sx={{
+              display: { xs: "block", sm: "none" },
+            }}
+          >
+            CINEMATIC
+          </Typography>
+        </ListItem>
+
         {nameList1.map((text, index) => (
-          <Link href={linkList1[index]} underline="none" color="inherit">
+          <Link
+            href={linkList1[index]}
+            underline="none"
+            color="inherit"
+            key={index}
+          >
             <ListItem button key={text}>
               <ListItemIcon>
                 {index < iconList1.length ? iconList1[index] : <HomeIcon />}
@@ -86,7 +103,12 @@ function ResponsiveDrawer(props) {
       <Divider />
       <List>
         {nameList2.map((text, index) => (
-          <Link href={linkList2[index]} underline="none" color="inherit">
+          <Link
+            href={linkList2[index]}
+            underline="none"
+            color="inherit"
+            key={index}
+          >
             <ListItem button key={text}>
               <ListItemIcon>
                 {index < iconList2.length ? iconList2[index] : <HomeIcon />}
@@ -215,7 +237,7 @@ function ResponsiveDrawer(props) {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={5} color="error">
+          <Badge badgeContent={2} color="error">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -239,10 +261,7 @@ function ResponsiveDrawer(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ height: 50, zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
+      <AppBar position="fixed" sx={{ height: 50, zIndex: { sm: 1201 } }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -279,15 +298,17 @@ function ResponsiveDrawer(props) {
           <Box sx={{ display: { xs: "none", md: "flex" }, mb: 1 }}>
             <IconButton
               size="small"
-              aria-label="show 4 new mails"
+              aria-label="show orders"
               color="inherit"
               sx={{ mr: 1 }}
             >
-              <ReceiptIcon />
+              <Badge badgeContent={1} color="error">
+                <ReceiptIcon />
+              </Badge>
             </IconButton>
             <IconButton
               size="small"
-              aria-label="show 17 new notifications"
+              aria-label="show new notifications"
               color="inherit"
               sx={{ mr: 1 }}
             >
@@ -329,7 +350,7 @@ function ResponsiveDrawer(props) {
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label=""
+        aria-label="drawer"
       >
         <Drawer
           container={container}
@@ -367,11 +388,12 @@ function ResponsiveDrawer(props) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          px: 2,
+          pt: 5,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        <Toolbar />
+        {/* <Toolbar/> */}
         <Router>
           <Switch>
             <Route path="/home" exact component={Home} />
