@@ -1,6 +1,7 @@
 package fyp.kwchui.cinematicbackend.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -14,8 +15,7 @@ import lombok.NoArgsConstructor;
 public class Movie {
 
     @Id
-    @SequenceGenerator(
-        name = "movie_sequence", sequenceName = "movie_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "movie_sequence", sequenceName = "movie_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_sequence")
     private Long id;
     private String title;
@@ -23,7 +23,7 @@ public class Movie {
     private String language;
     private String category;
     private String director;
-    /* private String starring;
+    private String starring;
     private String distributor;
     private String description;
     private String posterUri;
@@ -31,6 +31,7 @@ public class Movie {
     private LocalDate release_date;
     private float duration;
     private float rating;
-    private List<MovieReview> movieReviews */
-    // Movie reviews
+    @OneToMany(mappedBy = "movie")
+    private List<MovieReview> movieReviews;
+    
 }
