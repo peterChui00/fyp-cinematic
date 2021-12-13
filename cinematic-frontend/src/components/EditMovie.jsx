@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -25,6 +25,7 @@ const genres = ["Action", "Adventure", "Animation", "Comedy", "Sci-Fi"];
 const languages = ["Cantonese", "English", "Japanese"];
 
 function EditMovie() {
+  const [id, setId] = useState(null);
   const [title, setTitle] = useState("");
   const [genre, setGenre] = useState("");
   const [genreArray, setGenreArray] = useState([]);
@@ -37,14 +38,46 @@ function EditMovie() {
   const [releaseDate, setReleaseDate] = useState(null);
   const [duration, setDuration] = useState("");
 
+  let { movieId } = useParams();
   let history = useHistory();
+
+  const getMovieToBeUpdated = useCallback(() => {
+    axios.get("http://localhost:8080/api/movie/" + id).then((res) => {
+      console.log(res);
+      const resMovie = res.data;
+      setTitle(resMovie.title);
+      setGenre(resMovie.genre);
+      setGenreArray(resMovie.genre.split(", "));
+      setLanguage(resMovie.language);
+      setCategory(resMovie.category);
+      setDirector(resMovie.director);
+      setStarring(resMovie.starring);
+      setDistributor(resMovie.distributor);
+      setDescription(resMovie.description);
+      setReleaseDate(resMovie.releaseDate);
+      setDuration(resMovie.duration);
+    });
+  }, [id]);
+
+  useEffect(() => {
+    // Determine whether the component is for adding or updating movie
+    if (typeof movieId !== "undefined") {
+      setId(movieId);
+      console.log("Edit movie: " + id);
+      if (id !== null) {
+        getMovieToBeUpdated();
+      }
+    } else {
+      console.log("Add movie.");
+    }
+  }, [movieId, id, getMovieToBeUpdated]);
 
   const backToMovieMgmt = () => {
     history.push("/movieMgmt");
   };
 
-  const addMovie = () => {
-    let movie = {
+  function getEditedMovie() {
+    var movie = {
       title: title,
       genre: genre,
       language: language,
@@ -56,9 +89,27 @@ function EditMovie() {
       releaseDate: releaseDate,
       duration: duration,
     };
-    console.log("Add moive: " + JSON.stringify(movie));
+    return movie;
+  };
+
+  const addMovie = () => {
+    console.log("Add moive: " + JSON.stringify(getEditedMovie()));
     axios
-      .post("http://localhost:8080/api/movie", movie)
+      .post("http://localhost:8080/api/movie", getEditedMovie())
+      .then((res) => {
+        console.log(res);
+        backToMovieMgmt();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const updateMovie = () => {
+   
+    console.log("Update moive: " + JSON.stringify(getEditedMovie()));
+    axios
+      .put("http://localhost:8080/api/movie/" + id, getEditedMovie())
       .then((res) => {
         console.log(res);
         backToMovieMgmt();
@@ -71,7 +122,7 @@ function EditMovie() {
   const handleGenreChange = (event, value) => {
     console.log(value);
     setGenreArray(value);
-    // Convert genres in the array into one string
+    // Convert genres into one string
     var genreString = "";
     value.forEach((genre) => {
       if (value.indexOf(genre) === 0) {
@@ -82,13 +133,6 @@ function EditMovie() {
     });
     console.log(genreString);
     setGenre(genreString);
-  };
-
-  const handleLanguageChange = (event, value) => {
-    var languageString = "";
-    languageString = value;
-    console.log(languageString);
-    setLanguage(languageString);
   };
 
   const resetForm = () => {
@@ -219,7 +263,9 @@ function EditMovie() {
             disableClearable
             options={languages}
             value={language}
-            onChange={handleLanguageChange}
+            onChange={(event, value) => {
+              setLanguage(value);
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -303,28 +349,54 @@ function EditMovie() {
           />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Button
-            fullWidth
-            size="medium"
-            variant="outlined"
-            startIcon={<CheckCircleIcon />}
-            onClick={addMovie}
-            color="success"
-          >
-            Add movie
-          </Button>
+          {id == null ? (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<CheckCircleIcon />}
+              onClick={addMovie}
+              color="success"
+            >
+              Add movie
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<CheckCircleIcon />}
+              onClick={updateMovie}
+              color="success"
+            >
+              Update movie
+            </Button>
+          )}
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Button
-            fullWidth
-            size="medium"
-            variant="outlined"
-            startIcon={<RestartAltIcon />}
-            onClick={resetForm}
-            color="success"
-          >
-            Reset
-          </Button>
+          {id == null ? (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<RestartAltIcon />}
+              onClick={resetForm}
+              color="info"
+            >
+              Reset
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<RestartAltIcon />}
+              onClick={getMovieToBeUpdated}
+              color="info"
+            >
+              Reset
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Box>

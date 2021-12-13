@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,6 +24,8 @@ function MovieManagement() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
+  let history = useHistory();
+
   const getMovies = () => {
     setLoading(true);
     axios.get("http://localhost:8080/api/movie").then((res) => {
@@ -37,7 +39,14 @@ function MovieManagement() {
     getMovies();
   }, []);
 
-  let history = useHistory();
+  function deleteMovie(id) {
+    setLoading(true);
+    axios.delete("http://localhost:8080/api/movie/" + id).then((res) => {
+      console.log(res);
+      setMovies(movies.filter(movie => movie.id !== id));
+      setLoading(false);
+    });
+  }
 
   const addMovie = () => {
     history.push("/editMovie");
@@ -50,7 +59,7 @@ function MovieManagement() {
           <TableCell>{movie.id}</TableCell>
           <TableCell>{movie.title}</TableCell>
           <TableCell>{movie.genre}</TableCell>
-          <TableCell>{movie.release_date}</TableCell>
+          <TableCell>{movie.releaseDate}</TableCell>
           <TableCell>{movie.language}</TableCell>
           <TableCell>{movie.category}</TableCell>
           <TableCell>{movie.duration}</TableCell>
@@ -58,10 +67,13 @@ function MovieManagement() {
           <TableCell>{movie.starring}</TableCell>
           <TableCell>{movie.distributor}</TableCell>
           <TableCell>
-            <IconButton color="primary">
-              <EditIcon />
-            </IconButton>
-            <IconButton color="secondary">
+            <Link to={"/editMovie/" + movie.id}>
+              <IconButton color="primary">
+                <EditIcon />
+              </IconButton>
+            </Link>
+
+            <IconButton color="secondary" onClick={() => deleteMovie(movie.id)}>
               <DeleteForeverIcon />
             </IconButton>
           </TableCell>

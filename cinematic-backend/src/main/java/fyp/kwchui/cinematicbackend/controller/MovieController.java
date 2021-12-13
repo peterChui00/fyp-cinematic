@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.service.MovieService;
@@ -36,6 +37,11 @@ public class MovieController {
         return movieService.getMovies();
     }
 
+    @GetMapping(path = "/movie/{movieID}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable("movieID") Long movieId) {
+        return ResponseEntity.ok(movieService.getMovieById(movieId));
+    }
+
     @PostMapping(path = "/movie")
     public void addMovie(@RequestBody Movie movie) {
         movieService.addMovie(movie);
@@ -46,7 +52,6 @@ public class MovieController {
         movieService.deleteMovie(movieId);
     }
 
-    // chagne to request body
     @PutMapping(path = "/movie/{movieID}")
     public void updateMovie(
             @PathVariable("movieID") Long movieId,

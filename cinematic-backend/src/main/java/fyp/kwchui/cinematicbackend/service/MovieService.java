@@ -19,9 +19,11 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
+    public Movie getMovieById(Long movieId) {
+        return movieRepository.findById(movieId).get();
+    }
+
     public void addMovie(Movie movie) {
-        movieRepository.findMovieByTitle(movie.getTitle())
-                .orElseThrow(() -> new IllegalStateException("Title existed."));
         movieRepository.save(movie);
     }
 
@@ -36,22 +38,16 @@ public class MovieService {
     public void updateMovie(Long movieId, Movie newMovie) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalStateException("Movie with id " + movieId + " does not exists."));
-
-        if(newMovie.getTitle()!=null && newMovie.getTitle().length()>0){
-            movie.setTitle(newMovie.getTitle()); 
-        }        
-        if(newMovie.getGenre()!=null && newMovie.getGenre().length()>0){
-            movie.setGenre(newMovie.getGenre()); 
-        }   
-        if(newMovie.getLanguage()!=null && newMovie.getLanguage().length()>0){
-            movie.setLanguage(newMovie.getLanguage());  
-        }
-        if(newMovie.getCategory()!=null && newMovie.getCategory().length()>0){
-            movie.setCategory(newMovie.getCategory()); 
-        }
-        if(newMovie.getDirector()!=null && newMovie.getDirector().length()>0){
-            movie.setDirector(newMovie.getDirector()); 
-        }  
+        movie.setTitle(newMovie.getTitle());
+        movie.setGenre(newMovie.getGenre());
+        movie.setLanguage(newMovie.getLanguage());
+        movie.setCategory(newMovie.getCategory());
+        movie.setDirector(newMovie.getDirector());
+        movie.setStarring(newMovie.getStarring());
+        movie.setDistributor(newMovie.getDistributor());
+        movie.setDescription(newMovie.getDescription());
+        movie.setReleaseDate(newMovie.getReleaseDate());
+        movie.setDuration(newMovie.getDuration());
         movieRepository.save(movie);
     }
 }

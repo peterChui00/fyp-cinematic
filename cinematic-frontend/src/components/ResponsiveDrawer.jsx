@@ -63,7 +63,7 @@ function ResponsiveDrawer(props) {
     "Cinema Management",
     "User Management",
   ];
-  const linkList1 = ["/home", "/movie", "/cinema", "/watch"];
+  const linkList1 = ["/", "/movie", "/cinema", "/watch"];
   const linkList2 = ["/movieMgmt", "/cinemaMgmt", "/userMgmt"];
 
   const drawer = (
@@ -407,9 +407,10 @@ function ResponsiveDrawer(props) {
         {/* <Toolbar/> */}
         <Router>
           <Switch>
-            <Route path="/home" exact component={Home} />
+            <Route path="/" exact component={Home} />
             <Route path="/movieMgmt" exact component={MovieManagement} />
-            <Route path="/editMovie" component={EditMovie} />
+            <Route path="/editMovie" exact component={EditMovie} />
+            <Route path="/editMovie/:movieId" component={EditMovie} />
           </Switch>
         </Router>
       </Box>

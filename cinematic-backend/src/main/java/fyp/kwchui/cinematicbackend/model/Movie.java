@@ -29,9 +29,9 @@ public class Movie {
     private String description;
     private String posterUri;
     private String streamingUri;
-    private LocalDate release_date;
+    private LocalDate releaseDate;
     private float duration;
     @OneToMany(mappedBy = "movie")
     private List<MovieReview> movieReviews;
-    
+
 }
