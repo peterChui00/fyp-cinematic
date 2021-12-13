@@ -30,12 +30,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Home from "./Home";
 import MovieManagement from "./MovieManagement";
+import EditMovie from "./EditMovie"
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 
-const drawerWidth = 195;
+const drawerWidth = 184;
 
 function ResponsiveDrawer(props) {
   const { window } = props;
@@ -95,7 +96,10 @@ function ResponsiveDrawer(props) {
               <ListItemIcon>
                 {index < iconList1.length ? iconList1[index] : <HomeIcon />}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText
+                primary={text}
+                primaryTypographyProps={{ fontSize: "0.9em" }}
+              />
             </ListItem>
           </Link>
         ))}
@@ -113,10 +117,17 @@ function ResponsiveDrawer(props) {
               <ListItemIcon>
                 {index < iconList2.length ? iconList2[index] : <HomeIcon />}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText
+                primary={text}
+                primaryTypographyProps={{ fontSize: "0.9em" }}
+              />
             </ListItem>
           </Link>
         ))}
+      </List>
+      <Divider />
+      <List>
+        <ListItem sx={{ fontSize: "9px" }}>&copy; 2021 Peter CHUI</ListItem>
       </List>
     </div>
   );
@@ -155,8 +166,8 @@ function ResponsiveDrawer(props) {
       paddingLeft: `calc(1em + ${theme.spacing(4)})`,
       transition: theme.transitions.create("width"),
       width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
+      [theme.breakpoints.up("sm")]: {
+        width: "100%",
       },
     },
   }));
@@ -224,7 +235,7 @@ function ResponsiveDrawer(props) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+        <IconButton size="large" aria-label="show new orders" color="inherit">
           <Badge badgeContent={1} color="error">
             <ReceiptIcon />
           </Badge>
@@ -234,7 +245,7 @@ function ResponsiveDrawer(props) {
       <MenuItem>
         <IconButton
           size="large"
-          aria-label="show 17 new notifications"
+          aria-label="show new notifications"
           color="inherit"
         >
           <Badge badgeContent={2} color="error">
@@ -279,7 +290,7 @@ function ResponsiveDrawer(props) {
             sx={{
               display: { xs: "none", sm: "block" },
               mb: { xs: 1, sm: 2 },
-              mr: "60px",
+              mr: "34px",
             }}
           >
             CINEMATIC
@@ -389,7 +400,7 @@ function ResponsiveDrawer(props) {
         sx={{
           flexGrow: 1,
           px: 2,
-          pt: 5,
+          pt: 7,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
@@ -398,6 +409,7 @@ function ResponsiveDrawer(props) {
           <Switch>
             <Route path="/home" exact component={Home} />
             <Route path="/movieMgmt" exact component={MovieManagement} />
+            <Route path="/editMovie" component={EditMovie} />
           </Switch>
         </Router>
       </Box>

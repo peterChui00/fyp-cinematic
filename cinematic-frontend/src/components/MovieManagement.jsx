@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,15 +15,18 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import axios from "axios";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import AddIcon from "@mui/icons-material/Add";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 function MovieManagement() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
   const getMovies = () => {
-    const res = axios.get("http://localhost:8080/api/movie").then((res) => {
+    setLoading(true);
+    axios.get("http://localhost:8080/api/movie").then((res) => {
       console.log(res);
       setMovies(res.data);
       setLoading(false);
@@ -33,16 +37,26 @@ function MovieManagement() {
     getMovies();
   }, []);
 
-  const Movies = () => {
+  let history = useHistory();
+
+  const addMovie = () => {
+    history.push("/editMovie");
+  };
+
+  const MovieRow = () => {
     return movies.map((movie, index) => {
       return (
         <TableRow key={index}>
           <TableCell>{movie.id}</TableCell>
           <TableCell>{movie.title}</TableCell>
           <TableCell>{movie.genre}</TableCell>
+          <TableCell>{movie.release_date}</TableCell>
           <TableCell>{movie.language}</TableCell>
           <TableCell>{movie.category}</TableCell>
+          <TableCell>{movie.duration}</TableCell>
           <TableCell>{movie.director}</TableCell>
+          <TableCell>{movie.starring}</TableCell>
+          <TableCell>{movie.distributor}</TableCell>
           <TableCell>
             <IconButton color="primary">
               <EditIcon />
@@ -58,30 +72,63 @@ function MovieManagement() {
 
   return (
     <Box>
-      <h2>Movie Management</h2>
-
-      <Button variant="outlined" startIcon={<AddBoxIcon />} sx={{ mb: 2 }}>
-        New movie
-      </Button>
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        justifyContent="space-between"
+      >
+        <Grid item>
+          <Typography variant="h5" gutterBottom component="div">
+            Movie Management
+          </Typography>
+        </Grid>
+        <Grid item>
+          <ButtonGroup sx={{ mb: 1 }}>
+            <Button
+              size="small"
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={addMovie}
+            >
+              Add movie
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              startIcon={<RefreshIcon />}
+              onClick={getMovies}
+            >
+              Refresh
+            </Button>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
 
       {isLoading ? (
-        <CircularProgress sx={{ mx: "auto", width: 200 }} />
+        <Box sx={{ textAlign: "center" }}>
+          <CircularProgress />
+        </Box>
       ) : (
         <TableContainer component={Paper}>
-          <Table>
+          <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Genre</TableCell>
+                <TableCell>Release Date</TableCell>
                 <TableCell>Language</TableCell>
                 <TableCell>Category</TableCell>
+                <TableCell>Duration (mins)</TableCell>
                 <TableCell>Director</TableCell>
+                <TableCell>Starring</TableCell>
+                <TableCell>Distributor</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <Movies></Movies>
+              <MovieRow />
             </TableBody>
           </Table>
         </TableContainer>
