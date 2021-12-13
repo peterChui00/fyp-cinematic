@@ -25,12 +25,12 @@ public class Movie {
     private String director;
     private String starring;
     private String distributor;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String posterUri;
     private String streamingUri;
     private LocalDate release_date;
     private float duration;
-    private float rating;
     @OneToMany(mappedBy = "movie")
     private List<MovieReview> movieReviews;
     
