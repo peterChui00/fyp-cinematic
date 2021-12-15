@@ -2,17 +2,26 @@ import { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import {
+  AppBar,
+  Box,
+  Badge,
+  CssBaseline,
+  Divider,
+  Drawer,
+  List,
+  Link,
+  IconButton,
+  InputBase,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuItem,
+  Stack,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import MovieIcon from "@mui/icons-material/Movie";
@@ -20,21 +29,17 @@ import MovieFilterIcon from "@mui/icons-material/MovieFilter";
 import CameraIndoorIcon from "@mui/icons-material/CameraIndoor";
 import CameraOutdoorIcon from "@mui/icons-material/CameraOutdoor";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import MoreIcon from "@mui/icons-material/MoreVert";
 import GroupIcon from "@mui/icons-material/Group";
 import SearchIcon from "@mui/icons-material/Search";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Badge from "@mui/material/Badge";
-import InputBase from "@mui/material/InputBase";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Home from "./Home";
+import EditMovie from "./EditMovie";
+import MovieList from "./MovieList";
 import MovieManagement from "./MovieManagement";
-import EditMovie from "./EditMovie"
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import ReceiptIcon from "@mui/icons-material/Receipt";
+import MovieDetail from "./MovieDetail";
 
 const drawerWidth = 184;
 
@@ -126,9 +131,33 @@ function ResponsiveDrawer(props) {
         ))}
       </List>
       <Divider />
-      <List>
-        <ListItem sx={{ fontSize: "9px" }}>&copy; 2021 Peter CHUI</ListItem>
-      </List>
+      <Stack
+        sx={{ py: 1, px: 2, fontSize: "9px", color: "text.disabled" }}
+        spacing={1}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link href="" underline="hover" color="inherit" sx={{ mr: 1 }}>
+            About us
+          </Link>
+          <Link href="" underline="hover" color="inherit" sx={{ mr: 1 }}>
+            FAQ
+          </Link>
+          <Link href="" underline="hover" color="inherit">
+            Reference
+          </Link>
+        </Box>
+        <Box>
+          &copy; 2021 CINEMATIC
+          <br />
+          Developed by Peter CHUI
+        </Box>
+      </Stack>
     </div>
   );
 
@@ -408,6 +437,8 @@ function ResponsiveDrawer(props) {
         <Router>
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/movie" exact component={MovieList} />
+            <Route path="/movie/:movieId" component={MovieDetail} />
             <Route path="/movieMgmt" exact component={MovieManagement} />
             <Route path="/editMovie" exact component={EditMovie} />
             <Route path="/editMovie/:movieId" component={EditMovie} />
