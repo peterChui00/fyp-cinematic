@@ -12,7 +12,6 @@ import {
   Stack,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 
 function MovieList() {

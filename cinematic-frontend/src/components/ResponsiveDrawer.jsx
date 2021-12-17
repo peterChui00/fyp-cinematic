@@ -40,6 +40,7 @@ import EditMovie from "./EditMovie";
 import MovieList from "./MovieList";
 import MovieManagement from "./MovieManagement";
 import MovieDetail from "./MovieDetail";
+import TicketingSeatSeletion from "./TicketingSeatSeletion";
 
 const drawerWidth = 184;
 
@@ -438,10 +439,11 @@ function ResponsiveDrawer(props) {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/movie" exact component={MovieList} />
-            <Route path="/movie/:movieId" component={MovieDetail} />
+            <Route path="/movie/:movieId" exact component={MovieDetail} />
+            <Route path="/movie/:movieId/:movieShowingId" exact component={TicketingSeatSeletion} />
             <Route path="/movieMgmt" exact component={MovieManagement} />
             <Route path="/editMovie" exact component={EditMovie} />
-            <Route path="/editMovie/:movieId" component={EditMovie} />
+            <Route path="/editMovie/:movieId" exact component={EditMovie} />
           </Switch>
         </Router>
       </Box>

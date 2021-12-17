@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-
 import {
   Box,
   Grid,
@@ -13,10 +12,15 @@ import {
   AccordionDetails,
   Tabs,
   Tab,
+  IconButton,
+  Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import CommentIcon from "@mui/icons-material/Comment";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { CardActionArea } from "@mui/material";
 
 function MovieDetail() {
   const [id, setId] = useState(null);
@@ -34,12 +38,14 @@ function MovieDetail() {
   const [tab, setTab] = useState(0);
 
   let { movieId } = useParams();
+  let history = useHistory();
 
   useEffect(() => {
     if (typeof movieId !== "undefined") {
       axios.get("http://localhost:8080/api/movie/" + movieId).then((res) => {
         console.log(res);
         const resMovie = res.data;
+        setId(resMovie.id);
         setTitle(resMovie.title);
         setGenre(resMovie.genre);
         setGenreArray(resMovie.genre.split(", "));
@@ -61,6 +67,10 @@ function MovieDetail() {
     setTab(newValue);
   };
 
+  const purchaseTicket = (movieId, movieShowingId) => {
+    history.push("/movie/" + movieId + "/" + movieShowingId);
+  };
+
   return (
     <Box sx={{ pt: 1 }}>
       <Grid container justifyContent="center" spacing={2}>
@@ -77,18 +87,18 @@ function MovieDetail() {
             item
             xs={12}
             container
-            spacing={2}
-            columnSpacing={{ xs: 8, md: 2 }}
+            spacing={1}
+            textAlign={"left"}
           >
             <Grid item xs={12}>
-              <Stack
-                direction="row"
-                spacing={12}
-                alignItems="center"
-                
-              >
+              <Stack direction="row" spacing={2} alignItems="center">
                 <Typography variant="h3">{title}</Typography>
-                <BookmarkBorderIcon />
+                <IconButton>
+                  <BookmarkBorderIcon />
+                </IconButton>
+                <IconButton>
+                  <CommentIcon />
+                </IconButton>
               </Stack>
             </Grid>
             <Grid item xs={2}>
@@ -133,7 +143,6 @@ function MovieDetail() {
             </Grid>
           </Grid>
         </Grid>
-        
       </Grid>
 
       {/* More details */}
@@ -187,7 +196,7 @@ function MovieDetail() {
         </Accordion>
       </Box>
 
-      {/* Showtime */}
+      {/* Showtime tabs */}
       <Box sx={{ mt: 2, width: "100%", maxWidth: "88vw" }}>
         <Tabs
           value={tab}
@@ -206,6 +215,136 @@ function MovieDetail() {
           <Tab label="22 DEC" />
           <Tab label="23 DEC" />
         </Tabs>
+      </Box>
+
+      {/* Showtimes */}
+      <Box sx={{ mt: 2, mx: 1 }}>
+        <Divider textAlign="left" sx={{ mb: 2 }}>
+          XXX Cinema - Chai Wan
+        </Divider>
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <CardActionArea>
+              <Box
+                sx={{
+                  bgcolor: "success.main",
+                  color: "primary.contrastText",
+                  py: 2,
+                  borderRadius: 2,
+                  textAlign: "center",
+                }}
+                onClick={() => purchaseTicket(id, id)}
+              >
+                <Typography variant="h3" sx={{ fontSize: "18px" }}>
+                  10:30
+                  <br />
+                  HK$65
+                </Typography>
+              </Box>
+            </CardActionArea>
+          </Grid>
+          <Grid item xs={3}>
+            <CardActionArea>
+              <Box
+                sx={{
+                  bgcolor: "warning.main",
+                  color: "primary.contrastText",
+                  py: 2,
+                  borderRadius: 2,
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="h3" sx={{ fontSize: "18px" }}>
+                  10:30
+                  <br />
+                  HK$65
+                </Typography>
+              </Box>
+            </CardActionArea>
+          </Grid>
+          <Grid item xs={3}>
+            <CardActionArea>
+              <Box
+                sx={{
+                  bgcolor: "error.main",
+                  color: "primary.contrastText",
+                  py: 2,
+                  borderRadius: 2,
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="h3" sx={{ fontSize: "18px" }}>
+                  10:30
+                  <br />
+                  HK$65
+                </Typography>
+              </Box>
+            </CardActionArea>
+          </Grid>
+        </Grid>
+        <Divider textAlign="left" sx={{ my: 2 }}>
+          XXX Cinema - Mong Kok
+        </Divider>
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <CardActionArea>
+              <Box
+                sx={{
+                  bgcolor: "success.main",
+                  color: "primary.contrastText",
+                  py: 2,
+                  borderRadius: 2,
+                  textAlign: "center",
+                }}
+               
+              >
+                <Typography variant="h3" sx={{ fontSize: "18px" }}>
+                  10:30
+                  <br />
+                  HK$65
+                </Typography>
+              </Box>
+            </CardActionArea>
+          </Grid>
+          <Grid item xs={3}>
+            <CardActionArea>
+              <Box
+                sx={{
+                  bgcolor: "warning.main",
+                  color: "primary.contrastText",
+                  py: 2,
+                  borderRadius: 2,
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="h3" sx={{ fontSize: "18px" }}>
+                  10:30
+                  <br />
+                  HK$65
+                </Typography>
+              </Box>
+            </CardActionArea>
+          </Grid>
+          <Grid item xs={3}>
+            <CardActionArea>
+              <Box
+                sx={{
+                  bgcolor: "error.main",
+                  color: "primary.contrastText",
+                  py: 2,
+                  borderRadius: 2,
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="h3" sx={{ fontSize: "18px" }}>
+                  10:30
+                  <br />
+                  HK$65
+                </Typography>
+              </Box>
+            </CardActionArea>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );
