@@ -108,7 +108,7 @@ function MovieList() {
         onChange={handleTabChange}
         indicatorColor="primary"
         textColor="inherit"
-        variant="scrollable"
+        variant="fullWidth"
         allowScrollButtonsMobile
         sx={{ mb: 2, width: "100%" }}
       >

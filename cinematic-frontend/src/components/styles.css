@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 
-.App {
+.SeatPlan {
     text-align: center;
     display: flex;
     flex-flow: column;
@@ -110,7 +110,7 @@
 
 .seat {
   display: inline-block;
-  background: #626262;
+  background: #7bc47f;
   width: 16px;
   height: 12px;
   border-top-left-radius: 10px;
@@ -122,11 +122,11 @@
 }
 
 .seat.selected {
-  background: #7bc47f !important;
+  background: #81c9f8 !important;
 }
 
 .seat.occupied {
-  background: #cfcfcf;
+  background: #e79c9c;
 }
 
 .info .count {

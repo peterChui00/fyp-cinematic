@@ -21,7 +21,32 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
-const genres = ["Action", "Adventure", "Animation", "Comedy", "Sci-Fi"];
+const genres = [
+  "Action",
+  "Adventure",
+  "Animation",
+  "Biography",
+  "Comedy",
+  "Crime",
+  "Documentary",
+  "Drama",
+  "Family",
+  "Fantasy",
+  "Film Noir",
+  "History",
+  "Horror",
+  "Music",
+  "Musical",
+  "Mystery",
+  "Romance",
+  "Sci-Fi",
+  "Short Film",
+  "Sport",
+  "Superhero",
+  "Thriller",
+  "War",
+  "Western"
+];
 const languages = ["Cantonese", "English", "Japanese"];
 
 function EditMovie() {
@@ -90,7 +115,7 @@ function EditMovie() {
       duration: duration,
     };
     return movie;
-  };
+  }
 
   const addMovie = () => {
     console.log("Add moive: " + JSON.stringify(getEditedMovie()));
@@ -106,7 +131,6 @@ function EditMovie() {
   };
 
   const updateMovie = () => {
-   
     console.log("Update moive: " + JSON.stringify(getEditedMovie()));
     axios
       .put("http://localhost:8080/api/movie/" + id, getEditedMovie())
@@ -376,7 +400,6 @@ function EditMovie() {
         <Grid item xs={6} sm={3}>
           {id == null ? (
             <Button
-            
               fullWidth
               size="medium"
               variant="outlined"

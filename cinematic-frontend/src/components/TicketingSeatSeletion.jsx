@@ -117,7 +117,7 @@ function TicketingSeatSeletion() {
     return (
       <ul className="ShowCase">
         <li>
-          <span className="seat" /> <small>N/A</small>
+          <span className="seat" /> <small>Available</small>
         </li>
         <li>
           <span className="seat selected" /> <small>Selected</small>
@@ -178,7 +178,7 @@ function TicketingSeatSeletion() {
 
   const SeatPlan = () => (
     <Box sx={{mb:2}}>
-      <div className="App">
+      <div className="SeatPlan">
         {/*  <Movies
     movie={selectedMovie}
     onChange={(movie) => {
@@ -272,6 +272,9 @@ function TicketingSeatSeletion() {
 
   const Payment = () => (
     <Box sx={{ px: 1, mb:2 }}>
+      <Typography variant="body2" gutterBottom sx={{ml: "auto", textAlign: "right"}}>
+        Time remaining: 10:00
+      </Typography>
       <Typography variant="h6" gutterBottom>
         Order Summary
       </Typography>
@@ -350,7 +353,7 @@ function TicketingSeatSeletion() {
       <Divider sx={{ my: 2 }} />
 
       <Typography variant="h6" gutterBottom>
-        Payment method
+        Payment
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
@@ -388,7 +391,6 @@ function TicketingSeatSeletion() {
             required
             id="cvv"
             label="CVV"
-            helperText="Last three digits on signature strip"
             fullWidth
             autoComplete="cc-csc"
             variant="standard"
@@ -456,7 +458,7 @@ function TicketingSeatSeletion() {
   );
 
   return (
-    <Box sx={{ pt: 1 }}>
+    <Box sx={{ pt: 1, textAlign: "center" }}>
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={9} sm={2}>
           <CardMedia
@@ -582,7 +584,7 @@ function TicketingSeatSeletion() {
 
       <Divider sx={{ my: 2 }} />
       {/*  */}
-      {step === 0 ? <SeatPlan /> : step === 1 ? <Payment /> : <Complete />}
+      {step === 0 ? <SeatPlan  /> : step === 1 ? <Payment /> : <Complete />}
     </Box>
   );
 }
