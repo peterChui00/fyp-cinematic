@@ -1,10 +1,14 @@
 package fyp.kwchui.cinematicbackend.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
@@ -48,6 +52,18 @@ public class MovieService {
         movie.setDescription(newMovie.getDescription());
         movie.setReleaseDate(newMovie.getReleaseDate());
         movie.setDuration(newMovie.getDuration());
+        movieRepository.save(movie);
+    }
+
+    public void uploadPoster(String movieTitle, MultipartFile file) throws IOException {
+        Movie movie = movieRepository.findByTitle(movieTitle)
+                .orElseThrow(() -> new IllegalStateException("Movie does not exists."));
+        String fileName = movieTitle + "_" +
+                UUID.randomUUID().toString() + "_" +
+                file.getOriginalFilename();
+        file.transferTo(new File("C:\\Users\\chuik\\Documents\\fyp-cinematic\\cinematic-frontend\\public\\assets\\"
+                + fileName));
+        movie.setPosterFileName(fileName);
         movieRepository.save(movie);
     }
 }

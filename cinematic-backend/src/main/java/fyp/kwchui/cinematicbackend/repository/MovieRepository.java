@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     
     //@Query("SELECT * FROM Moive m WHERE m.title = ?1")
-    Optional<Movie> findMovieByTitle(String title);
+    Optional<Movie> findByTitle(String title);
 }

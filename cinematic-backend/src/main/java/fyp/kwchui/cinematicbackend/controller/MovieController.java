@@ -1,5 +1,6 @@
 package fyp.kwchui.cinematicbackend.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.model.Movie;
@@ -20,42 +22,51 @@ import fyp.kwchui.cinematicbackend.service.MovieService;
 
 @RestController
 @RequestMapping(path = "/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class MovieController {
 
     @Autowired
     MovieService movieService;
-    /*
-     * private final MovieService movieService;
-     * 
-     * @Autowired public MovieController(MovieService movieService){
-     * this.movieService = movieService; }
-     */
+
+    // *** Basic CRUD operations ***
 
     @GetMapping(path = "/movie")
     public List<Movie> getMovies() {
         return movieService.getMovies();
     }
 
-    @GetMapping(path = "/movie/{movieID}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable("movieID") Long movieId) {
+    @GetMapping(path = "/movie/{movieId}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable("movieId") Long movieId) {
         return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
 
     @PostMapping(path = "/movie")
-    public void addMovie(@RequestBody Movie movie) {
+    public void addMovie(
+            @RequestBody Movie movie) {
         movieService.addMovie(movie);
     }
 
-    @DeleteMapping(path = "/movie/{movieID}")
-    public void deleteMovie(@PathVariable("movieID") Long movieId) {
+    @DeleteMapping(path = "/movie/{movieId}")
+    public void deleteMovie(@PathVariable("movieId") Long movieId) {
         movieService.deleteMovie(movieId);
     }
 
-    @PutMapping(path = "/movie/{movieID}")
+    @PutMapping(path = "/movie/{movieId}")
     public void updateMovie(
-            @PathVariable("movieID") Long movieId,
+            @PathVariable("movieId") Long movieId,
             @RequestBody Movie newMovie) {
         movieService.updateMovie(movieId, newMovie);
+    }
+
+    @PostMapping(path = "/movie/{movieTitle}/uploadPoster")
+    public void uploadPoster(
+            @PathVariable("movieTitle") String movieTitle,
+            @RequestParam("posterFile") MultipartFile posterFile) {
+        try {
+            movieService.uploadPoster(movieTitle, posterFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

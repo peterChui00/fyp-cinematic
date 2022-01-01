@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useLayoutEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import {
   Box,
@@ -20,6 +21,7 @@ import AdapterMoment from "@mui/lab/AdapterMoment";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import MovieService from "../services/MovieService";
 
 const genres = [
   "Action",
@@ -45,14 +47,14 @@ const genres = [
   "Superhero",
   "Thriller",
   "War",
-  "Western"
+  "Western",
 ];
 const languages = ["Cantonese", "English", "Japanese"];
 
 function EditMovie() {
   const [id, setId] = useState(null);
   const [title, setTitle] = useState("");
-  const [genre, setGenre] = useState("");
+  const [genre, setGenre] = useState(null);
   const [genreArray, setGenreArray] = useState([]);
   const [language, setLanguage] = useState("");
   const [category, setCategory] = useState("");
@@ -62,6 +64,7 @@ function EditMovie() {
   const [description, setDescription] = useState("");
   const [releaseDate, setReleaseDate] = useState(null);
   const [duration, setDuration] = useState("");
+  const [files, setFiles] = useState([]);
 
   let { movieId } = useParams();
   let history = useHistory();
@@ -72,7 +75,9 @@ function EditMovie() {
       const resMovie = res.data;
       setTitle(resMovie.title);
       setGenre(resMovie.genre);
-      setGenreArray(resMovie.genre.split(", "));
+      setGenreArray(
+        resMovie.genre !== null ? resMovie.genre.split(", ") : []
+      );
       setLanguage(resMovie.language);
       setCategory(resMovie.category);
       setDirector(resMovie.director);
@@ -93,7 +98,7 @@ function EditMovie() {
         getMovieToBeUpdated();
       }
     } else {
-      console.log("Add movie.");
+      console.log("Add movie");
     }
   }, [movieId, id, getMovieToBeUpdated]);
 
@@ -117,30 +122,37 @@ function EditMovie() {
     return movie;
   }
 
-  const addMovie = () => {
-    console.log("Add moive: " + JSON.stringify(getEditedMovie()));
-    axios
-      .post("http://localhost:8080/api/movie", getEditedMovie())
-      .then((res) => {
-        console.log(res);
-        backToMovieMgmt();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const uploadPoster = async () => {
+    if (files.length > 0) {
+      const posterFile = new FormData();
+      posterFile.append("posterFile", files[0]);
+      const res = await MovieService.uploadPoster(title, posterFile);
+      console.log(res);
+    }
   };
 
-  const updateMovie = () => {
-    console.log("Update moive: " + JSON.stringify(getEditedMovie()));
-    axios
-      .put("http://localhost:8080/api/movie/" + id, getEditedMovie())
-      .then((res) => {
-        console.log(res);
-        backToMovieMgmt();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const addMovie = async () => {
+    console.log("Add moive: " + JSON.stringify(getEditedMovie()));
+    try {
+      const res = await MovieService.addMovie(getEditedMovie());
+      console.log(res);
+      await uploadPoster();
+      backToMovieMgmt();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateMovie = async () => {
+    try {
+      console.log("Update moive: " + JSON.stringify(getEditedMovie()));
+      const res = await MovieService.updateMovie(id, getEditedMovie());
+      console.log(res);
+      await uploadPoster();
+      backToMovieMgmt();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleGenreChange = (event, value) => {
@@ -171,7 +183,47 @@ function EditMovie() {
     setDescription("");
     setReleaseDate(null);
     setDuration("");
+    setFiles([]);
   };
+
+  function PosterDropzone() {
+    const { getRootProps, getInputProps } = useDropzone({
+      maxFiles: 1,
+      accept: "image/*",
+      onDrop: (acceptedFiles) => {
+        setFiles(
+          acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+      },
+    });
+
+    const thumbs = files.map((file) => (
+      <div key={file.name}>
+        <div>
+          <img src={file.preview} alt="" width={"100px"} />
+        </div>
+      </div>
+    ));
+
+    return (
+      <section className="container">
+        <div {...getRootProps({ className: "dropzone" })}>
+          <input {...getInputProps()} />
+          <p>Drag 'n' drop some files here, or click to select files</p>
+          <p>
+            {files.length > 0
+              ? "Uploaded poster: " + files[0].name
+              : "No poster uploaded."}
+          </p>
+        </div>
+        <aside>{thumbs}</aside>
+      </section>
+    );
+  }
 
   return (
     <Box>
@@ -371,6 +423,9 @@ function EditMovie() {
               setDescription(e.target.value);
             }}
           />
+        </Grid>
+        <Grid item xs={6}>
+          <PosterDropzone />
         </Grid>
         <Grid item xs={6} sm={3}>
           {id == null ? (

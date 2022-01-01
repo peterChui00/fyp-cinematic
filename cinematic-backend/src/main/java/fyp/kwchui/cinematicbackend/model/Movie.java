@@ -27,7 +27,7 @@ public class Movie {
     private String distributor;
     @Column(columnDefinition = "TEXT")
     private String description;
-    private String posterUri;
+    private String posterFileName;
     private String streamingUri;
     private LocalDate releaseDate;
     private float duration;
