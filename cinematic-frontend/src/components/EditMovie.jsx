@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useLayoutEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
@@ -75,9 +75,7 @@ function EditMovie() {
       const resMovie = res.data;
       setTitle(resMovie.title);
       setGenre(resMovie.genre);
-      setGenreArray(
-        resMovie.genre !== null ? resMovie.genre.split(", ") : []
-      );
+      setGenreArray(resMovie.genre !== null ? resMovie.genre.split(", ") : []);
       setLanguage(resMovie.language);
       setCategory(resMovie.category);
       setDirector(resMovie.director);
@@ -213,11 +211,11 @@ function EditMovie() {
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <p>Drag & drop / click to select a movie poster</p>
           <p>
             {files.length > 0
-              ? "Uploaded poster: " + files[0].name
-              : "No poster uploaded."}
+              ? "Movie poster to be uploaded: " + files[0].name
+              : "No movie poster to be uploaded."}
           </p>
         </div>
         <aside>{thumbs}</aside>

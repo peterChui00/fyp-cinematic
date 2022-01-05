@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class Movie {
 
     @Id
-    @SequenceGenerator(name = "movie_sequence", sequenceName = "movie_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_sequence")
+    @SequenceGenerator(name = "movie_seq", sequenceName = "movie_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_seq")
     private Long id;
     private String title;
     private String genre;
@@ -31,7 +31,7 @@ public class Movie {
     private String streamingUri;
     private LocalDate releaseDate;
     private float duration;
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieReview> movieReviews;
 
 }

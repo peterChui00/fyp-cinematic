@@ -12,8 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class MovieService {
 
     @Autowired

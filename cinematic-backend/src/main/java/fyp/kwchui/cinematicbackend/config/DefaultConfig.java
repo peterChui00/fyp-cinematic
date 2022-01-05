@@ -1,6 +1,7 @@
 package fyp.kwchui.cinematicbackend.config;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -8,14 +9,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import fyp.kwchui.cinematicbackend.model.Movie;
+import fyp.kwchui.cinematicbackend.model.Role;
+import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
+import fyp.kwchui.cinematicbackend.service.UserService;
 
 @Configuration
-public class MovieConfig {
+public class DefaultConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(MovieRepository movieRepository) {
+    CommandLineRunner commandLineRunner(MovieRepository movieRepository, UserService userService) {
         return args -> {
+
+            // Movie
             Movie m1 = new Movie();
             m1.setTitle("Free Guy");
             m1.setGenre("Action, Comedy, Adventure");
@@ -56,6 +62,17 @@ public class MovieConfig {
             m3.setDuration(156);
 
             movieRepository.saveAll(List.of(m1, m2, m3));
+
+            // User & Role
+            userService.addRole(new Role(null, "MEMBER"));
+            userService.addRole(new Role(null, "CINEMA_COMPANY"));
+            userService.addRole(new Role(null, "STREAMING_PROVIDER"));
+            userService.addRole(new Role(null, "ADMIN"));
+
+            userService.addUser(
+                    new User(null, "peter@cinematic.com", "Peter", "peterpw", new ArrayList<>(), new ArrayList<>()));
+            userService.addRoleToUser("Peter", "MEMBER");
+            userService.addRoleToUser("Peter", "ADMIN");
         };
     }
 }

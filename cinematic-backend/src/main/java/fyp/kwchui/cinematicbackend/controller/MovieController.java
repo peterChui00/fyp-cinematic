@@ -41,8 +41,7 @@ public class MovieController {
     }
 
     @PostMapping(path = "/movie")
-    public void addMovie(
-            @RequestBody Movie movie) {
+    public void addMovie(@RequestBody Movie movie) {
         movieService.addMovie(movie);
     }
 
@@ -52,9 +51,7 @@ public class MovieController {
     }
 
     @PutMapping(path = "/movie/{movieId}")
-    public void updateMovie(
-            @PathVariable("movieId") Long movieId,
-            @RequestBody Movie newMovie) {
+    public void updateMovie(@PathVariable("movieId") Long movieId, @RequestBody Movie newMovie) {
         movieService.updateMovie(movieId, newMovie);
     }
 
