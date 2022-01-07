@@ -18,4 +18,9 @@ public class House {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "house_seq")
     private Long id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
+    private Cinema cinema;
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieShowing> movieShowings;
 }
