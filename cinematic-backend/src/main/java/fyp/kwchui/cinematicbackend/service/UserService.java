@@ -39,6 +39,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public User getUserByUsername(String username) {
+        log.info("Fetching user [{}].", username);
+        return userRepository.findByUsername(username).get();
+    }
+
     public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("Saving new user to DB.");
