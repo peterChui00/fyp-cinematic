@@ -23,5 +23,5 @@ public class Cinema {
     private Double longitude;
     private Double latitude;
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<House> house;
+    private List<House> houses;
 }

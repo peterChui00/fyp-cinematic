@@ -35,7 +35,7 @@ public class MovieService {
 
     public void deleteMovie(Long movieId) {
         if (!movieRepository.existsById(movieId)) {
-            throw new IllegalStateException("Movie with id " + movieId + " does not exists.");
+            throw new IllegalStateException("Movie with ID " + movieId + " does not exists.");
         }
         movieRepository.deleteById(movieId);
     }
@@ -43,7 +43,7 @@ public class MovieService {
     @Transactional
     public void updateMovie(Long movieId, Movie newMovie) {
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new IllegalStateException("Movie with id " + movieId + " does not exists."));
+                .orElseThrow(() -> new IllegalStateException("Movie with ID " + movieId + " does not exists."));
         movie.setTitle(newMovie.getTitle());
         movie.setGenre(newMovie.getGenre());
         movie.setLanguage(newMovie.getLanguage());
