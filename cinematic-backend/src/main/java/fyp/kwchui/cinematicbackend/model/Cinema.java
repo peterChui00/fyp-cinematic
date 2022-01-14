@@ -4,11 +4,13 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class Cinema {
@@ -18,8 +20,8 @@ public class Cinema {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cinema_seq")
     private Long id;
     private String name;
-    private String address;
     private String phoneNumber;
+    private String address;
     private Double longitude;
     private Double latitude;
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)

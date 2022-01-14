@@ -61,6 +61,10 @@ public class CinemaService {
         return cinemaRepository.findById(cinemaId).get().getHouses();
     }
 
+    public House getHouseById(Long houseId) {
+        return houseRepository.findById(houseId).get();
+    }
+
     public House addHouse(Long cinemaId, House house) {
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
@@ -78,6 +82,12 @@ public class CinemaService {
         } else {
             houseRepository.delete(house);
         }
-        cinemaRepository.deleteById(cinemaId);
+    }
+
+    public void updateHouse(Long houseId, House newHouse) {
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new IllegalStateException("House with ID " + houseId + " does not exists."));
+        house.setName(newHouse.getName());
+        houseRepository.save(house);
     }
 }

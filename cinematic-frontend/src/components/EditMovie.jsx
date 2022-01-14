@@ -105,7 +105,7 @@ function EditMovie() {
   };
 
   function getEditedMovie() {
-    var movie = {
+    return {
       title: title,
       genre: genre,
       language: language,
@@ -117,7 +117,6 @@ function EditMovie() {
       releaseDate: releaseDate,
       duration: duration,
     };
-    return movie;
   }
 
   const uploadPoster = async () => {

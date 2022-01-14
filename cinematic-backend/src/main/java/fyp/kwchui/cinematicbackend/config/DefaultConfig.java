@@ -8,17 +8,20 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.Role;
 import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
+import fyp.kwchui.cinematicbackend.service.CinemaService;
 import fyp.kwchui.cinematicbackend.service.UserService;
 
 @Configuration
 public class DefaultConfig {
 
         @Bean
-        CommandLineRunner commandLineRunner(MovieRepository movieRepository, UserService userService) {
+        CommandLineRunner commandLineRunner(MovieRepository movieRepository, UserService userService,
+                        CinemaService cinemaService) {
                 return args -> {
 
                         // Movie
@@ -74,6 +77,11 @@ public class DefaultConfig {
                                                         new ArrayList<>(), new ArrayList<>()));
                         userService.addRoleToUser("Peter", "MEMBER");
                         userService.addRoleToUser("Peter", "ADMIN");
+
+                        // Cinema
+                        cinemaService.addCinema(new Cinema(null, "KINGSWOOD", "1515 5555",
+                                        "Shop G87A, 1/F, G/F, +WOO Phase 2, 18 Tin Yan Road, Tin Shui Wai, Yuen Long, NT",
+                                        22.45734920690819, 114.00374591080308, new ArrayList<>()));
                 };
         }
 }

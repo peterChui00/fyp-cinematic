@@ -1,24 +1,28 @@
 import { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
+import {
+  Stack,
+  Grid,
+  Typography,
+  Button,
+  ButtonGroup,
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
+  TableContainer,
+  Tooltip,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 
 function MovieManagement() {
   const [movies, setMovies] = useState([]);
@@ -43,7 +47,7 @@ function MovieManagement() {
     setLoading(true);
     axios.delete("http://localhost:8080/api/movie/" + id).then((res) => {
       console.log(res);
-      setMovies(movies.filter(movie => movie.id !== id));
+      setMovies(movies.filter((movie) => movie.id !== id));
       setLoading(false);
     });
   }
@@ -67,15 +71,23 @@ function MovieManagement() {
           <TableCell>{movie.starring}</TableCell>
           <TableCell>{movie.distributor}</TableCell>
           <TableCell>
-            <Link to={"/editMovie/" + movie.id}>
-              <IconButton color="primary">
-                <EditIcon />
-              </IconButton>
-            </Link>
-
-            <IconButton color="secondary" onClick={() => deleteMovie(movie.id)}>
-              <DeleteForeverIcon />
-            </IconButton>
+            <Stack direction="row">
+              <Tooltip title="Detail">
+                <Link to={"/editMovie/" + movie.id}>
+                  <IconButton color="primary">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
+              </Tooltip>
+              <Tooltip title="Delete Forever">
+                <IconButton
+                  color="secondary"
+                  onClick={() => deleteMovie(movie.id)}
+                >
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Tooltip>
+            </Stack>
           </TableCell>
         </TableRow>
       );

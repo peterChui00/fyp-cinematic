@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -31,22 +30,22 @@ public class CinemaController {
     /* --- Basic CRUD operations --- */
 
     @GetMapping(path = "/cinema")
-    public ResponseEntity<List<Cinema>> getcinemas() {
+    public ResponseEntity<List<Cinema>> getCinemas() {
         return ResponseEntity.ok(cinemaService.getCinemas());
     }
 
     @GetMapping(path = "/cinema/{cinemaId}")
-    public ResponseEntity<Cinema> getcinemaById(@PathVariable("cinemaId") Long cinemaId) {
+    public ResponseEntity<Cinema> getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
         return ResponseEntity.ok(cinemaService.getCinemaById(cinemaId));
     }
 
     @PostMapping(path = "/cinema")
-    public ResponseEntity<Cinema> addcinema(@RequestBody Cinema cinema) {
+    public ResponseEntity<Cinema> addCinema(@RequestBody Cinema cinema) {
         return new ResponseEntity<Cinema>(cinemaService.addCinema(cinema), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/cinema/{cinemaId}")
-    public ResponseEntity<?> deletecinema(@PathVariable("cinemaId") Long cinemaId) {
+    public ResponseEntity<?> deleteCinema(@PathVariable("cinemaId") Long cinemaId) {
         cinemaService.deleteCinema(cinemaId);
         return ResponseEntity.ok().build();
     }
