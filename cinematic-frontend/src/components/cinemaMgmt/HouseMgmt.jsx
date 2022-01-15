@@ -1,103 +1,109 @@
-import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import axios from "axios";
 import {
-  Box,
+  Stack,
   Grid,
   Typography,
   Button,
   ButtonGroup,
-  Stack,
+  Box,
+  CircularProgress,
+  Paper,
   Table,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableRow,
+  TableHead,
   TableContainer,
-  IconButton,
-  Paper,
-  CircularProgress,
-  /* useMediaQuery, */
   Tooltip,
+  IconButton,
 } from "@mui/material";
-/* import { useTheme } from "@mui/material/styles"; */
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import OtherHousesIcon from "@mui/icons-material/OtherHouses";
+import VideocamIcon from "@mui/icons-material/Videocam";
 import CinemaService from "../../services/CinemaService";
 
-function CinemaManagement() {
-  const [cinemas, setCinemas] = useState([]);
+function HouseMgmt() {
+  const [houses, setHouses] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  /* const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md")); */
 
+  let { cinemaId } = useParams();
   let history = useHistory();
 
-  const addCinema = () => {
-    history.push("/editCinema");
+  const addHouse = () => {
+    history.push("/editHouse");
   };
 
-  const getCinemas = async () => {
+  const getHousesByCinemaId = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await CinemaService.getCinemas();
+      const res = await CinemaService.getHousesById(cinemaId);
       console.log(res);
-      setCinemas(res.data);
+      setHouses(res.data);
       setLoading(false);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [cinemaId]);
 
-  const deleteCinema = (cinemaId) => {
+  const deleteHouse = (cinemaId, houseId) => {
     setLoading(true);
-    CinemaService.deleteCinema(cinemaId).then((res) => {
+    CinemaService.deleteHouse(cinemaId, houseId).then((res) => {
       console.log(res);
-      setCinemas(cinemas.filter((cinema) => cinema.id !== cinemaId));
+      setHouses(houses.filter((house) => house.id !== houseId));
       setLoading(false);
     });
   };
 
   useEffect(() => {
-    getCinemas();
-  }, []);
+    if (typeof cinemaId !== "undefined") {
+      getHousesByCinemaId();
+    }
+  });
 
-  const updateCinema = (cinemaId) => {
-    history.push("/editCinema/" + cinemaId);
+  const backToCinemaMgmt = () => {
+    history.push("/cinemaMgmt");
   };
 
-  const showHouses = (cinemaId) => {
-    history.push("/cinemaMgmt/" + cinemaId + "/houseMgmt");
+  const showMovieShowings = (houseId) => {
+    history.push(
+      "/cinemaMgmt/" + cinemaId + "/houseMgmt/" + houseId + "/movieShowingMgmt"
+    );
   };
 
-  const CinemaRow = () => {
-    return cinemas.map((cinema, index) => {
+  const updateHouse = (houseId) => {
+    history.push(
+      "/cinemaMgmt/" + cinemaId + "/houseMgmt" + houseId + "/editHouse"
+    );
+  };
+
+  const HouseRow = () => {
+    return houses.map((house, index) => {
       return (
         <TableRow key={index}>
-          <TableCell>{cinema.id}</TableCell>
-          <TableCell>{cinema.name}</TableCell>
-          <TableCell>{cinema.phoneNumber}</TableCell>
-          <TableCell>{cinema.address}</TableCell>
-          <TableCell>{cinema.latitude + ", " + cinema.longitude}</TableCell>
+          <TableCell>{house.id}</TableCell>
+          <TableCell>{house.name}</TableCell>
           <TableCell>
             <Stack direction="row">
               <Tooltip title="Houses">
                 <IconButton
                   color="primary"
                   onClick={() => {
-                    showHouses(cinema.id);
+                    showMovieShowings(house.id);
                   }}
                 >
-                  <OtherHousesIcon />
+                  <VideocamIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Detail">
                 <IconButton
                   color="primary"
                   onClick={() => {
-                    updateCinema(cinema.id);
+                    updateHouse(house.id);
                   }}
                 >
                   <EditIcon />
@@ -106,7 +112,7 @@ function CinemaManagement() {
               <Tooltip title="Delete Forever">
                 <IconButton
                   color="secondary"
-                  onClick={() => deleteCinema(cinema.id)}
+                  onClick={() => deleteHouse(cinemaId, house.id)}
                 >
                   <DeleteForeverIcon />
                 </IconButton>
@@ -126,26 +132,33 @@ function CinemaManagement() {
         direction="row"
         justifyContent="space-between"
       >
-        <Grid item>
-          <Typography variant="h5" gutterBottom component="div">
-            Cinema Management
-          </Typography>
-        </Grid>
+        <Tooltip title="Back" placement="right" sx={{ mb: 2 }}>
+          <Button
+            size="small"
+            variant="text"
+            startIcon={<ArrowBackIcon />}
+            onClick={backToCinemaMgmt}
+          >
+            <Typography variant="h6" component="div">
+              House
+            </Typography>
+          </Button>
+        </Tooltip>
         <Grid item>
           <ButtonGroup sx={{ mb: 1 }}>
             <Button
               size="small"
               variant="outlined"
               startIcon={<AddIcon />}
-              onClick={addCinema}
+              onClick={addHouse}
             >
-              Add Cinema
+              Add House
             </Button>
             <Button
               size="small"
               variant="outlined"
               startIcon={<RefreshIcon />}
-              onClick={getCinemas}
+              onClick={getHousesByCinemaId(cinemaId)}
             >
               Refresh
             </Button>
@@ -164,14 +177,11 @@ function CinemaManagement() {
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell>Name</TableCell>
-                <TableCell>Phone No.</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>Location</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <CinemaRow />
+              <HouseRow />
             </TableBody>
           </Table>
         </TableContainer>
@@ -180,4 +190,4 @@ function CinemaManagement() {
   );
 }
 
-export default CinemaManagement;
+export default HouseMgmt;

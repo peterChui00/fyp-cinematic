@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.model.Cinema;
+import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.service.CinemaService;
 
 @RestController
@@ -27,7 +28,7 @@ public class CinemaController {
     @Autowired
     CinemaService cinemaService;
 
-    /* --- Basic CRUD operations --- */
+    /* --- Cinema functions --- */
 
     @GetMapping(path = "/cinema")
     public ResponseEntity<List<Cinema>> getCinemas() {
@@ -55,4 +56,16 @@ public class CinemaController {
         return ResponseEntity.ok(cinemaService.updateCinema(cinemaId, newCinema));
     }
 
+    /* --- House functions --- */
+    @GetMapping(path = "/cinema/{cinemaId}/house")
+    public ResponseEntity<List<House>> getHousesById(@PathVariable("cinemaId") Long cinemaId) {
+        return ResponseEntity.ok(cinemaService.getHousesByCinemaId(cinemaId));
+    }
+
+    @DeleteMapping(path = "/cinema/{cinemaId}/house/{houseId}")
+    public ResponseEntity<?> deleteCinema(@PathVariable("cinemaId") Long cinemaId,
+            @PathVariable("houseId") Long houseId) {
+        cinemaService.deleteHouse(cinemaId, houseId);
+        return ResponseEntity.ok().build();
+    }
 }

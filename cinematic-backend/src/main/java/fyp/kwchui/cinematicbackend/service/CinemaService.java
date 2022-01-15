@@ -84,10 +84,16 @@ public class CinemaService {
         }
     }
 
-    public void updateHouse(Long houseId, House newHouse) {
+    public void updateHouse(Long cinemaId, Long houseId, House newHouse) {
+        Cinema cinema = cinemaRepository.findById(cinemaId)
+                .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new IllegalStateException("House with ID " + houseId + " does not exists."));
-        house.setName(newHouse.getName());
-        houseRepository.save(house);
+        if (!house.getCinema().getId().equals(cinema.getId())) {
+            throw new IllegalStateException();
+        } else {
+            house.setName(newHouse.getName());
+            houseRepository.save(house);
+        }
     }
 }

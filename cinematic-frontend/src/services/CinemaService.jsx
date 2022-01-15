@@ -26,5 +26,13 @@ class CinemaService {
   deleteCinema(cinemaId) {
     return axios.delete(CINEMA_API_BASE_URL + cinemaId);
   }
+
+  getHousesById(cinemaId) {
+    return axios.get(CINEMA_API_BASE_URL + cinemaId + "/house");
+  }
+
+  deleteHouse(cinemaId, houseId) {
+    return axios.delete(CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId);
+  }
 }
 export default new CinemaService();
