@@ -73,7 +73,7 @@ function EditCinema() {
   };
 
   // *** Helper functions ***
-  
+
   function getEditedCinema() {
     return {
       name: name,
@@ -98,147 +98,145 @@ function EditCinema() {
 
   return (
     <Box>
-      <Box>
-        <Tooltip title="Back" placement="right" sx={{ mb: 2 }}>
-          <Button
-            size="small"
-            variant="text"
-            startIcon={<ArrowBackIcon />}
-            onClick={backToCinemaMgmt}
-          >
-            <Typography variant="h6" component="div">
-              {id === null ? "Create new " : "Update "}Cinema
-            </Typography>
-          </Button>
-        </Tooltip>
-        <Grid
-          container
-          spacing={2}
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
+      <Tooltip title="Back" placement="right" sx={{ mb: 2 }}>
+        <Button
+          size="small"
+          variant="text"
+          startIcon={<ArrowBackIcon />}
+          onClick={backToCinemaMgmt}
         >
-          <Grid item xs={12} sm={6}>
-            <TextField
-              required
-              id="name"
-              label="Name"
-              variant="standard"
-              autoFocus
-              fullWidth
-              value={name || ""}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              id="phone_number"
-              label="Phone Number"
-              variant="standard"
-              fullWidth
-              value={phoneNumber || ""}
-              onChange={(e) => {
-                setPhoneNumber(e.target.value);
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              id="address"
-              label="Address"
-              variant="standard"
-              fullWidth
-              value={address || ""}
-              onChange={(e) => {
-                setAddress(e.target.value);
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              required
-              id="latitude"
-              label="Latitude"
-              variant="standard"
-              type="number"
-              fullWidth
-              helperText="Latitude of the cinema location"
-              value={latitude || ""}
-              onChange={(e) => {
-                setLatitude(e.target.value);
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              required
-              id="Longitude"
-              label="Longitude"
-              variant="standard"
-              type="number"
-              fullWidth
-              helperText="Longitude of the cinema location"
-              value={longitude || ""}
-              onChange={(e) => {
-                setLongitude(e.target.value);
-              }}
-            />
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            {id == null ? (
-              <Button
-                fullWidth
-                size="medium"
-                variant="outlined"
-                startIcon={<CheckCircleIcon />}
-                onClick={addCinema}
-                color="success"
-              >
-                Add Cinema
-              </Button>
-            ) : (
-              <Button
-                fullWidth
-                size="medium"
-                variant="outlined"
-                startIcon={<CheckCircleIcon />}
-                onClick={updateCinema}
-                color="success"
-              >
-                Update cinema
-              </Button>
-            )}
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            {id == null ? (
-              <Button
-                fullWidth
-                size="medium"
-                variant="outlined"
-                startIcon={<RestartAltIcon />}
-                onClick={resetForm}
-                color="info"
-              >
-                Reset
-              </Button>
-            ) : (
-              <Button
-                fullWidth
-                size="medium"
-                variant="outlined"
-                startIcon={<RestartAltIcon />}
-                onClick={getCinemaToBeUpdated}
-                color="info"
-              >
-                Reset
-              </Button>
-            )}
-          </Grid>
+          <Typography variant="h6" component="div">
+            {id === null ? "Create new " : "Update "}Cinema
+          </Typography>
+        </Button>
+      </Tooltip>
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="center"
+      >
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="name"
+            label="Name"
+            variant="standard"
+            autoFocus
+            fullWidth
+            value={name || ""}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
         </Grid>
-      </Box>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="phone_number"
+            label="Phone Number"
+            variant="standard"
+            fullWidth
+            value={phoneNumber || ""}
+            onChange={(e) => {
+              setPhoneNumber(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            id="address"
+            label="Address"
+            variant="standard"
+            fullWidth
+            value={address || ""}
+            onChange={(e) => {
+              setAddress(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="latitude"
+            label="Latitude"
+            variant="standard"
+            type="number"
+            fullWidth
+            helperText="Latitude of the cinema location"
+            value={latitude || ""}
+            onChange={(e) => {
+              setLatitude(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="Longitude"
+            label="Longitude"
+            variant="standard"
+            type="number"
+            fullWidth
+            helperText="Longitude of the cinema location"
+            value={longitude || ""}
+            onChange={(e) => {
+              setLongitude(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          {id == null ? (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<CheckCircleIcon />}
+              onClick={addCinema}
+              color="success"
+            >
+              Add Cinema
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<CheckCircleIcon />}
+              onClick={updateCinema}
+              color="success"
+            >
+              Update cinema
+            </Button>
+          )}
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          {id == null ? (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<RestartAltIcon />}
+              onClick={resetForm}
+              color="info"
+            >
+              Reset
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              size="medium"
+              variant="outlined"
+              startIcon={<RestartAltIcon />}
+              onClick={getCinemaToBeUpdated}
+              color="info"
+            >
+              Reset
+            </Button>
+          )}
+        </Grid>
+      </Grid>
     </Box>
   );
 }

@@ -58,7 +58,7 @@ public class CinemaController {
 
     /* --- House functions --- */
     @GetMapping(path = "/cinema/{cinemaId}/house")
-    public ResponseEntity<List<House>> getHousesById(@PathVariable("cinemaId") Long cinemaId) {
+    public ResponseEntity<List<House>> getHousesByCinemaId(@PathVariable("cinemaId") Long cinemaId) {
         return ResponseEntity.ok(cinemaService.getHousesByCinemaId(cinemaId));
     }
 

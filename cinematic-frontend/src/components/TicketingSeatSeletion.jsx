@@ -18,7 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from "@mui/icons-material/Cancel";
 import { CardActionArea } from "@mui/material";
 import clsx from "clsx";
 import "./styles.css";
@@ -92,27 +92,6 @@ function TicketingSeatSeletion() {
 
   const seats = Array.from({ length: 8 * 8 }, (_, i) => i);
 
-  function Movies({ movie, onChange }) {
-    return (
-      <div className="Movies">
-        <label htmlFor="movie">Pick a movie</label>
-        <select
-          id="movie"
-          value={movie.name}
-          onChange={(e) => {
-            onChange(movies.find((movie) => movie.name === e.target.value));
-          }}
-        >
-          {movies.map((movie) => (
-            <option key={movie.name} value={movie.name}>
-              {movie.name} (${movie.price})
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-
   function ShowCase() {
     return (
       <ul className="ShowCase">
@@ -129,7 +108,7 @@ function TicketingSeatSeletion() {
     );
   }
 
-  function Cinema({ movie, selectedSeats, onSelectedSeatsChange }) {
+  function Cinema({ selectedSeats, onSelectedSeatsChange }) {
     function handleSelectedState(seat) {
       const isSelected = selectedSeats.includes(seat);
       if (isSelected) {
@@ -148,7 +127,7 @@ function TicketingSeatSeletion() {
         <div className="seats">
           {seats.map((seat) => {
             const isSelected = selectedSeats.includes(seat);
-            const isOccupied = movie.occupied.includes(seat);
+            const isOccupied = movies.occupied.includes(seat);
             return (
               <span
                 tabIndex="0"
@@ -177,18 +156,10 @@ function TicketingSeatSeletion() {
   }
 
   const SeatPlan = () => (
-    <Box sx={{mb:2}}>
+    <Box sx={{ mb: 2 }}>
       <div className="SeatPlan">
-        {/*  <Movies
-    movie={selectedMovie}
-    onChange={(movie) => {
-      setSelectedSeats([]);
-      setSelectedMovie(movie);
-    }}
-  /> */}
         <ShowCase />
         <Cinema
-          movie={selectedMovie}
           selectedSeats={selectedSeats}
           onSelectedSeatsChange={(selectedSeats) =>
             setSelectedSeats(selectedSeats)
@@ -198,11 +169,6 @@ function TicketingSeatSeletion() {
         <p className="info">
           You have selected{" "}
           <span className="count">{selectedSeats.length}</span> seats.
-          {/*  for the
-    price of{" "}
-    <span className="total">
-      {selectedSeats.length * selectedMovie.price}$
-    </span> */}
         </p>
       </div>
       <Button
@@ -271,8 +237,12 @@ function TicketingSeatSeletion() {
   };
 
   const Payment = () => (
-    <Box sx={{ px: 1, mb:2 }}>
-      <Typography variant="body2" gutterBottom sx={{ml: "auto", textAlign: "right"}}>
+    <Box sx={{ px: 1, mb: 2 }}>
+      <Typography
+        variant="body2"
+        gutterBottom
+        sx={{ ml: "auto", textAlign: "right" }}
+      >
         Time remaining: 10:00
       </Typography>
       <Typography variant="h6" gutterBottom>
@@ -584,7 +554,7 @@ function TicketingSeatSeletion() {
 
       <Divider sx={{ my: 2 }} />
       {/*  */}
-      {step === 0 ? <SeatPlan  /> : step === 1 ? <Payment /> : <Complete />}
+      {step === 0 ? <SeatPlan /> : step === 1 ? <Payment /> : <Complete />}
     </Box>
   );
 }

@@ -462,6 +462,11 @@ function ResponsiveDrawer(props) {
               component={HouseMgmt}
             />
             <Route
+              path="/cinemaMgmt/:cinemaId/houseMgmt/editHouse"
+              exact
+              component={EditHouse}
+            />
+            <Route
               path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/editHouse"
               exact
               component={EditHouse}

@@ -27,7 +27,7 @@ class CinemaService {
     return axios.delete(CINEMA_API_BASE_URL + cinemaId);
   }
 
-  getHousesById(cinemaId) {
+  getHousesByCinemaId(cinemaId) {
     return axios.get(CINEMA_API_BASE_URL + cinemaId + "/house");
   }
 

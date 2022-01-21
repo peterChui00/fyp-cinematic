@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import axios from "axios";
 import {
   Stack,
   Grid,
@@ -28,27 +27,29 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import CinemaService from "../../services/CinemaService";
 
 function HouseMgmt() {
+  let history = useHistory();
+  let { cinemaId } = useParams();
+
+  const [cinId, setCinId] = useState(cinemaId);
   const [houses, setHouses] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
-  let { cinemaId } = useParams();
-  let history = useHistory();
-
-  const addHouse = () => {
-    history.push("/editHouse");
-  };
-
   const getHousesByCinemaId = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await CinemaService.getHousesById(cinemaId);
+      const res = await CinemaService.getHousesByCinemaId(cinId);
       console.log(res);
       setHouses(res.data);
-      setLoading(false);
     } catch (err) {
       console.error(err);
     }
-  }, [cinemaId]);
+    setLoading(false);
+  }, [cinId]);
+
+  useEffect(() => {
+    console.log("cinemaId:" + cinemaId + " cinId:" + cinId);
+    getHousesByCinemaId();
+  }, [cinId, cinemaId, getHousesByCinemaId]);
 
   const deleteHouse = (cinemaId, houseId) => {
     setLoading(true);
@@ -59,11 +60,15 @@ function HouseMgmt() {
     });
   };
 
-  useEffect(() => {
-    if (typeof cinemaId !== "undefined") {
-      getHousesByCinemaId();
-    }
-  });
+  const addHouse = () => {
+    history.push("/cinemaMgmt/" + cinemaId + "/houseMgmt/editHouse");
+  };
+
+  const updateHouse = (houseId) => {
+    history.push(
+      "/cinemaMgmt/" + cinemaId + "/houseMgmt" + houseId + "/editHouse"
+    );
+  };
 
   const backToCinemaMgmt = () => {
     history.push("/cinemaMgmt");
@@ -72,12 +77,6 @@ function HouseMgmt() {
   const showMovieShowings = (houseId) => {
     history.push(
       "/cinemaMgmt/" + cinemaId + "/houseMgmt/" + houseId + "/movieShowingMgmt"
-    );
-  };
-
-  const updateHouse = (houseId) => {
-    history.push(
-      "/cinemaMgmt/" + cinemaId + "/houseMgmt" + houseId + "/editHouse"
     );
   };
 
@@ -132,7 +131,7 @@ function HouseMgmt() {
         direction="row"
         justifyContent="space-between"
       >
-        <Tooltip title="Back" placement="right" sx={{ mb: 2 }}>
+        <Tooltip title="Back" placement="right" sx={{ m: 2 }}>
           <Button
             size="small"
             variant="text"
@@ -158,7 +157,9 @@ function HouseMgmt() {
               size="small"
               variant="outlined"
               startIcon={<RefreshIcon />}
-              onClick={getHousesByCinemaId(cinemaId)}
+              onClick={() => {
+                getHousesByCinemaId(cinId);
+              }}
             >
               Refresh
             </Button>
