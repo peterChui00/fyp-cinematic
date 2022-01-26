@@ -1,5 +1,6 @@
 package fyp.kwchui.cinematicbackend.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
+import fyp.kwchui.cinematicbackend.model.Seat;
 import fyp.kwchui.cinematicbackend.service.CinemaService;
 
 @RestController
@@ -67,5 +69,10 @@ public class CinemaController {
             @PathVariable("houseId") Long houseId) {
         cinemaService.deleteHouse(cinemaId, houseId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(path = "/cinema/{cinemaId}/house/seatingPlan")
+    public ResponseEntity<List<List<Seat>>> getSeatingPlan() {
+        return ResponseEntity.ok(cinemaService.getSeatingPlan());
     }
 }

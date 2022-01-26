@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import fyp.kwchui.cinematicbackend.model.Cinema;
+import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.Role;
 import fyp.kwchui.cinematicbackend.model.User;
@@ -79,9 +80,12 @@ public class DefaultConfig {
                         userService.addRoleToUser("Peter", "ADMIN");
 
                         // Cinema
-                        cinemaService.addCinema(new Cinema(null, "KINGSWOOD", "1515 5555",
+                        Cinema c1 = cinemaService.addCinema(new Cinema(null, "KINGSWOOD", "1515 5555",
                                         "Shop G87A, 1/F, G/F, +WOO Phase 2, 18 Tin Yan Road, Tin Shui Wai, Yuen Long, NT",
                                         22.45734920690819, 114.00374591080308, new ArrayList<>()));
+
+                        // House
+                        cinemaService.addHouse(c1.getId(), new House(null, "House1", "alphabet", c1, new ArrayList<>()));
                 };
         }
 }

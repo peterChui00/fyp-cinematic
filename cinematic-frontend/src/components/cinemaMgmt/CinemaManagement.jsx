@@ -44,6 +44,7 @@ function CinemaManagement() {
       setLoading(true);
       const res = await CinemaService.getCinemas();
       console.log(res);
+      console.log(res.data);
       setCinemas(res.data);
       setLoading(false);
     } catch (err) {

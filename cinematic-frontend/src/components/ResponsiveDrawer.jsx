@@ -436,7 +436,7 @@ function ResponsiveDrawer(props) {
           flexGrow: 1,
           px: 2,
           pt: 7,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+         /*  width: { sm: `calc(100% - ${drawerWidth}px)` }, */
         }}
       >
         {/* <Toolbar/> */}

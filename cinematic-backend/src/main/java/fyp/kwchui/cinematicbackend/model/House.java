@@ -4,11 +4,15 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class House {
@@ -18,9 +22,11 @@ public class House {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "house_seq")
     private Long id;
     private String name;
+    private String rowStyle;
     @ManyToOne
     @JoinColumn(name = "cinema_id")
+    @JsonIgnore
     private Cinema cinema;
-    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
     private List<MovieShowing> movieShowings;
 }

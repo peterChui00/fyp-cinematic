@@ -92,6 +92,27 @@ function TicketingSeatSeletion() {
 
   const seats = Array.from({ length: 8 * 8 }, (_, i) => i);
 
+  function Movies({ movie, onChange }) {
+    return (
+      <div className="Movies">
+        <label htmlFor="movie">Pick a movie</label>
+        <select
+          id="movie"
+          value={movie.name}
+          onChange={(e) => {
+            onChange(movies.find((movie) => movie.name === e.target.value));
+          }}
+        >
+          {movies.map((movie) => (
+            <option key={movie.name} value={movie.name}>
+              {movie.name} (${movie.price})
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+
   function ShowCase() {
     return (
       <ul className="ShowCase">
@@ -108,7 +129,7 @@ function TicketingSeatSeletion() {
     );
   }
 
-  function Cinema({ selectedSeats, onSelectedSeatsChange }) {
+  function Cinema({ movie, selectedSeats, onSelectedSeatsChange }) {
     function handleSelectedState(seat) {
       const isSelected = selectedSeats.includes(seat);
       if (isSelected) {
@@ -127,7 +148,7 @@ function TicketingSeatSeletion() {
         <div className="seats">
           {seats.map((seat) => {
             const isSelected = selectedSeats.includes(seat);
-            const isOccupied = movies.occupied.includes(seat);
+            const isOccupied = movie.occupied.includes(seat);
             return (
               <span
                 tabIndex="0"
@@ -156,15 +177,18 @@ function TicketingSeatSeletion() {
   }
 
   const SeatPlan = () => (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ mb: 2 }} >
       <div className="SeatPlan">
-        <ShowCase />
-        <Cinema
-          selectedSeats={selectedSeats}
-          onSelectedSeatsChange={(selectedSeats) =>
-            setSelectedSeats(selectedSeats)
-          }
-        />
+        
+          <ShowCase />
+          <Cinema
+            movie={selectedMovie}
+            selectedSeats={selectedSeats}
+            onSelectedSeatsChange={(selectedSeats) =>
+              setSelectedSeats(selectedSeats)
+            }
+          />
+    
 
         <p className="info">
           You have selected{" "}

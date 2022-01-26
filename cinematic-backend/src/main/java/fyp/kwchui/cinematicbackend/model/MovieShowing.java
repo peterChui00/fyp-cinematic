@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +22,7 @@ public class MovieShowing {
     private LocalDateTime showtime;
     @ManyToOne
     @JoinColumn(name = "house_id")
+    @JsonIgnore
     private House house;
     @OneToOne
     private Movie movie;

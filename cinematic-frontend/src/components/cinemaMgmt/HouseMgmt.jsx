@@ -66,7 +66,7 @@ function HouseMgmt() {
 
   const updateHouse = (houseId) => {
     history.push(
-      "/cinemaMgmt/" + cinemaId + "/houseMgmt" + houseId + "/editHouse"
+      "/cinemaMgmt/" + cinemaId + "/houseMgmt/" + houseId + "/editHouse"
     );
   };
 
@@ -88,7 +88,7 @@ function HouseMgmt() {
           <TableCell>{house.name}</TableCell>
           <TableCell>
             <Stack direction="row">
-              <Tooltip title="Houses">
+              <Tooltip title="Movie Showings">
                 <IconButton
                   color="primary"
                   onClick={() => {
