@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -14,6 +14,9 @@ import {
   ToggleButtonGroup,
   Grid,
   InputAdornment,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -39,13 +42,7 @@ function EditHouse() {
   const [numOfCol, setNumOfCol] = useState(8);
   const [rowStyle, setRowStyle] = useState("alphabet");
 
-  useEffect(() => {
-    console.log("cinemaId:" + cinemaId + " | cinId:" + cinId);
-    console.log("houseId:" + houseId + " | id:" + id);
-    createDefaultSeat(8, 8);
-  }, []);
-
-  const createDefaultSeat = (rows, cols) => {
+  const createDefaultSeat = useCallback((rows, cols) => {
     let defaultSeatBox = [];
     for (var i = 0; i < rows; i++) {
       let rowArray = [];
@@ -55,12 +52,62 @@ function EditHouse() {
       defaultSeatBox.push(rowArray);
     }
     setDefaultSeat(defaultSeatBox);
+  }, []);
+
+  useEffect(() => {
+    console.log(
+      "cinemaId: " +
+        cinemaId +
+        " | cinId: " +
+        cinId +
+        " | houseId: " +
+        houseId +
+        " | id: " +
+        id +
+        " | Row style: " +
+        rowStyle +
+        " | numOfRow: " +
+        numOfRow +
+        " | numOfCol: " +
+        numOfCol
+    );
     console.log(defaultSeat);
+  }, [cinemaId, cinId, houseId, id, rowStyle, defaultSeat, numOfRow, numOfCol]);
+
+  useEffect(() => {
+    if (numOfRow !== "" && numOfCol !== "") {
+      createDefaultSeat(numOfRow, numOfCol);
+    }
+  }, [createDefaultSeat, numOfRow, numOfCol]);
+
+  const handleRowStyleChange = (event) => {
+    setRowStyle(event.target.value);
   };
 
-  const handleRowStyleChange = (event, newRowStyle) => {
-    setRowStyle(newRowStyle);
+  function getEditedHouse() {
+    let requestDefaultSeat = [];
+    defaultSeat.forEach((row) => {
+      row.forEach((seat) => {
+        requestDefaultSeat.push(seat);
+      });
+    });
+    return {
+      name: name,
+      rowStyle: rowStyle,
+      seatingPlanSeats: requestDefaultSeat,
+    };
+  }
+
+  const addHouse = async () => {
+    try {
+      const res = await CinemaService.addHouse(cinId, id, getEditedHouse());
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  const updateHouse = () => {};
 
   const backToHouseMgmt = () => {
     history.push("/cinemaMgmt/" + cinId + "/houseMgmt");
@@ -112,9 +159,11 @@ function EditHouse() {
             id="number_of_row"
             type="number"
             value={numOfRow}
-            /* onChange={(e) => {
-              setDuration(e.target.value);
-            }} */
+            onChange={(e) => {
+              if (e.target.value !== null || e.target.value !== "") {
+                setNumOfRow(e.target.value);
+              }
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">row(s)</InputAdornment>
@@ -131,9 +180,9 @@ function EditHouse() {
             id="number_of_column"
             type="number"
             value={numOfCol}
-            /* onChange={(e) => {
-              setDuration(e.target.value);
-            }} */
+            onChange={(e) => {
+              setNumOfCol(e.target.value);
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">column(s)</InputAdornment>
@@ -145,27 +194,32 @@ function EditHouse() {
             required
             variant="standard"
           />
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={3} alignItems="center">
             <Typography variant="subtitle1">Row Style</Typography>
-            <ToggleButtonGroup
-              color="primary"
+            <RadioGroup
+              row
+              aria-labelledby="row-style-radio-buttons-group"
+              name="row-style-radio-buttons-group"
               value={rowStyle}
-              exclusive
               onChange={handleRowStyleChange}
             >
-              <ToggleButton value="alphabet">
-                <AbcIcon sx={{ mr: 1 }} />
-                Alphabetical
-              </ToggleButton>
-              <ToggleButton value="number">
-                <FormatListNumberedIcon sx={{ mr: 1 }} />
-                Numerical
-              </ToggleButton>
-            </ToggleButtonGroup>
+              <FormControlLabel
+                value="alphabet"
+                control={<Radio />}
+                label="Alphabetical"
+              />
+              <FormControlLabel
+                value="number"
+                control={<Radio />}
+                label="Numerical"
+              />
+            </RadioGroup>
           </Stack>
         </Stack>
 
-        <Container><Box></Box></Container>
+        <Container>
+          <Box></Box>
+        </Container>
         {defaultSeat.map((row, rowIndex) => {
           return (
             <Stack
@@ -174,7 +228,9 @@ function EditHouse() {
               spacing={2}
               justifyContent="center"
             >
-              <Box>{alphabet[rowIndex]}</Box>
+              <Box>
+                {rowStyle === "alphabet" ? alphabet[rowIndex] : rowIndex + 1}
+              </Box>
               {row.map((seat, seatIndex) => {
                 const isSelected = selectedDefaultSeat.includes(seat);
                 return (
@@ -190,6 +246,41 @@ function EditHouse() {
             </Stack>
           );
         })}
+      </Box>
+      <Box sx={{ my: 2 }}>
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
+          <Grid item xs={6} sm={3}>
+            {id === undefined ? (
+              <Button
+                size="medium"
+                variant="outlined"
+                fullWidth
+                startIcon={<CheckCircleIcon />}
+                onClick={addHouse}
+                color="success"
+              >
+                Add house
+              </Button>
+            ) : (
+              <Button
+                fullWidth
+                size="medium"
+                variant="outlined"
+                startIcon={<CheckCircleIcon />}
+                onClick={updateHouse}
+                color="success"
+              >
+                Update house
+              </Button>
+            )}
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );

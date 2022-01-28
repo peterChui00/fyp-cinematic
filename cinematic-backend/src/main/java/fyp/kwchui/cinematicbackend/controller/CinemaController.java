@@ -25,6 +25,7 @@ import fyp.kwchui.cinematicbackend.service.CinemaService;
 @RestController
 @RequestMapping(path = "/api")
 @CrossOrigin(origins = "http://localhost:3000/")
+
 public class CinemaController {
 
     @Autowired
@@ -64,15 +65,20 @@ public class CinemaController {
         return ResponseEntity.ok(cinemaService.getHousesByCinemaId(cinemaId));
     }
 
+    @PostMapping(path = "/cinema/{cinemaId}/house")
+    public ResponseEntity<House> addHouse(
+            @PathVariable("cinemaId") Long cinemaId,
+            @RequestBody House house) {
+        return new ResponseEntity<House>(
+                cinemaService.addHouse(cinemaId, house), HttpStatus.CREATED);
+    }
+
     @DeleteMapping(path = "/cinema/{cinemaId}/house/{houseId}")
-    public ResponseEntity<?> deleteCinema(@PathVariable("cinemaId") Long cinemaId,
+    public ResponseEntity<?> deleteCinema(
+            @PathVariable("cinemaId") Long cinemaId,
             @PathVariable("houseId") Long houseId) {
         cinemaService.deleteHouse(cinemaId, houseId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(path = "/cinema/{cinemaId}/house/seatingPlan")
-    public ResponseEntity<List<List<Seat>>> getSeatingPlan() {
-        return ResponseEntity.ok(cinemaService.getSeatingPlan());
-    }
 }

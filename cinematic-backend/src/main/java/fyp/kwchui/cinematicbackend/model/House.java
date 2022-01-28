@@ -28,5 +28,7 @@ public class House {
     @JsonIgnore
     private Cinema cinema;
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
+    private List<SeatingPlanSeat> seatingPlanSeats;
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
     private List<MovieShowing> movieShowings;
 }

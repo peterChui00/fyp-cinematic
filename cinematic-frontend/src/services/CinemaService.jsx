@@ -3,6 +3,8 @@ import axios from "axios";
 const CINEMA_API_BASE_URL = "http://localhost:8080/api/cinema/";
 
 class CinemaService {
+  // *** Cinema functions ***
+
   getCinemas() {
     return axios.get(CINEMA_API_BASE_URL);
   }
@@ -27,12 +29,18 @@ class CinemaService {
     return axios.delete(CINEMA_API_BASE_URL + cinemaId);
   }
 
+  // *** House functions ***
+
   getHousesByCinemaId(cinemaId) {
     return axios.get(CINEMA_API_BASE_URL + cinemaId + "/house");
   }
 
   deleteHouse(cinemaId, houseId) {
     return axios.delete(CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId);
+  }
+
+  addHouse(cinemaId, houseId, house) {
+    return axios.post(CINEMA_API_BASE_URL + cinemaId + "/house", house);
   }
 }
 export default new CinemaService();

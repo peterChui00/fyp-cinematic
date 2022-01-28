@@ -85,7 +85,9 @@ public class DefaultConfig {
                                         22.45734920690819, 114.00374591080308, new ArrayList<>()));
 
                         // House
-                        cinemaService.addHouse(c1.getId(), new House(null, "House1", "alphabet", c1, new ArrayList<>()));
+                        cinemaService.addHouse(c1.getId(),
+                                        new House(null, "House1", "alphabet", c1, new ArrayList<>(),
+                                                        new ArrayList<>()));
                 };
         }
 }

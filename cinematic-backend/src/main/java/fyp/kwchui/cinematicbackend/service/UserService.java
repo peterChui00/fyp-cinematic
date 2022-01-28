@@ -35,28 +35,28 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public List<User> getUsers() {
-        log.info("Fetching all users.");
+        log.info("Fetching all users");
         return userRepository.findAll();
     }
 
     public User getUserByUsername(String username) {
-        log.info("Fetching user [{}].", username);
+        log.info("Fetching user [{}]", username);
         return userRepository.findByUsername(username).get();
     }
 
     public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        log.info("Saving new user to DB.");
+        log.info("Adding new user [{}]", user.getUsername());
         return userRepository.save(user);
     }
 
     public Role addRole(Role role) {
-        log.info("Saving new role {} to DB.", role.getName());
+        log.info("Adding new role [{}]", role.getName());
         return roleRepository.save(role);
     }
 
     public void addRoleToUser(String username, String roleName) {
-        log.info("Adding role {} to user {}.", roleName, username);
+        log.info("Granting role [{}] to user [{}]", roleName, username);
         User user = userRepository.findByUsername(username).orElseThrow();
         Role role = roleRepository.findByName(roleName).orElseThrow();
         user.getRoles().add(role);
