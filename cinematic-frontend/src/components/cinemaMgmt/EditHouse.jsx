@@ -71,8 +71,18 @@ function EditHouse() {
         " | numOfCol: " +
         numOfCol
     );
-    console.log(defaultSeat);
-  }, [cinemaId, cinId, houseId, id, rowStyle, defaultSeat, numOfRow, numOfCol]);
+    console.log(defaultSeat, selectedDefaultSeat);
+  }, [
+    cinemaId,
+    cinId,
+    houseId,
+    id,
+    rowStyle,
+    defaultSeat,
+    numOfRow,
+    numOfCol,
+    selectedDefaultSeat,
+  ]);
 
   useEffect(() => {
     if (numOfRow !== "" && numOfCol !== "") {
@@ -82,6 +92,43 @@ function EditHouse() {
 
   const handleRowStyleChange = (event) => {
     setRowStyle(event.target.value);
+  };
+
+  const handleSelectedSeatChange = (seat) => {
+    let modifiedSeat = {};
+    if (selectedDefaultSeat.includes(seat)) {
+      setSelectedDefaultSeat(
+        selectedDefaultSeat.filter((selectedSeat) => selectedSeat !== seat)
+      );
+      setDefaultSeat(
+        defaultSeat.map((row) =>
+          row.map((s) => {
+            if (s.row === seat.row && s.column === seat.column) {
+              modifiedSeat.row = seat.row;
+              modifiedSeat.column = seat.column;
+              modifiedSeat.available = true;
+              return modifiedSeat;
+            }
+            return s;
+          })
+        )
+      );
+    } else {
+      setDefaultSeat(
+        defaultSeat.map((row) =>
+          row.map((s) => {
+            if (s.row === seat.row && s.column === seat.column) {
+              modifiedSeat.row = seat.row;
+              modifiedSeat.column = seat.column;
+              modifiedSeat.available = false;
+              return modifiedSeat;
+            }
+            return s;
+          })
+        )
+      );
+      setSelectedDefaultSeat([...selectedDefaultSeat, modifiedSeat]);
+    }
   };
 
   function getEditedHouse() {
@@ -107,7 +154,14 @@ function EditHouse() {
     }
   };
 
-  const updateHouse = () => {};
+  const updateHouse = async () => {
+    try {
+      const res = await CinemaService.updateHouse(cinId, id, getEditedHouse());
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const backToHouseMgmt = () => {
     history.push("/cinemaMgmt/" + cinId + "/houseMgmt");
@@ -144,6 +198,7 @@ function EditHouse() {
       </Box>
 
       <Divider sx={{ m: 3 }} />
+
       <Box>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Seating Plan
@@ -162,6 +217,7 @@ function EditHouse() {
             onChange={(e) => {
               if (e.target.value !== null || e.target.value !== "") {
                 setNumOfRow(e.target.value);
+                setSelectedDefaultSeat([]);
               }
             }}
             InputProps={{
@@ -181,7 +237,10 @@ function EditHouse() {
             type="number"
             value={numOfCol}
             onChange={(e) => {
-              setNumOfCol(e.target.value);
+              if (e.target.value !== null || e.target.value !== "") {
+                setNumOfCol(e.target.value);
+                setSelectedDefaultSeat([]);
+              }
             }}
             InputProps={{
               endAdornment: (
@@ -220,6 +279,7 @@ function EditHouse() {
         <Container>
           <Box></Box>
         </Container>
+
         {defaultSeat.map((row, rowIndex) => {
           return (
             <Stack
@@ -236,8 +296,11 @@ function EditHouse() {
                 return (
                   <Box
                     key={seatIndex}
-                    className={clsx("seat", isSelected && "selected")}
+                    className={clsx("seat", isSelected && "unavailable")}
                     sx={{ color: "black", textAlign: "center" }}
+                    onClick={() => {
+                      handleSelectedSeatChange(seat);
+                    }}
                   >
                     {seat.column + 1}
                   </Box>
@@ -247,6 +310,7 @@ function EditHouse() {
           );
         })}
       </Box>
+
       <Box sx={{ my: 2 }}>
         <Grid
           container

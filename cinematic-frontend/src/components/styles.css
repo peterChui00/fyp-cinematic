@@ -131,6 +131,10 @@
   background: #81c9f8 !important;
 }
 
+.seat.unavailable {
+  background: #555555 !important;
+}
+
 .seat.occupied {
   background: #e79c9c;
 }

@@ -42,5 +42,9 @@ class CinemaService {
   addHouse(cinemaId, houseId, house) {
     return axios.post(CINEMA_API_BASE_URL + cinemaId + "/house", house);
   }
+
+  updateHouse(cinemaId, houseId, house) {
+    return axios.put(CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId, house);
+  }
 }
 export default new CinemaService();

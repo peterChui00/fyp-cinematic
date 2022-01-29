@@ -1,6 +1,5 @@
 package fyp.kwchui.cinematicbackend.controller;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
-import fyp.kwchui.cinematicbackend.model.Seat;
 import fyp.kwchui.cinematicbackend.service.CinemaService;
 
 @RestController

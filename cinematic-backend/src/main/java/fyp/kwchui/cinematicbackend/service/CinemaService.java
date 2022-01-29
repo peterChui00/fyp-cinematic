@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
+import fyp.kwchui.cinematicbackend.model.SeatingPlanSeat;
 import fyp.kwchui.cinematicbackend.repository.CinemaRepository;
 import fyp.kwchui.cinematicbackend.repository.HouseRepository;
+import fyp.kwchui.cinematicbackend.repository.SeatingPlanSeatRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -22,6 +24,9 @@ public class CinemaService {
 
     @Autowired
     HouseRepository houseRepository;
+
+    @Autowired
+    SeatingPlanSeatRepository seatingPlanSeatRepository;
 
     /* --- Cinema functions --- */
 
@@ -71,6 +76,11 @@ public class CinemaService {
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
         house.setCinema(cinema);
+        List<SeatingPlanSeat> seatingPlanSeats = house.getSeatingPlanSeats();
+        for (SeatingPlanSeat seatingPlanSeat : seatingPlanSeats) {
+            seatingPlanSeat.setHouse(house);
+        }
+        house.setSeatingPlanSeats(seatingPlanSeats);
         log.info("Adding House [{}] with {} seats", house.getName(), house.getSeatingPlanSeats().size());
         return houseRepository.save(house);
     }
