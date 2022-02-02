@@ -18,11 +18,12 @@ public class SeatingPlanSeat {
     @Id
     @SequenceGenerator(name = "seating_plan_seat_seq", sequenceName = "seating_plan_seat_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seating_plan_seat_seq")
+    @JsonIgnore
     private Long id;
     @Column(name = "seat_row")
-    private String row;
+    private int row;
     @Column(name = "seat_column")
-    private String column;
+    private int column;
     private boolean isAvailable;
     @ManyToOne
     @JoinColumn(name = "house_id")

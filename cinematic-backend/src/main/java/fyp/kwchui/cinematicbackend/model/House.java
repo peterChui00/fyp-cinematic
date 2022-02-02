@@ -23,6 +23,8 @@ public class House {
     private Long id;
     private String name;
     private String rowStyle;
+    private int numOfRow;
+    private int numOfCol;
     @ManyToOne
     @JoinColumn(name = "cinema_id")
     @JsonIgnore

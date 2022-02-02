@@ -1,11 +1,13 @@
 package fyp.kwchui.cinematicbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fyp.kwchui.cinematicbackend.dto.HouseDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.model.SeatingPlanSeat;
@@ -68,8 +70,46 @@ public class CinemaService {
         return cinemaRepository.findById(cinemaId).get().getHouses();
     }
 
-    public House getHouseById(Long houseId) {
-        return houseRepository.findById(houseId).get();
+    public HouseDto getHouseById(Long cinemaId, Long houseId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId)
+                .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new IllegalStateException("House with ID " + houseId + " does not exists."));
+        if (!house.getCinema().getId().equals(cinema.getId())) {
+            throw new IllegalStateException();
+        } else {
+            /*
+             * Convert the list of seatingPlanSeat into a suitable nested list and
+             * create a list of unavailable seats for front-end usage
+             */
+            int numOfRow = house.getNumOfRow();
+            List<SeatingPlanSeat> seatingPlanSeats = house.getSeatingPlanSeats();
+            List<List<SeatingPlanSeat>> nestedSeatingPlanSeats = new ArrayList<List<SeatingPlanSeat>>(numOfRow);
+            List<SeatingPlanSeat> unavailableSeatingPlanSeats = new ArrayList<SeatingPlanSeat>();
+
+            for (int i = 0; i < numOfRow; i++) {
+                nestedSeatingPlanSeats.add(new ArrayList<SeatingPlanSeat>());
+            }
+
+            int curRow = -1;
+            for (int i = 0; i < seatingPlanSeats.size(); i++) {
+                int row = seatingPlanSeats.get(i).getRow();
+                if (curRow != row) {
+                    curRow = row;
+                }
+                nestedSeatingPlanSeats.get(curRow).add(seatingPlanSeats.get(i));
+                if (!seatingPlanSeats.get(i).isAvailable()) {
+                    unavailableSeatingPlanSeats.add(seatingPlanSeats.get(i));
+                }
+            }
+
+            return new HouseDto(house.getName(),
+                    house.getRowStyle(),
+                    numOfRow,
+                    house.getNumOfCol(),
+                    nestedSeatingPlanSeats,
+                    unavailableSeatingPlanSeats);
+        }
     }
 
     public House addHouse(Long cinemaId, House house) {
@@ -97,16 +137,31 @@ public class CinemaService {
         }
     }
 
-    public void updateHouse(Long cinemaId, Long houseId, House newHouse) {
+    public House updateHouse(Long cinemaId, Long houseId, House newHouse) {
+        log.info("hI: {}, cI: {}", houseId, cinemaId);
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new IllegalStateException("House with ID " + houseId + " does not exists."));
-        if (!house.getCinema().getId().equals(cinema.getId())) {
+        if (house.getCinema().getId() != cinema.getId()) {
             throw new IllegalStateException();
         } else {
+
             house.setName(newHouse.getName());
-            houseRepository.save(house);
+            house.setNumOfRow(newHouse.getNumOfRow());
+            house.setNumOfCol(newHouse.getNumOfCol());
+            log.info("\nUpdating:\nName: {}\nRow: {}\nCol: {}", house.getName(), house.getNumOfRow(),
+                    house.getNumOfCol());
+            if (house.getSeatingPlanSeats() != null) {
+                List<SeatingPlanSeat> seatingPlanSeats = house.getSeatingPlanSeats();
+                seatingPlanSeatRepository.deleteAllInBatch(seatingPlanSeats);
+                seatingPlanSeats = newHouse.getSeatingPlanSeats();
+                for (SeatingPlanSeat seatingPlanSeat : seatingPlanSeats) {
+                    seatingPlanSeat.setHouse(house);
+                }
+                house.setSeatingPlanSeats(seatingPlanSeats);
+            }
+            return houseRepository.save(house);
         }
     }
 

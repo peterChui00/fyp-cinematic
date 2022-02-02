@@ -86,7 +86,7 @@ public class DefaultConfig {
 
                         // House
                         cinemaService.addHouse(c1.getId(),
-                                        new House(null, "House1", "alphabet", c1, new ArrayList<>(),
+                                        new House(null, "House1", "alphabet", 0, 0, c1, new ArrayList<>(),
                                                         new ArrayList<>()));
                 };
         }

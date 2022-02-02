@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import fyp.kwchui.cinematicbackend.dto.HouseDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.service.CinemaService;
@@ -62,9 +63,14 @@ public class CinemaController {
         return ResponseEntity.ok(cinemaService.getHousesByCinemaId(cinemaId));
     }
 
+    @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}")
+    public ResponseEntity<HouseDto> getHouseById(@PathVariable("cinemaId") Long cinemaId,
+            @PathVariable("houseId") Long houseId) {
+        return ResponseEntity.ok(cinemaService.getHouseById(cinemaId, houseId));
+    }
+
     @PostMapping(path = "/cinema/{cinemaId}/house")
-    public ResponseEntity<House> addHouse(
-            @PathVariable("cinemaId") Long cinemaId,
+    public ResponseEntity<House> addHouse(@PathVariable("cinemaId") Long cinemaId,
             @RequestBody House house) {
         return new ResponseEntity<House>(
                 cinemaService.addHouse(cinemaId, house), HttpStatus.CREATED);
@@ -78,4 +84,9 @@ public class CinemaController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping(path = "/cinema/{cinemaId}/house/{houseId}")
+    public ResponseEntity<House> updateHouse(@PathVariable("cinemaId") Long cinemaId,
+            @PathVariable("houseId") Long houseId, @RequestBody House newHouse) {
+        return ResponseEntity.ok(cinemaService.updateHouse(cinemaId, houseId, newHouse));
+    }
 }

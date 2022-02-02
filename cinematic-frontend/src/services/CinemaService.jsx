@@ -39,7 +39,7 @@ class CinemaService {
     return axios.delete(CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId);
   }
 
-  addHouse(cinemaId, houseId, house) {
+  addHouse(cinemaId, house) {
     return axios.post(CINEMA_API_BASE_URL + cinemaId + "/house", house);
   }
 

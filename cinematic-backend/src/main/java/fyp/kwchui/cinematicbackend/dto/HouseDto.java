@@ -1,0 +1,18 @@
+package fyp.kwchui.cinematicbackend.dto;
+
+import java.util.List;
+
+import fyp.kwchui.cinematicbackend.model.SeatingPlanSeat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class HouseDto {
+    private String name;
+    private String rowStyle;
+    private int numOfRow;
+    private int numOfCol;
+    private List<List<SeatingPlanSeat>> seatingPlanSeats;
+    private List<SeatingPlanSeat> unavailableSeatingPlanSeats;
+}

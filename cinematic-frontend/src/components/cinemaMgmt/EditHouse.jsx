@@ -54,6 +54,22 @@ function EditHouse() {
     setDefaultSeat(defaultSeatBox);
   }, []);
 
+  const getHouseToBeUpdated = useCallback(() => {
+    axios
+      .get("http://localhost:8080/api/cinema/" + cinId + "/house/" + id)
+      .then((res) => {
+        console.log(res);
+        setName(res.data.name);
+        setRowStyle(res.data.rowStyle);
+        setNumOfRow(res.data.numOfRow);
+        setNumOfCol(res.data.numOfCol);
+        if (res.data.seatingPlanSeats.length > 0) {
+          setSelectedDefaultSeat(res.data.unavailableSeatingPlanSeats);
+          setDefaultSeat(res.data.seatingPlanSeats);
+        }
+      });
+  }, [cinId, id]);
+
   useEffect(() => {
     console.log(
       "cinemaId: " +
@@ -85,10 +101,24 @@ function EditHouse() {
   ]);
 
   useEffect(() => {
-    if (numOfRow !== "" && numOfCol !== "") {
+    if (typeof houseId === "undefined" && numOfRow !== "" && numOfCol !== "") {
       createDefaultSeat(numOfRow, numOfCol);
+    } else {
+      if (defaultSeat.length === 0 && typeof houseId !== "undefined") {
+        getHouseToBeUpdated();
+      } else if (numOfRow !== "" && numOfCol !== "") {
+        createDefaultSeat(numOfRow, numOfCol);
+      }
     }
-  }, [createDefaultSeat, numOfRow, numOfCol]);
+  }, [
+    createDefaultSeat,
+    numOfRow,
+    numOfCol,
+    cinemaId,
+    houseId,
+    defaultSeat.length,
+    getHouseToBeUpdated,
+  ]);
 
   const handleRowStyleChange = (event) => {
     setRowStyle(event.target.value);
@@ -96,9 +126,16 @@ function EditHouse() {
 
   const handleSelectedSeatChange = (seat) => {
     let modifiedSeat = {};
-    if (selectedDefaultSeat.includes(seat)) {
+    if (
+      selectedDefaultSeat.some(
+        (s) => s.row === seat.row && s.column === seat.column
+      )
+    ) {
       setSelectedDefaultSeat(
-        selectedDefaultSeat.filter((selectedSeat) => selectedSeat !== seat)
+        selectedDefaultSeat.filter(
+          (selectedSeat) =>
+            JSON.stringify(selectedSeat) !== JSON.stringify(seat)
+        )
       );
       setDefaultSeat(
         defaultSeat.map((row) =>
@@ -141,14 +178,17 @@ function EditHouse() {
     return {
       name: name,
       rowStyle: rowStyle,
+      numOfRow: numOfRow,
+      numOfCol: numOfCol,
       seatingPlanSeats: requestDefaultSeat,
     };
   }
 
   const addHouse = async () => {
     try {
-      const res = await CinemaService.addHouse(cinId, id, getEditedHouse());
+      const res = await CinemaService.addHouse(cinId, getEditedHouse());
       console.log(res);
+      backToHouseMgmt();
     } catch (err) {
       console.error(err);
     }
@@ -156,11 +196,20 @@ function EditHouse() {
 
   const updateHouse = async () => {
     try {
-      const res = await CinemaService.updateHouse(cinId, id, getEditedHouse());
-      console.log(res);
+      const res = await CinemaService.updateHouse(
+        cinId,
+        houseId,
+        getEditedHouse()
+      );
+      console.log(res, houseId);
+      backToHouseMgmt();
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const resetHouse = () => {
+    getHouseToBeUpdated();
   };
 
   const backToHouseMgmt = () => {
@@ -203,6 +252,7 @@ function EditHouse() {
         <Typography variant="h6" sx={{ mb: 1 }}>
           Seating Plan
         </Typography>
+
         <Stack
           direction="row"
           spacing={2}
@@ -215,7 +265,7 @@ function EditHouse() {
             type="number"
             value={numOfRow}
             onChange={(e) => {
-              if (e.target.value !== null || e.target.value !== "") {
+              if (e.target.value !== null && e.target.value !== "") {
                 setNumOfRow(e.target.value);
                 setSelectedDefaultSeat([]);
               }
@@ -237,7 +287,7 @@ function EditHouse() {
             type="number"
             value={numOfCol}
             onChange={(e) => {
-              if (e.target.value !== null || e.target.value !== "") {
+              if (e.target.value !== null && e.target.value !== "") {
                 setNumOfCol(e.target.value);
                 setSelectedDefaultSeat([]);
               }
@@ -277,7 +327,27 @@ function EditHouse() {
         </Stack>
 
         <Container>
-          <Box></Box>
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <Grid
+              container
+              spacing={2}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <Box className={clsx("seat")}></Box>
+              </Grid>
+              <Grid item>
+                <Box>Available</Box>
+              </Grid>
+              <Grid item>
+                <Box className={clsx("seat", "unavailable")}></Box>
+              </Grid>
+              <Grid item>
+                <Box>Unavailable</Box>
+              </Grid>
+            </Grid>
+          </Stack>
         </Container>
 
         {defaultSeat.map((row, rowIndex) => {
@@ -288,11 +358,13 @@ function EditHouse() {
               spacing={2}
               justifyContent="center"
             >
-              <Box>
+              <Box sx={{ width: "2em", textAlign: "center" }}>
                 {rowStyle === "alphabet" ? alphabet[rowIndex] : rowIndex + 1}
               </Box>
               {row.map((seat, seatIndex) => {
-                const isSelected = selectedDefaultSeat.includes(seat);
+                const isSelected =
+                  selectedDefaultSeat.includes(seat) ||
+                  seat.available === false;
                 return (
                   <Box
                     key={seatIndex}
@@ -343,6 +415,20 @@ function EditHouse() {
                 Update house
               </Button>
             )}
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            {id !== undefined ? (
+              <Button
+                fullWidth
+                size="medium"
+                variant="outlined"
+                startIcon={<RestartAltIcon />}
+                onClick={resetHouse}
+                color="info"
+              >
+                Reset
+              </Button>
+            ) : null}
           </Grid>
         </Grid>
       </Box>
