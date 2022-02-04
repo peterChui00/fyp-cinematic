@@ -31,6 +31,7 @@ public class House {
     private Cinema cinema;
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
     private List<SeatingPlanSeat> seatingPlanSeats;
-    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "house", cascade = { CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.REFRESH })
     private List<MovieShowing> movieShowings;
 }

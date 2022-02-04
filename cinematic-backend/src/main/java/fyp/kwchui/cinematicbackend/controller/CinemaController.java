@@ -16,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
+import fyp.kwchui.cinematicbackend.model.MovieShowing;
 import fyp.kwchui.cinematicbackend.service.CinemaService;
 
 @RestController
@@ -43,7 +45,8 @@ public class CinemaController {
 
     @PostMapping(path = "/cinema")
     public ResponseEntity<Cinema> addCinema(@RequestBody Cinema cinema) {
-        return new ResponseEntity<Cinema>(cinemaService.addCinema(cinema), HttpStatus.CREATED);
+        return new ResponseEntity<Cinema>(
+                cinemaService.addCinema(cinema), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/cinema/{cinemaId}")
@@ -53,40 +56,65 @@ public class CinemaController {
     }
 
     @PutMapping(path = "/cinema/{cinemaId}")
-    public ResponseEntity<Cinema> updateCinema(@PathVariable("cinemaId") Long cinemaId, @RequestBody Cinema newCinema) {
+    public ResponseEntity<Cinema> updateCinema(
+            @PathVariable("cinemaId") Long cinemaId, @RequestBody Cinema newCinema) {
         return ResponseEntity.ok(cinemaService.updateCinema(cinemaId, newCinema));
     }
 
     /* --- House functions --- */
+
     @GetMapping(path = "/cinema/{cinemaId}/house")
-    public ResponseEntity<List<House>> getHousesByCinemaId(@PathVariable("cinemaId") Long cinemaId) {
+    public ResponseEntity<List<House>> getHousesByCinemaId(
+            @PathVariable("cinemaId") Long cinemaId) {
         return ResponseEntity.ok(cinemaService.getHousesByCinemaId(cinemaId));
     }
 
     @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}")
-    public ResponseEntity<HouseDto> getHouseById(@PathVariable("cinemaId") Long cinemaId,
-            @PathVariable("houseId") Long houseId) {
+    public ResponseEntity<HouseDto> getHouseById(
+            @PathVariable("cinemaId") Long cinemaId, @PathVariable("houseId") Long houseId) {
         return ResponseEntity.ok(cinemaService.getHouseById(cinemaId, houseId));
     }
 
     @PostMapping(path = "/cinema/{cinemaId}/house")
-    public ResponseEntity<House> addHouse(@PathVariable("cinemaId") Long cinemaId,
-            @RequestBody House house) {
+    public ResponseEntity<House> addHouse(
+            @PathVariable("cinemaId") Long cinemaId, @RequestBody House house) {
         return new ResponseEntity<House>(
                 cinemaService.addHouse(cinemaId, house), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/cinema/{cinemaId}/house/{houseId}")
     public ResponseEntity<?> deleteCinema(
-            @PathVariable("cinemaId") Long cinemaId,
-            @PathVariable("houseId") Long houseId) {
+            @PathVariable("cinemaId") Long cinemaId, @PathVariable("houseId") Long houseId) {
         cinemaService.deleteHouse(cinemaId, houseId);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(path = "/cinema/{cinemaId}/house/{houseId}")
-    public ResponseEntity<House> updateHouse(@PathVariable("cinemaId") Long cinemaId,
-            @PathVariable("houseId") Long houseId, @RequestBody House newHouse) {
+    public ResponseEntity<House> updateHouse(
+            @PathVariable("cinemaId") Long cinemaId,
+            @PathVariable("houseId") Long houseId,
+            @RequestBody House newHouse) {
         return ResponseEntity.ok(cinemaService.updateHouse(cinemaId, houseId, newHouse));
+    }
+
+    /* --- MovieShowing functions --- */
+
+    @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing")
+    public ResponseEntity<List<MovieShowing>> getMovieShowingsByHouseId(
+            @PathVariable("houseId") Long houseId) {
+        return ResponseEntity.ok(cinemaService.getMovieShowingsByHouseId(houseId));
+    }
+
+    @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing/{movieShowingId}")
+    public ResponseEntity<MovieShowingDto> getMovieShowingById(
+            @PathVariable("movieShowingId") Long movieShowingId) {
+        return ResponseEntity.ok(cinemaService.getMovieShowingById(movieShowingId));
+    }
+
+    @PostMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing")
+    public ResponseEntity<MovieShowingDto> addMovieShowing(
+            @PathVariable("houseId") Long houseId, @RequestBody MovieShowing movieShowing) {
+        return new ResponseEntity<MovieShowingDto>(
+                cinemaService.addMovieShowing(houseId, movieShowing), HttpStatus.CREATED);
     }
 }

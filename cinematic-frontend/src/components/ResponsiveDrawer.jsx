@@ -46,6 +46,7 @@ import EditCinema from "./cinemaMgmt/EditCinema";
 import HouseMgmt from "./cinemaMgmt/HouseMgmt";
 import EditHouse from "./cinemaMgmt/EditHouse";
 import MovieShowingMgmt from "./cinemaMgmt/MovieShowingMgmt";
+import EditMovieShowing from "./cinemaMgmt/EditMovieShowing";
 
 const drawerWidth = 184;
 
@@ -436,7 +437,7 @@ function ResponsiveDrawer(props) {
           flexGrow: 1,
           px: 2,
           pt: 7,
-         /*  width: { sm: `calc(100% - ${drawerWidth}px)` }, */
+          /*  width: { sm: `calc(100% - ${drawerWidth}px)` }, */
         }}
       >
         {/* <Toolbar/> */}
@@ -475,6 +476,16 @@ function ResponsiveDrawer(props) {
               path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt"
               exact
               component={MovieShowingMgmt}
+            />
+            <Route
+              path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt/edit"
+              exact
+              component={EditMovieShowing}
+            />
+            <Route
+              path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt/:movieShowingId/edit"
+              exact
+              component={EditMovieShowing}
             />
           </Switch>
         </Router>

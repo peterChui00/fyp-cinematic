@@ -18,9 +18,12 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seat_seq")
     private Long id;
     @Column(name = "seat_row")
-    private String row;
+    private int row;
     @Column(name = "seat_column")
-    private String column;
+    private int column;
     private boolean isOccupied;
     private boolean isAvailable;
+    @ManyToOne
+    @JoinColumn(name = "movie_showing_id")
+    private MovieShowing movieShowings;
 }

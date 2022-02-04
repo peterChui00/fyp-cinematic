@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
+import fyp.kwchui.cinematicbackend.model.MovieShowing;
 import fyp.kwchui.cinematicbackend.model.SeatingPlanSeat;
 import fyp.kwchui.cinematicbackend.repository.CinemaRepository;
 import fyp.kwchui.cinematicbackend.repository.HouseRepository;
+import fyp.kwchui.cinematicbackend.repository.MovieShowingRepository;
 import fyp.kwchui.cinematicbackend.repository.SeatingPlanSeatRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +32,9 @@ public class CinemaService {
 
     @Autowired
     SeatingPlanSeatRepository seatingPlanSeatRepository;
+
+    @Autowired
+    MovieShowingRepository movieShowingRepository;
 
     /* --- Cinema functions --- */
 
@@ -138,7 +144,6 @@ public class CinemaService {
     }
 
     public House updateHouse(Long cinemaId, Long houseId, House newHouse) {
-        log.info("hI: {}, cI: {}", houseId, cinemaId);
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
         House house = houseRepository.findById(houseId)
@@ -150,8 +155,6 @@ public class CinemaService {
             house.setName(newHouse.getName());
             house.setNumOfRow(newHouse.getNumOfRow());
             house.setNumOfCol(newHouse.getNumOfCol());
-            log.info("\nUpdating:\nName: {}\nRow: {}\nCol: {}", house.getName(), house.getNumOfRow(),
-                    house.getNumOfCol());
             if (house.getSeatingPlanSeats() != null) {
                 List<SeatingPlanSeat> seatingPlanSeats = house.getSeatingPlanSeats();
                 seatingPlanSeatRepository.deleteAllInBatch(seatingPlanSeats);
@@ -165,4 +168,28 @@ public class CinemaService {
         }
     }
 
+    /* --- MovieShowing functions --- */
+
+    public List<MovieShowing> getMovieShowingsByHouseId(Long houseId) {
+        return houseRepository.findById(houseId).get().getMovieShowings();
+    }
+
+    public MovieShowingDto getMovieShowingById(Long movieShowingId) {
+        MovieShowing movieShowing = movieShowingRepository.findById(movieShowingId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "MovieShowing with id " + movieShowingId + " does not exists."));
+        return null;
+    }
+
+    public MovieShowingDto addMovieShowing(Long houseId,  MovieShowing movieShowing) {
+        return null;
+    }
+
+    public MovieShowingDto updateMovieShowing(Long houseId, Long movie, MovieShowing movieShowing) {
+        return null;
+    }
+
+    public void deleteMovieShowing(Long cinemaId, Long houseId, Long movieShowingId) {
+
+    }
 }

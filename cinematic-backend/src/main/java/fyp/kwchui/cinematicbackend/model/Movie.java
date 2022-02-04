@@ -31,7 +31,9 @@ public class Movie {
     private String streamingUri;
     private LocalDate releaseDate;
     private float duration;
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieReview> movieReviews;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<MovieShowing> movieShowings;
 
 }
