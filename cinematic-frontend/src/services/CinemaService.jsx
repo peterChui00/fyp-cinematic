@@ -44,7 +44,59 @@ class CinemaService {
   }
 
   updateHouse(cinemaId, houseId, house) {
-    return axios.put(CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId, house);
+    return axios.put(
+      CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId,
+      house
+    );
+  }
+
+  // *** Movie Showing functions ***
+
+  getMovieShowingsByHouseId(cinemaId, houseId) {
+    return axios.get(
+      CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId + "/movieShowing"
+    );
+  }
+
+  getMovieShowingById(cinemaId, houseId, movieShowingId) {
+    return axios.get(
+      CINEMA_API_BASE_URL +
+        cinemaId +
+        "/house/" +
+        houseId +
+        "/movieShowing/" +
+        movieShowingId
+    );
+  }
+
+  addMovieShowing(cinemaId, houseId, movieShowing) {
+    return axios.post(
+      CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId + "/movieShowing",
+      movieShowing
+    );
+  }
+
+  updateMovieShowing(cinemaId, houseId, movieShowingId, movieShowing) {
+    return axios.put(
+      CINEMA_API_BASE_URL +
+        cinemaId +
+        "/house/" +
+        houseId +
+        "/movieShowing/" +
+        movieShowingId,
+      movieShowing
+    );
+  }
+
+  deleteMovieShowing(cinemaId, houseId, movieShowingId) {
+    return axios.delete(
+      CINEMA_API_BASE_URL +
+        cinemaId +
+        "/house/" +
+        houseId +
+        "/movieShowing/" +
+        movieShowingId
+    );
   }
 }
 export default new CinemaService();

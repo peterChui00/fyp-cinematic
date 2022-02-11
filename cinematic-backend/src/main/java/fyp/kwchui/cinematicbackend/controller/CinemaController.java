@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingRequestDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.model.MovieShowing;
@@ -100,7 +101,7 @@ public class CinemaController {
     /* --- MovieShowing functions --- */
 
     @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing")
-    public ResponseEntity<List<MovieShowing>> getMovieShowingsByHouseId(
+    public ResponseEntity<List<MovieShowingDto>> getMovieShowingsByHouseId(
             @PathVariable("houseId") Long houseId) {
         return ResponseEntity.ok(cinemaService.getMovieShowingsByHouseId(houseId));
     }
@@ -112,9 +113,25 @@ public class CinemaController {
     }
 
     @PostMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing")
-    public ResponseEntity<MovieShowingDto> addMovieShowing(
-            @PathVariable("houseId") Long houseId, @RequestBody MovieShowing movieShowing) {
-        return new ResponseEntity<MovieShowingDto>(
-                cinemaService.addMovieShowing(houseId, movieShowing), HttpStatus.CREATED);
+    public ResponseEntity<MovieShowing> addMovieShowing(
+            @PathVariable("houseId") Long houseId,
+            @RequestBody MovieShowingRequestDto movieShowingRequestDto) {
+        return new ResponseEntity<MovieShowing>(
+                cinemaService.addMovieShowing(houseId, movieShowingRequestDto), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing/{movieShowingId}")
+    public ResponseEntity<?> deleteMovieShowing(
+            @PathVariable("movieShowingId") Long movieShowingId) {
+        cinemaService.deleteMovieShowing(movieShowingId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing/{movieShowingId}")
+    public ResponseEntity<MovieShowing> updateMovieShowing(
+            @PathVariable("movieShowingId") Long movieShowingId,
+            @RequestBody MovieShowingRequestDto movieShowingRequestDto) {
+        return ResponseEntity.ok(
+                cinemaService.updateMovieShowing(movieShowingId, movieShowingRequestDto));
     }
 }

@@ -38,14 +38,14 @@ function MovieShowingMgmt() {
   const getMovieShowingsByHouseId = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await CinemaService.getMovieShowingsByHouseId(hseId);
+      const res = await CinemaService.getMovieShowingsByHouseId(cinId, hseId);
       console.log(res);
       setMovieShowings(res.data);
     } catch (err) {
       console.error(err);
     }
     setLoading(false);
-  }, [hseId]);
+  }, [cinId, hseId]);
 
   useEffect(() => {
     console.log(
@@ -53,7 +53,7 @@ function MovieShowingMgmt() {
         cinemaId +
         " cinId:" +
         cinId +
-        "houseId:" +
+        " houseId:" +
         houseId +
         " hseId:" +
         hseId
@@ -61,13 +61,21 @@ function MovieShowingMgmt() {
     getMovieShowingsByHouseId();
   }, [cinId, cinemaId, getMovieShowingsByHouseId, houseId, hseId]);
 
-  const deleteMovieShowing = (cinemaId, houseId) => {
-    /*  setLoading(true);
-    CinemaService.deleteHouse(cinemaId, houseId).then((res) => {
+  const deleteMovieShowing = async (cinemaId, houseId, movieShowingId) => {
+    setLoading(true);
+    try {
+      const res = await CinemaService.deleteHouse(cinemaId, houseId);
       console.log(res);
-      setHouses(houses.filter((house) => house.id !== houseId));
-      setLoading(false);
-    }); */
+      setMovieShowings(
+        movieShowings.filter(
+          (movieShowing) => movieShowing.id !== movieShowingId
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+
+    setLoading(false);
   };
 
   const addMovieShowing = () => {
@@ -101,6 +109,7 @@ function MovieShowingMgmt() {
       return (
         <TableRow key={index}>
           <TableCell>{movieShowing.id}</TableCell>
+          <TableCell>{movieShowing.movieTitle}</TableCell>
           <TableCell>{movieShowing.showtime}</TableCell>
           <TableCell>
             <Stack direction="row">
@@ -146,7 +155,7 @@ function MovieShowingMgmt() {
             onClick={backToHouseMgmt}
           >
             <Typography variant="h6" component="div">
-              House
+              Movie Showing
             </Typography>
           </Button>
         </Tooltip>
@@ -158,7 +167,7 @@ function MovieShowingMgmt() {
               startIcon={<AddIcon />}
               onClick={addMovieShowing}
             >
-              Add House
+              Add Movie Showing
             </Button>
             <Button
               size="small"
@@ -184,6 +193,7 @@ function MovieShowingMgmt() {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
+                <TableCell>Movie Title</TableCell>
                 <TableCell>Showtime</TableCell>
                 <TableCell></TableCell>
               </TableRow>

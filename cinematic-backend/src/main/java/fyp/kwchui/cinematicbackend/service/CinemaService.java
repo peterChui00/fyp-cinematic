@@ -9,12 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingRequestDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
+import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.MovieShowing;
+import fyp.kwchui.cinematicbackend.model.Seat;
 import fyp.kwchui.cinematicbackend.model.SeatingPlanSeat;
 import fyp.kwchui.cinematicbackend.repository.CinemaRepository;
 import fyp.kwchui.cinematicbackend.repository.HouseRepository;
+import fyp.kwchui.cinematicbackend.repository.MovieRepository;
 import fyp.kwchui.cinematicbackend.repository.MovieShowingRepository;
 import fyp.kwchui.cinematicbackend.repository.SeatingPlanSeatRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +39,9 @@ public class CinemaService {
 
     @Autowired
     MovieShowingRepository movieShowingRepository;
+
+    @Autowired
+    MovieRepository movieRepository;
 
     /* --- Cinema functions --- */
 
@@ -151,7 +158,6 @@ public class CinemaService {
         if (house.getCinema().getId() != cinema.getId()) {
             throw new IllegalStateException();
         } else {
-
             house.setName(newHouse.getName());
             house.setNumOfRow(newHouse.getNumOfRow());
             house.setNumOfCol(newHouse.getNumOfCol());
@@ -170,8 +176,20 @@ public class CinemaService {
 
     /* --- MovieShowing functions --- */
 
-    public List<MovieShowing> getMovieShowingsByHouseId(Long houseId) {
-        return houseRepository.findById(houseId).get().getMovieShowings();
+    public List<MovieShowingDto> getMovieShowingsByHouseId(Long houseId) {
+        List<MovieShowing> movieShowings = houseRepository.findById(houseId).get().getMovieShowings();
+        List<MovieShowingDto> movieShowingDtos = new ArrayList<MovieShowingDto>();
+        for (MovieShowing movieShowing : movieShowings) {
+            MovieShowingDto movieShowingDto = new MovieShowingDto(
+                    movieShowing.getId(),
+                    movieShowing.getShowtime(),
+                    houseId,
+                    movieShowing.getMovie().getId(),
+                    movieShowing.getMovie().getTitle(),
+                    null, null, null);
+            movieShowingDtos.add(movieShowingDto);
+        }
+        return movieShowingDtos;
     }
 
     public MovieShowingDto getMovieShowingById(Long movieShowingId) {
@@ -181,15 +199,45 @@ public class CinemaService {
         return null;
     }
 
-    public MovieShowingDto addMovieShowing(Long houseId,  MovieShowing movieShowing) {
+    public MovieShowing addMovieShowing(
+            Long houseId, MovieShowingRequestDto movieShowingRequestDto) {
+        MovieShowing movieShowing = new MovieShowing();
+        movieShowing.setShowtime(movieShowingRequestDto.getShowtime());
+
+        Long movieId = movieShowingRequestDto.getMovieId();
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalStateException("Movie with id " + movieId + " does not exists."));
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new IllegalStateException("House with ID " + houseId + " does not exists."));
+        movieShowing.setMovie(movie);
+        movieShowing.setHouse(house);
+
+        List<SeatingPlanSeat> seatingPlanSeats = house.getSeatingPlanSeats();
+        List<Seat> seats = new ArrayList<Seat>();
+        for (SeatingPlanSeat seatingPlanSeat : seatingPlanSeats) {
+            Seat seat = new Seat(
+                    null,
+                    seatingPlanSeat.getRow(),
+                    seatingPlanSeat.getColumn(),
+                    false,
+                    seatingPlanSeat.isAvailable(),
+                    movieShowing);
+            seats.add(seat);
+        }
+        movieShowing.setSeats(seats);
+        log.info("Adding MovieShowing");
+        return movieShowingRepository.save(movieShowing);
+    }
+
+    public MovieShowing updateMovieShowing(
+            Long movieShowingId, MovieShowingRequestDto movieShowingRequestDto) {
         return null;
     }
 
-    public MovieShowingDto updateMovieShowing(Long houseId, Long movie, MovieShowing movieShowing) {
-        return null;
-    }
-
-    public void deleteMovieShowing(Long cinemaId, Long houseId, Long movieShowingId) {
-
+    public void deleteMovieShowing(Long movieShowingId) {
+        MovieShowing movieShowing = movieShowingRepository.findById(movieShowingId)
+        .orElseThrow(() -> new IllegalStateException(
+                "MovieShowing with id " + movieShowingId + " does not exists."));
+        movieShowingRepository.delete(movieShowing);
     }
 }

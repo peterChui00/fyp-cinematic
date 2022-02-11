@@ -2,6 +2,8 @@ package fyp.kwchui.cinematicbackend.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +27,6 @@ public class Seat {
     private boolean isAvailable;
     @ManyToOne
     @JoinColumn(name = "movie_showing_id")
-    private MovieShowing movieShowings;
+    @JsonIgnore
+    private MovieShowing movieShowing;
 }

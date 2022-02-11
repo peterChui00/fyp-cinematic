@@ -19,8 +19,6 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import AbcIcon from "@mui/icons-material/Abc";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import CinemaService from "../../services/CinemaService";
 import clsx from "clsx";
 
@@ -36,8 +34,8 @@ function EditHouse() {
   const [name, setName] = useState("");
   const [defaultSeat, setDefaultSeat] = useState([]);
   const [selectedDefaultSeat, setSelectedDefaultSeat] = useState([]);
-  const [numOfRow, setNumOfRow] = useState(8);
-  const [numOfCol, setNumOfCol] = useState(8);
+  const [numOfRow, setNumOfRow] = useState();
+  const [numOfCol, setNumOfCol] = useState();
   const [rowStyle, setRowStyle] = useState("alphabet");
 
   const createDefaultSeat = useCallback((rows, cols) => {
@@ -103,9 +101,12 @@ function EditHouse() {
       createDefaultSeat(numOfRow, numOfCol);
     } else {
       if (defaultSeat.length === 0 && typeof houseId !== "undefined") {
+        console.log(defaultSeat.length, "getHouse");
         getHouseToBeUpdated();
+        
       } else if (numOfRow !== "" && numOfCol !== "") {
         createDefaultSeat(numOfRow, numOfCol);
+        console.log("createNew");
       }
     }
   }, [
