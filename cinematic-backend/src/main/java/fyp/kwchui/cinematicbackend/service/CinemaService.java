@@ -161,6 +161,7 @@ public class CinemaService {
             house.setName(newHouse.getName());
             house.setNumOfRow(newHouse.getNumOfRow());
             house.setNumOfCol(newHouse.getNumOfCol());
+            house.setRowStyle(newHouse.getRowStyle());
             if (house.getSeatingPlanSeats() != null) {
                 List<SeatingPlanSeat> seatingPlanSeats = house.getSeatingPlanSeats();
                 seatingPlanSeatRepository.deleteAllInBatch(seatingPlanSeats);
@@ -196,7 +197,33 @@ public class CinemaService {
         MovieShowing movieShowing = movieShowingRepository.findById(movieShowingId)
                 .orElseThrow(() -> new IllegalStateException(
                         "MovieShowing with id " + movieShowingId + " does not exists."));
-        return null;
+        /*
+         * Convert the list of seat into a suitable nested list for front-end usage
+         */
+        List<Seat> seats = movieShowing.getSeats();
+        int numOfRow = movieShowing.getHouse().getNumOfRow();
+        List<List<Seat>> nestedSeats = new ArrayList<List<Seat>>(numOfRow);
+
+        for (int i = 0; i < numOfRow; i++) {
+            nestedSeats.add(new ArrayList<Seat>());
+        }
+
+        int curRow = -1;
+        for (int i = 0; i < seats.size(); i++) {
+            int row = seats.get(i).getRow();
+            if (curRow != row) {
+                curRow = row;
+            }
+            nestedSeats.get(curRow).add(seats.get(i));
+        }
+
+        return new MovieShowingDto(
+                movieShowing.getId(),
+                movieShowing.getShowtime(),
+                movieShowing.getHouse().getId(),
+                movieShowing.getMovie().getId(),
+                movieShowing.getMovie().getTitle(),
+                nestedSeats, null, null);
     }
 
     public MovieShowing addMovieShowing(
@@ -231,13 +258,23 @@ public class CinemaService {
 
     public MovieShowing updateMovieShowing(
             Long movieShowingId, MovieShowingRequestDto movieShowingRequestDto) {
-        return null;
+        MovieShowing movieShowing = movieShowingRepository.findById(movieShowingId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "MovieShowing with id " + movieShowingId + " does not exists."));
+        Long movieId = movieShowingRequestDto.getMovieId();
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Movie with id " + movieId + " does not exists."));
+        movieShowing.setShowtime(movieShowingRequestDto.getShowtime());
+        movieShowing.setMovie(movie);
+        log.info("Updating MovieShowing");
+        return movieShowingRepository.save(movieShowing);
     }
 
     public void deleteMovieShowing(Long movieShowingId) {
         MovieShowing movieShowing = movieShowingRepository.findById(movieShowingId)
-        .orElseThrow(() -> new IllegalStateException(
-                "MovieShowing with id " + movieShowingId + " does not exists."));
+                .orElseThrow(() -> new IllegalStateException(
+                        "MovieShowing with id " + movieShowingId + " does not exists."));
         movieShowingRepository.delete(movieShowing);
     }
 }

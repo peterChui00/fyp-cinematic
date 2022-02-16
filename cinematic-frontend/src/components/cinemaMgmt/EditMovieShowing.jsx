@@ -19,59 +19,58 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CinemaService from "../../services/CinemaService";
 import MovieService from "../../services/MovieService";
 import clsx from "clsx";
-import moment from 'moment';
+import moment from "moment";
+import axios from "axios";
+
+const alphabet = Array.from(Array(26))
+  .map((e, i) => i + 65)
+  .map((x) => String.fromCharCode(x));
 
 function EditMovieShowing() {
   let history = useHistory();
   let { cinemaId, houseId, movieShowingId } = useParams();
-  const [cinId, setCinId] = useState(cinemaId);
-  const [hseId, setHseId] = useState(houseId);
-  const [id, setId] = useState(movieShowingId);
+  const [cinId] = useState(cinemaId);
+  const [hseId] = useState(houseId);
+  const [id] = useState(movieShowingId);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieId, setMovieId] = useState(null);
   const [showtime, setShowtime] = useState(null);
+  const [rowStyle, setRowStyle] = useState("alphabet");
   const [seats, setSeats] = useState([]);
 
-  const getMovieShowingToBeUpdated = useCallback(async () => {
-    try {
-      const res = await CinemaService.getMovieShowingByHouseId(
-        cinId,
-        hseId,
-        id
-      );
-      console.log(res);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [cinId, hseId, id]);
-
-  const getMovies = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await MovieService.getMovies();
       console.log(res);
       setMovies(res.data);
+
+      if (
+        typeof cinemaId !== "undefined" &&
+        typeof houseId !== "undefined" &&
+        typeof movieShowingId !== "undefined"
+      ) {
+        const [res1, res2] = await axios.all([
+          CinemaService.getMovieShowingById(cinId, hseId, id),
+          CinemaService.getHouseById(cinId, hseId),
+        ]);
+        console.log(res1, res2);
+        setShowtime(moment(res1.data.showtime, "DD-MM-YYYY HH:mm"));
+        setMovieId(res1.data.movieId);
+        setSelectedMovie(
+          res.data.find((movie) => movie.id === res1.data.movieId)
+        );
+        setSeats(res1.data.seats);
+        setRowStyle(res2.data.rowStyle);
+      }
     } catch (err) {
       console.error(err);
     }
-  }, []);
+  }, [cinId, hseId, id, cinemaId, houseId, movieShowingId]);
 
   useEffect(() => {
-    getMovies();
-    if (
-      typeof cinemaId !== "undefined" &&
-      typeof houseId !== "undefined" &&
-      typeof movieShowingId !== "undefined"
-    ) {
-      getMovieShowingToBeUpdated();
-    }
-  }, [
-    cinemaId,
-    houseId,
-    movieShowingId,
-    getMovieShowingToBeUpdated,
-    getMovies,
-  ]);
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     console.log(
@@ -86,40 +85,52 @@ function EditMovieShowing() {
         " | showtime-" +
         showtime
     );
-    console.log(seats,moment(showtime).format("YYYY-MM-DDTHH:mm"));
-  }, [cinId, hseId, id, movieId, seats, showtime]);
+    console.log(
+      seats,
+      moment(showtime).format("YYYY-MM-DDTHH:mm"),
+      selectedMovie,
+     
+    );
+  }, [cinId, hseId, id, movieId, seats, selectedMovie, showtime]);
 
   function getEditedMovieShowing() {
-    return {
+    return{
       showtime: moment(showtime).format("YYYY-MM-DDTHH:mm"),
       movieId: movieId,
     };
   }
 
-  const addMovieShowing = () => {
+  const addMovieShowing = async () => {
     try {
-      const res = CinemaService.addMovieShowing(
+      const res = await CinemaService.addMovieShowing(
         cinId,
         hseId,
         getEditedMovieShowing()
       );
       console.log(res);
+      backToMovieShowingMgmt();
     } catch (err) {
       console.error(err);
     }
   };
 
-  const updateMovieShowing = () => {
+  const updateMovieShowing = async () => {
     try {
-      const res = CinemaService.updateMovieShowing();
+      const res = await CinemaService.updateMovieShowing(
+        cinemaId,
+        houseId,
+        id,
+        getEditedMovieShowing()
+      );
+      console.log(res);
+      backToMovieShowingMgmt();
     } catch (err) {
       console.error(err);
     }
   };
 
   const resetMovieShowing = () => {
-    getMovieShowingToBeUpdated();
-    getMovies();
+    fetchData();
   };
 
   const backToMovieShowingMgmt = () => {
@@ -148,7 +159,7 @@ function EditMovieShowing() {
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <DateTimePicker
             ampm={false}
-            inputFormat='DD-MM-YYYY HH:mm'
+            inputFormat="DD-MM-YYYY HH:mm"
             mask="__-__-____ __:__"
             renderInput={(props) => (
               <TextField sx={{ width: 300 }} {...props} />
@@ -227,6 +238,75 @@ function EditMovieShowing() {
           </Grid>
         </Grid>
       </Box>
+
+      {typeof cinemaId !== "undefined" &&
+        typeof houseId !== "undefined" &&
+        typeof movieShowingId !== "undefined" && (
+          <Box>
+            <Divider sx={{ m: 2 }} />
+            <Typography variant="h6" component="div">Ticketing</Typography>
+            <Box>
+              <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Grid item>
+                    <Box className={clsx("seat")}></Box>
+                  </Grid>
+                  <Grid item>
+                    <Box>Available</Box>
+                  </Grid>
+                  <Grid item>
+                    <Box className={clsx("seat", "occupied")}></Box>
+                  </Grid>
+                  <Grid item>
+                    <Box>Occupied</Box>
+                  </Grid>
+                  <Grid item>
+                    <Box className={clsx("seat", "unavailable")}></Box>
+                  </Grid>
+                  <Grid item>
+                    <Box>Unavailable</Box>
+                  </Grid>
+                </Grid>
+              </Stack>
+            </Box>
+
+            <Box>
+              {seats.map((row, rowIndex) => {
+                return (
+                  <Stack
+                    key={rowIndex}
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                  >
+                    <Box sx={{ width: "2em", textAlign: "center" }}>
+                      {rowStyle === "alphabet"
+                        ? alphabet[rowIndex]
+                        : rowIndex + 1}
+                    </Box>
+                    {row.map((seat, seatIndex) => {
+                      const isSelected = seat.available === false;
+                      return (
+                        <Box
+                          key={seatIndex}
+                          className={clsx("seat", isSelected && "unavailable")}
+                          sx={{ color: "black", textAlign: "center" }}
+                        >
+                          {seat.column + 1}
+                        </Box>
+                      );
+                    })}
+                  </Stack>
+                );
+              })}
+            </Box>
+          </Box>
+        )}
     </Box>
   );
 }

@@ -21,7 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { CardActionArea } from "@mui/material";
 import clsx from "clsx";
-import "./styles.css";
+import "../styles.css";
 
 const movies = [
   {
@@ -56,7 +56,7 @@ function TicketingSeatSeletion() {
   const [releaseDate, setReleaseDate] = useState(null);
   const [duration, setDuration] = useState("");
 
-  const [selectedMovie, setSelectedMovie] = useState(movies[0]);
+  const [selectedMovie] = useState(movies[0]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [step, setStep] = useState(0);
   const [adultTicket, setAdultTicket] = useState(0);

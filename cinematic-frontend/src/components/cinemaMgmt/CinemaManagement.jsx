@@ -79,7 +79,7 @@ function CinemaManagement() {
         <TableRow key={index}>
           <TableCell>{cinema.id}</TableCell>
           <TableCell>{cinema.name}</TableCell>
-          <TableCell>{cinema.phoneNumber}</TableCell>
+          <TableCell sx={{whiteSpace: "nowrap"}}>{cinema.phoneNumber}</TableCell>
           <TableCell>{cinema.address}</TableCell>
           <TableCell>{cinema.latitude + ", " + cinema.longitude}</TableCell>
           <TableCell>

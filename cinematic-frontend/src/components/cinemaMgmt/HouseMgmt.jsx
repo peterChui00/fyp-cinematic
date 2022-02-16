@@ -29,7 +29,7 @@ import CinemaService from "../../services/CinemaService";
 function HouseMgmt() {
   let history = useHistory();
   let { cinemaId } = useParams();
-  const [cinId, setCinId] = useState(cinemaId);
+  const [cinId] = useState(cinemaId);
   const [houses, setHouses] = useState([]);
   const [isLoading, setLoading] = useState(true);
 

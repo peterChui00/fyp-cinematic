@@ -25,13 +25,15 @@ public class House {
     private String rowStyle;
     private int numOfRow;
     private int numOfCol;
+
     @ManyToOne
     @JoinColumn(name = "cinema_id")
     @JsonIgnore
     private Cinema cinema;
+
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
     private List<SeatingPlanSeat> seatingPlanSeats;
-    @OneToMany(mappedBy = "house", cascade = { CascadeType.PERSIST,
-            CascadeType.MERGE, CascadeType.REFRESH })
+    
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
     private List<MovieShowing> movieShowings;
 }

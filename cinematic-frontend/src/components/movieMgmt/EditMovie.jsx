@@ -21,7 +21,7 @@ import AdapterMoment from "@mui/lab/AdapterMoment";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import MovieService from "../services/MovieService";
+import MovieService from "../../services/MovieService";
 
 const genres = [
   "Action",

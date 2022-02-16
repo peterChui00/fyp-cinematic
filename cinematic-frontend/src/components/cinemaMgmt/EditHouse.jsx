@@ -29,8 +29,8 @@ const alphabet = Array.from(Array(26))
 function EditHouse() {
   let history = useHistory();
   let { cinemaId, houseId } = useParams();
-  const [cinId, setCinId] = useState(cinemaId);
-  const [id, setId] = useState(houseId);
+  const [cinId] = useState(cinemaId);
+  const [id] = useState(houseId);
   const [name, setName] = useState("");
   const [defaultSeat, setDefaultSeat] = useState([]);
   const [selectedDefaultSeat, setSelectedDefaultSeat] = useState([]);

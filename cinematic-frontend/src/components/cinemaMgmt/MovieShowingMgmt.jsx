@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import axios from "axios";
+
 import {
   Stack,
   Grid,
@@ -21,7 +21,6 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -30,8 +29,8 @@ import CinemaService from "../../services/CinemaService";
 function MovieShowingMgmt() {
   let history = useHistory();
   let { cinemaId, houseId } = useParams();
-  const [cinId, setCinId] = useState(cinemaId);
-  const [hseId, setHseId] = useState(houseId);
+  const [cinId] = useState(cinemaId);
+  const [hseId] = useState(houseId);
   const [movieShowings, setMovieShowings] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -64,7 +63,11 @@ function MovieShowingMgmt() {
   const deleteMovieShowing = async (cinemaId, houseId, movieShowingId) => {
     setLoading(true);
     try {
-      const res = await CinemaService.deleteHouse(cinemaId, houseId);
+      const res = await CinemaService.deleteMovieShowing(
+        cinemaId,
+        houseId,
+        movieShowingId
+      );
       console.log(res);
       setMovieShowings(
         movieShowings.filter(
@@ -74,7 +77,6 @@ function MovieShowingMgmt() {
     } catch (err) {
       console.error(err);
     }
-
     setLoading(false);
   };
 

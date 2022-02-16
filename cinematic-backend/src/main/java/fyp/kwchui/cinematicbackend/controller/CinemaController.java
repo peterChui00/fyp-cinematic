@@ -84,7 +84,7 @@ public class CinemaController {
     }
 
     @DeleteMapping(path = "/cinema/{cinemaId}/house/{houseId}")
-    public ResponseEntity<?> deleteCinema(
+    public ResponseEntity<?> deleteHouse(
             @PathVariable("cinemaId") Long cinemaId, @PathVariable("houseId") Long houseId) {
         cinemaService.deleteHouse(cinemaId, houseId);
         return ResponseEntity.ok().build();
