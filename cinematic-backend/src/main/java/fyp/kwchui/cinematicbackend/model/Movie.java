@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class Movie {
@@ -31,8 +33,10 @@ public class Movie {
     private String streamingUri;
     private LocalDate releaseDate;
     private float duration;
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieReview> movieReviews;
+    
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieShowing> movieShowings;
 

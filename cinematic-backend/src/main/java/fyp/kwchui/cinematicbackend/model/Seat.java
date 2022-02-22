@@ -25,8 +25,12 @@ public class Seat {
     private int column;
     private boolean isOccupied;
     private boolean isAvailable;
+
     @ManyToOne
     @JoinColumn(name = "movie_showing_id")
     @JsonIgnore
     private MovieShowing movieShowing;
+
+    @OneToOne(mappedBy = "seat", cascade = CascadeType.ALL)
+    private Ticket ticket;
 }

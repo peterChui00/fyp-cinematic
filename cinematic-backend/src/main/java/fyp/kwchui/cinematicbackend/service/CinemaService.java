@@ -248,7 +248,8 @@ public class CinemaService {
                     seatingPlanSeat.getColumn(),
                     false,
                     seatingPlanSeat.isAvailable(),
-                    movieShowing);
+                    movieShowing,
+                    null);
             seats.add(seat);
         }
         movieShowing.setSeats(seats);

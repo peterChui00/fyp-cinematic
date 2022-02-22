@@ -19,7 +19,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { CardActionArea } from "@mui/material";
 import clsx from "clsx";
 import "../styles.css";
 

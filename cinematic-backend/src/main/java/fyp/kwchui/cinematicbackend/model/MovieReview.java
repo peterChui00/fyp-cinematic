@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +23,15 @@ public class MovieReview {
     private String comment;
     private float rating;
     private LocalDateTime createdTime;
+
     @ManyToOne
     @JoinColumn(name = "movie_id")
+    @JsonIgnore
     private Movie movie;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
 }

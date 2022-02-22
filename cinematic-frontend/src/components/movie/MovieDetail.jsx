@@ -217,7 +217,7 @@ function MovieDetail() {
         </Tabs>
       </Box>
 
-      {/* Showtimes */}
+      {/*  ------- Showtimes -------  */}
       <Box sx={{ mt: 2, mx: 1 }}>
         <Divider textAlign="left" sx={{ mb: 2 }}>
           XXX Cinema - Chai Wan

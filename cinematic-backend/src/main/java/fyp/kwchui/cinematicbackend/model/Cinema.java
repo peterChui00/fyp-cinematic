@@ -24,6 +24,7 @@ public class Cinema {
     private String address;
     private Double longitude;
     private Double latitude;
+    
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL)
     private List<House> houses;
 }

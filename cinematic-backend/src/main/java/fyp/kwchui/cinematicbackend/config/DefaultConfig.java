@@ -38,6 +38,7 @@ public class DefaultConfig {
                                         "A bank teller who discovers he is actually a non-player character in a massively multiplayer online video game and becomes the hero of the story, trying to save his friends from deletion by the game's creator.");
                         m1.setReleaseDate(LocalDate.of(2021, 8, 12));
                         m1.setDuration(115);
+                        m1.setPosterFileName("FreeGuy_HKPoster.jpg");
 
                         Movie m2 = new Movie();
                         m2.setTitle("The Suicide Squad");
@@ -51,6 +52,7 @@ public class DefaultConfig {
                                         "Supervillains Harley Quinn, Bloodsport, Peacemaker and a collection of nutty cons at Belle Reve prison join the super-secret, super-shady Task Force X as they are dropped off at the remote, enemy-infused island of Corto Maltese.");
                         m2.setReleaseDate(LocalDate.of(2021, 8, 5));
                         m2.setDuration(132);
+                        m2.setPosterFileName("SuicideSquad2nd_HKposter.jpg");
 
                         Movie m3 = new Movie();
                         m3.setTitle("Dune");
@@ -64,6 +66,7 @@ public class DefaultConfig {
                                         "A mythic and emotionally charged hero\'s journey, \"Dune\" tells the story of Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, who must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet\'s exclusive supply of the most precious resource in existence-a commodity capable of unlocking humanity\'s greatest potential-only those who can conquer their fear will survive.");
                         m3.setReleaseDate(LocalDate.of(2021, 9, 16));
                         m3.setDuration(156);
+                        m3.setPosterFileName("DUNE_HKPoster.jpg");
 
                         movieRepository.saveAll(List.of(m1, m2, m3));
 

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import {
   Box,
+  CircularProgress,
   Grid,
   Typography,
   CardMedia,
@@ -13,18 +13,25 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import CommentIcon from "@mui/icons-material/Comment";
+import MovieService from "../../services/MovieService";
 
 function MovieList() {
   const [tab, setTab] = useState(0);
   const [showingMovies, setShowingMovies] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
   let history = useHistory();
 
-  const getMovies = () => {
-    axios.get("http://localhost:8080/api/movie").then((res) => {
+  const getMovies = async () => {
+    setLoading(true);
+    try {
+      const res = await MovieService.getMovies();
       console.log(res);
       setShowingMovies(res.data);
-    });
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -55,15 +62,7 @@ function MovieList() {
             <CardMedia
               component="img"
               sx={{ width: 1, borderRadius: 3 }}
-              image={
-                index === 0
-                  ? "./assets/FreeGuy_HKPoster.jpg"
-                  : index === 1
-                  ? "./assets/SuicideSquad2nd_HKposter.jpg"
-                  : index === 2
-                  ? "./assets/DUNE_HKPoster.jpg"
-                  : ""
-              }
+              image={"./assets/" + movie.posterFileName}
               alt={movie.title + " poster"}
             />
             <Stack sx={{ px: 1, mb: 1 }}>
@@ -83,10 +82,6 @@ function MovieList() {
                     4.5
                   </Typography>
                 </Stack>
-                {/*  <Stack direction="row" spacing={0.5}>
-                  <FavoriteIcon sx={{ color: "#e91e63", fontSize: 15 }} />
-                  <Typography variant="body1" sx={{ fontSize: 15 }}>50</Typography>
-                </Stack> */}
                 <Stack direction="row" spacing={0.5} alignItems="center">
                   <CommentIcon sx={{ color: "text.secondary", fontSize: 15 }} />
                   <Typography variant="body1" sx={{ fontSize: 15 }}>
@@ -117,23 +112,29 @@ function MovieList() {
         <Tab label="Other" />
       </Tabs>
 
-      {/* Now Showing movies */}
-      <Box hidden={tab !== 0} sx={{ flexGrow: 1 }}>
-        <Grid
-          container
-          spacing={1}
-          alignItems="stretch"
-          justifyContent="space-evenly"
-        >
-          <MovieCard />
-        </Grid>
-      </Box>
-
-      {/* Upcoming movies */}
-      <Box hidden={tab !== 1}>No movies available.</Box>
-
-      {/* Other movies */}
-      <Box hidden={tab !== 2}>No movies available.</Box>
+      {isLoading ? (
+        <Box sx={{ textAlign: "center" }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box>
+          {/* Now Showing movies */}
+          <Box hidden={tab !== 0} sx={{ flexGrow: 1 }}>
+            <Grid
+              container
+              spacing={1}
+              alignItems="stretch"
+              justifyContent="space-evenly"
+            >
+              <MovieCard />
+            </Grid>
+          </Box>
+          {/* Upcoming movies */}
+          <Box hidden={tab !== 1}>No movies available.</Box>
+          {/* Other movies */}
+          <Box hidden={tab !== 2}>No movies available.</Box>
+        </Box>
+      )}
     </Box>
   );
 }

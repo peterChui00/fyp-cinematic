@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,9 +22,12 @@ public class Order {
     private Long id;
     private String paymentMethod;
     private LocalDateTime orderTime;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = false)
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 }
