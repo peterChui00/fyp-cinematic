@@ -13,21 +13,39 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import CommentIcon from "@mui/icons-material/Comment";
+import MovieCard from "./MovieCard";
 import MovieService from "../../services/MovieService";
 
 function MovieList() {
   const [tab, setTab] = useState(0);
   const [showingMovies, setShowingMovies] = useState([]);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [otherMovies, setOtherMovies] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
   let history = useHistory();
 
-  const getMovies = async () => {
+  const getMovies = async (tabValue) => {
     setLoading(true);
     try {
-      const res = await MovieService.getMovies();
+      let res;
+      switch (tabValue) {
+        case 0:
+          res = await MovieService.getShowingMovies();
+          setShowingMovies(res.data);
+          break;
+        case 1:
+          res = await MovieService.getUpcomingMovies();
+          setUpcomingMovies(res.data);
+          break;
+        case 2:
+          res = await MovieService.getOtherMovies();
+          setOtherMovies(res.data);
+          break;
+        default:
+          break;
+      }
       console.log(res);
-      setShowingMovies(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -35,18 +53,19 @@ function MovieList() {
   };
 
   useEffect(() => {
-    getMovies();
+    getMovies(0);
   }, []);
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
+    getMovies(newValue);
   };
 
   const openMovieDetails = (movieId) => {
     history.push("/movie/" + movieId);
   };
 
-  const MovieCard = () => {
+  const ShowingMovieCard = () => {
     return showingMovies.map((movie, index) => {
       return (
         <Grid
@@ -119,20 +138,49 @@ function MovieList() {
       ) : (
         <Box>
           {/* Now Showing movies */}
-          <Box hidden={tab !== 0} sx={{ flexGrow: 1 }}>
+          <Box hidden={tab !== 0}>
             <Grid
               container
               spacing={1}
               alignItems="stretch"
               justifyContent="space-evenly"
             >
-              <MovieCard />
+              <MovieCard
+                movies={showingMovies}
+                openMovieDetails={openMovieDetails}
+              />
             </Grid>
           </Box>
+
           {/* Upcoming movies */}
-          <Box hidden={tab !== 1}>No movies available.</Box>
+          <Box hidden={tab !== 1}>
+            <Grid
+              container
+              spacing={1}
+              alignItems="stretch"
+              justifyContent="space-evenly"
+            >
+              <MovieCard
+                movies={upcomingMovies}
+                openMovieDetails={openMovieDetails}
+              />
+            </Grid>
+          </Box>
+
           {/* Other movies */}
-          <Box hidden={tab !== 2}>No movies available.</Box>
+          <Box hidden={tab !== 2}>
+            <Grid
+              container
+              spacing={1}
+              alignItems="stretch"
+              justifyContent="space-evenly"
+            >
+              <MovieCard
+                movies={otherMovies}
+                openMovieDetails={openMovieDetails}
+              />
+            </Grid>
+          </Box>
         </Box>
       )}
     </Box>

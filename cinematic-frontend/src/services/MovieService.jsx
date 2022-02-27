@@ -30,5 +30,19 @@ class MovieService {
       { headers: { "Content-Type": "multipart/form-data" } }
     );
   }
+
+  getShowingMovies() {
+    return axios.get(MOVIE_API_BASE_URL + "showing");
+  }
+
+  getUpcomingMovies() {
+    return axios.get(MOVIE_API_BASE_URL + "upcoming");
+  }
+
+  getOtherMovies() {
+    return axios.get(MOVIE_API_BASE_URL + "other");
+  }
+
+
 }
 export default new MovieService();

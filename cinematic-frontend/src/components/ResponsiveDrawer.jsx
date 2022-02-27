@@ -82,7 +82,7 @@ function ResponsiveDrawer(props) {
     <div>
       <List
         sx={{
-          mt: { sm: 4 },
+          mt: { md: 4 },
         }}
       >
         <ListItem>
@@ -90,7 +90,7 @@ function ResponsiveDrawer(props) {
             variant="h6"
             noWrap
             sx={{
-              display: { xs: "block", sm: "none" },
+              display: { xs: "block", md: "none" },
             }}
           >
             CINEMATIC
@@ -308,14 +308,14 @@ function ResponsiveDrawer(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ height: 50, zIndex: { sm: 1201 } }}>
+      <AppBar position="fixed" sx={{ height: 50, zIndex: { md: 1201 } }}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, mb: 1, display: { sm: "none" } }}
+            sx={{ mr: 2, mb: 1, display: { md: "none" } }}
           >
             <MenuIcon />
           </IconButton>
@@ -324,8 +324,8 @@ function ResponsiveDrawer(props) {
             noWrap
             component="div"
             sx={{
-              display: { xs: "none", sm: "block" },
-              mb: { xs: 1, sm: 2 },
+              display: { xs: "none", md: "block" },
+              mb: { xs: 1, md: 2 },
               mr: "34px",
             }}
           >
@@ -396,7 +396,7 @@ function ResponsiveDrawer(props) {
 
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
         aria-label="drawer"
       >
         <Drawer
@@ -408,7 +408,7 @@ function ResponsiveDrawer(props) {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
@@ -420,7 +420,7 @@ function ResponsiveDrawer(props) {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: { xs: "none", md: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
