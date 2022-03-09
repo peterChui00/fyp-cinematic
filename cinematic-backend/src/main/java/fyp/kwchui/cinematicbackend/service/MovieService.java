@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import fyp.kwchui.cinematicbackend.dto.MovieDetailDto;
+import fyp.kwchui.cinematicbackend.dto.MovieDto;
 import fyp.kwchui.cinematicbackend.dto.MovieListDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.MovieReview;
 import fyp.kwchui.cinematicbackend.model.MovieShowing;
@@ -83,6 +85,7 @@ public class MovieService {
                 + fileName));
         movie.setPosterFileName(fileName);
         movieRepository.save(movie);
+        log.info("Uploading poster [{}]", fileName);
     }
 
     public List<MovieListDto> getMoviesForMovieList(String type) {
@@ -170,5 +173,30 @@ public class MovieService {
         }
 
     };
+
+    public MovieDetailDto getMovieDetail(Long movieId) {
+        List<MovieShowingDto> movieShowingDtos = new ArrayList<>();
+        List<MovieShowing> weekMovieShowings = movieShowingRepository.findAllByShowtimeBetween(
+                LocalDateTime.now().plusMinutes(15), LocalDateTime.now().plusWeeks(1));
+
+        for (MovieShowing movieShowing : weekMovieShowings) {
+            if (movieShowing.getMovie().getId() == movieId) {
+                MovieShowingDto movieShowingDto = new MovieShowingDto();
+                movieShowingDto.setId(movieShowing.getId());
+                movieShowingDto.setShowtime(movieShowing.getShowtime());
+                movieShowingDto.setCinemaId(movieShowing.getHouse().getCinema().getId());
+                movieShowingDto.setMovieId(movieId);
+                movieShowingDto.setOccupancyRate(movieShowing.getoccupancyRate());
+                movieShowingDtos.add(movieShowingDto);
+            }
+        }
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalStateException("Movie with ID " + movieId + " does not exists."));
+        MovieDto movieDto = modelMapper.map(movie, MovieDto.class);
+        MovieDetailDto movieDetailDto = new MovieDetailDto();
+        movieDetailDto.setMovie(movieDto);
+        movieDetailDto.setMovieShowings(movieShowingDtos);
+        return movieDetailDto;
+    }
 
 }

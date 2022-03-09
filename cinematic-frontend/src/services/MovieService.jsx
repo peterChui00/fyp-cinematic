@@ -43,6 +43,8 @@ class MovieService {
     return axios.get(MOVIE_API_BASE_URL + "other");
   }
 
-
+  getMovieDetail(movieId) {
+    return axios.get(MOVIE_API_BASE_URL + movieId + "/detail");
+  }
 }
 export default new MovieService();

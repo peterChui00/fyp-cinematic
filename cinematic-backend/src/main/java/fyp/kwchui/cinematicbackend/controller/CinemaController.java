@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
-import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingMgmtDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingRequestDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
@@ -101,13 +101,13 @@ public class CinemaController {
     /* --- MovieShowing functions --- */
 
     @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing")
-    public ResponseEntity<List<MovieShowingDto>> getMovieShowingsByHouseId(
+    public ResponseEntity<List<MovieShowingMgmtDto>> getMovieShowingsByHouseId(
             @PathVariable("houseId") Long houseId) {
         return ResponseEntity.ok(cinemaService.getMovieShowingsByHouseId(houseId));
     }
 
     @GetMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing/{movieShowingId}")
-    public ResponseEntity<MovieShowingDto> getMovieShowingById(
+    public ResponseEntity<MovieShowingMgmtDto> getMovieShowingById(
             @PathVariable("movieShowingId") Long movieShowingId) {
         return ResponseEntity.ok(cinemaService.getMovieShowingById(movieShowingId));
     }

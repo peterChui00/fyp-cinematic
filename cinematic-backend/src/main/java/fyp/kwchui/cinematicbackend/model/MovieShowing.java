@@ -39,4 +39,14 @@ public class MovieShowing {
 
     @OneToMany(mappedBy = "movieShowing", cascade = CascadeType.ALL)
     private List<Seat> seats;
+
+    public float getoccupancyRate() {
+        float occupancyRate = 0;
+        for (Seat seat : seats) {
+            if (seat.isOccupied()) {
+                occupancyRate++;
+            }
+        }
+        return occupancyRate/seats.size();
+    }
 }

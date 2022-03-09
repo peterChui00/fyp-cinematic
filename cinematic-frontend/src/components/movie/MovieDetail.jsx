@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useReducer } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
 import {
   Box,
   Grid,
@@ -10,65 +11,105 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Tabs,
-  Tab,
   IconButton,
-  Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CommentIcon from "@mui/icons-material/Comment";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { CardActionArea } from "@mui/material";
+import MovieShowingTimetable from "./MovieShowingTimetable";
+import MovieService from "../../services/MovieService";
+import CinemaService from "../../services/CinemaService";
+
+export const CHANGE_TAB = "CHANGE_TAB";
+const FETCH_DATA = "FETCH_DATA";
+
+const initialState = {
+  movie: {
+    id: "",
+    title: "",
+    genre: "",
+    language: "",
+    category: "",
+    director: "",
+    starring: "",
+    distributor: "",
+    description: "",
+    duration: "",
+    releaseDate: null,
+  },
+  movieShowing: [],
+  movieReview: [],
+  dateForTab: [],
+  cinema: [],
+  tab: 0,
+};
+
+const reducer = (state, action) => {
+  const payload = action.payload;
+  switch (action.type) {
+    case FETCH_DATA:
+      return {
+        ...state,
+        movie: payload.movie,
+        movieReview: payload.movieReview,
+        movieShowing: payload.movieShowing,
+        dateForTab: [
+          ...new Set(
+            payload.movieShowing.map((data) =>
+              moment(data.showtime).format("YYYY-MM-DD")
+            )
+          ),
+        ],
+        cinema: payload.cinema,
+      };
+    case CHANGE_TAB:
+      return { ...state, tab: payload };
+    default:
+      throw new Error();
+  }
+};
 
 function MovieDetail() {
-  const [id, setId] = useState(null);
-  const [title, setTitle] = useState("");
-  const [genre, setGenre] = useState("");
-  const [genreArray, setGenreArray] = useState([]);
-  const [language, setLanguage] = useState("");
-  const [category, setCategory] = useState("");
-  const [director, setDirector] = useState("");
-  const [starring, setStarring] = useState("");
-  const [distributor, setDistributor] = useState("");
-  const [description, setDescription] = useState("");
-  const [releaseDate, setReleaseDate] = useState(null);
-  const [duration, setDuration] = useState("");
-  const [tab, setTab] = useState(0);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { movie } = state;
 
   let { movieId } = useParams();
   let history = useHistory();
 
   useEffect(() => {
-    if (typeof movieId !== "undefined") {
-      axios.get("http://localhost:8080/api/movie/" + movieId).then((res) => {
-        console.log(res);
-        const resMovie = res.data;
-        setId(resMovie.id);
-        setTitle(resMovie.title);
-        setGenre(resMovie.genre);
-        setGenreArray(resMovie.genre.split(", "));
-        setLanguage(resMovie.language);
-        setCategory(resMovie.category);
-        setDirector(resMovie.director);
-        setStarring(resMovie.starring);
-        setDistributor(resMovie.distributor);
-        setDescription(resMovie.description);
-        setReleaseDate(resMovie.releaseDate);
-        setDuration(resMovie.duration);
-      });
-    } else {
-      console.log("ue");
-    }
+    const fetchData = async () => {
+      if (typeof movieId !== "undefined") {
+        try {
+          const [res1, res2] = await axios.all([
+            MovieService.getMovieDetail(movieId),
+            CinemaService.getCinemas(),
+          ]);
+          console.log(res1, res2);
+          const [resData1, resData2] = [res1.data, res2.data];
+          dispatch({
+            type: FETCH_DATA,
+            payload: {
+              movie: res1.data.movie,
+              movieReview: resData1.movieReviews,
+              movieShowing: resData1.movieShowings,
+              cinema: resData2,
+            },
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    fetchData();
   }, [movieId]);
 
-  const handleTabChange = (event, newValue) => {
-    setTab(newValue);
-  };
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   const purchaseTicket = (movieId, movieShowingId) => {
-    history.push("/movie/" + movieId + "/" + movieShowingId);
+    history.push("/movie/" + movieId + "/movieShowing/" + movieShowingId);
   };
 
   return (
@@ -78,21 +119,15 @@ function MovieDetail() {
           <CardMedia
             component="img"
             sx={{ width: 1, borderRadius: 3 }}
-            image={process.env.PUBLIC_URL + "/assets/FreeGuy_HKPoster.jpg"}
-            alt={title + " poster"}
+            image={process.env.PUBLIC_URL + "/assets/" + movie.posterFileName}
+            alt={movie.title + " poster"}
           />
         </Grid>
         <Grid item xs={12} sm={9} container>
-          <Grid
-            item
-            xs={12}
-            container
-            spacing={1}
-            textAlign={"left"}
-          >
+          <Grid item xs={12} container spacing={1} textAlign={"left"}>
             <Grid item xs={12}>
               <Stack direction="row" spacing={2} alignItems="center">
-                <Typography variant="h3">{title}</Typography>
+                <Typography variant="h3">{movie.title}</Typography>
                 <IconButton>
                   <BookmarkBorderIcon />
                 </IconButton>
@@ -107,7 +142,7 @@ function MovieDetail() {
               </Typography>
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body2">{genre}</Typography>
+              <Typography variant="body2">{movie.genre}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" sx={{ fontWeight: "Bold" }}>
@@ -115,7 +150,7 @@ function MovieDetail() {
               </Typography>
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body2">{releaseDate}</Typography>
+              <Typography variant="body2">{movie.releaseDate}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" sx={{ fontWeight: "Bold" }}>
@@ -123,7 +158,7 @@ function MovieDetail() {
               </Typography>
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body2">{duration}</Typography>
+              <Typography variant="body2">{movie.duration}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" sx={{ fontWeight: "Bold" }}>
@@ -131,7 +166,7 @@ function MovieDetail() {
               </Typography>
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body2">{category}</Typography>
+              <Typography variant="body2">{movie.category}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" sx={{ fontWeight: "Bold" }}>
@@ -139,7 +174,7 @@ function MovieDetail() {
               </Typography>
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body2">{language}</Typography>
+              <Typography variant="body2">{movie.language}</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -164,7 +199,7 @@ function MovieDetail() {
                 >
                   Director
                 </Typography>
-                <Typography variant="body2">{director}</Typography>
+                <Typography variant="body2">{movie.director}</Typography>
               </Stack>
               <Stack direction="row" spacing={4}>
                 <Typography
@@ -173,7 +208,7 @@ function MovieDetail() {
                 >
                   Starring
                 </Typography>
-                <Typography variant="body2">{starring}</Typography>
+                <Typography variant="body2">{movie.starring}</Typography>
               </Stack>
               <Stack direction="row" spacing={4}>
                 <Typography
@@ -182,7 +217,7 @@ function MovieDetail() {
                 >
                   Distributor
                 </Typography>
-                <Typography variant="body2">{distributor}</Typography>
+                <Typography variant="body2">{movie.distributor}</Typography>
               </Stack>
               <Typography
                 variant="body2"
@@ -190,162 +225,17 @@ function MovieDetail() {
               >
                 Description
               </Typography>
-              <Typography variant="body2">{description}</Typography>
+              <Typography variant="body2">{movie.description}</Typography>
             </Stack>
           </AccordionDetails>
         </Accordion>
       </Box>
 
-      {/* Showtime tabs */}
-      <Box sx={{ mt: 2, width: "100%", maxWidth: "88vw" }}>
-        <Tabs
-          value={tab}
-          onChange={handleTabChange}
-          variant="scrollable"
-          scrollButtons
-          allowScrollButtonsMobile
-          aria-label=""
-          sx={{ mb: 1, maxWidth: "100%" }}
-        >
-          <Tab label="17 DEC" />
-          <Tab label="18 DEC" />
-          <Tab label="19 DEC" />
-          <Tab label="20 DEC" />
-          <Tab label="21 DEC" />
-          <Tab label="22 DEC" />
-          <Tab label="23 DEC" />
-        </Tabs>
-      </Box>
-
-      {/*  ------- Showtimes -------  */}
-      <Box sx={{ mt: 2, mx: 1 }}>
-        <Divider textAlign="left" sx={{ mb: 2 }}>
-          XXX Cinema - Chai Wan
-        </Divider>
-        <Grid container spacing={1}>
-          <Grid item xs={3}>
-            <CardActionArea>
-              <Box
-                sx={{
-                  bgcolor: "success.main",
-                  color: "primary.contrastText",
-                  py: 2,
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-                onClick={() => purchaseTicket(id, id)}
-              >
-                <Typography variant="h3" sx={{ fontSize: "18px" }}>
-                  10:30
-                  <br />
-                  HK$65
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Grid>
-          <Grid item xs={3}>
-            <CardActionArea>
-              <Box
-                sx={{
-                  bgcolor: "warning.main",
-                  color: "primary.contrastText",
-                  py: 2,
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="h3" sx={{ fontSize: "18px" }}>
-                  10:30
-                  <br />
-                  HK$65
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Grid>
-          <Grid item xs={3}>
-            <CardActionArea>
-              <Box
-                sx={{
-                  bgcolor: "error.main",
-                  color: "primary.contrastText",
-                  py: 2,
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="h3" sx={{ fontSize: "18px" }}>
-                  10:30
-                  <br />
-                  HK$65
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Grid>
-        </Grid>
-        <Divider textAlign="left" sx={{ my: 2 }}>
-          XXX Cinema - Mong Kok
-        </Divider>
-        <Grid container spacing={1}>
-          <Grid item xs={3}>
-            <CardActionArea>
-              <Box
-                sx={{
-                  bgcolor: "success.main",
-                  color: "primary.contrastText",
-                  py: 2,
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-               
-              >
-                <Typography variant="h3" sx={{ fontSize: "18px" }}>
-                  10:30
-                  <br />
-                  HK$65
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Grid>
-          <Grid item xs={3}>
-            <CardActionArea>
-              <Box
-                sx={{
-                  bgcolor: "warning.main",
-                  color: "primary.contrastText",
-                  py: 2,
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="h3" sx={{ fontSize: "18px" }}>
-                  10:30
-                  <br />
-                  HK$65
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Grid>
-          <Grid item xs={3}>
-            <CardActionArea>
-              <Box
-                sx={{
-                  bgcolor: "error.main",
-                  color: "primary.contrastText",
-                  py: 2,
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="h3" sx={{ fontSize: "18px" }}>
-                  10:30
-                  <br />
-                  HK$65
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Grid>
-        </Grid>
-      </Box>
+      <MovieShowingTimetable
+        state={state}
+        dispatch={dispatch}
+        purchaseTicket={purchaseTicket}
+      />
     </Box>
   );
 }

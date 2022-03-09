@@ -36,8 +36,7 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieReview> movieReviews;
-    
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieShowing> movieShowings;
-
 }

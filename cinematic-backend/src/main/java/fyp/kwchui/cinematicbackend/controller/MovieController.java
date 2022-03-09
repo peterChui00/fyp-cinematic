@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 
+import fyp.kwchui.cinematicbackend.dto.MovieDetailDto;
 import fyp.kwchui.cinematicbackend.dto.MovieListDto;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.service.MovieService;
@@ -81,6 +82,12 @@ public class MovieController {
     @GetMapping(path = "/movie/other")
     public ResponseEntity<List<MovieListDto>> getOtherMovies() {
         return ResponseEntity.ok(movieService.getMoviesForMovieList("other"));
+    }
+
+    @GetMapping(path = "/movie/{movieId}/detail")
+    public ResponseEntity<MovieDetailDto> getMovieDetail(
+            @PathVariable("movieId") Long movieId) {
+        return ResponseEntity.ok(movieService.getMovieDetail(movieId));
     }
 
 }

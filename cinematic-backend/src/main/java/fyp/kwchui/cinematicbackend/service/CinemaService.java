@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
-import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingMgmtDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingRequestDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
@@ -177,11 +177,11 @@ public class CinemaService {
 
     /* --- MovieShowing functions --- */
 
-    public List<MovieShowingDto> getMovieShowingsByHouseId(Long houseId) {
+    public List<MovieShowingMgmtDto> getMovieShowingsByHouseId(Long houseId) {
         List<MovieShowing> movieShowings = houseRepository.findById(houseId).get().getMovieShowings();
-        List<MovieShowingDto> movieShowingDtos = new ArrayList<MovieShowingDto>();
+        List<MovieShowingMgmtDto> movieShowingDtos = new ArrayList<MovieShowingMgmtDto>();
         for (MovieShowing movieShowing : movieShowings) {
-            MovieShowingDto movieShowingDto = new MovieShowingDto(
+            MovieShowingMgmtDto movieShowingDto = new MovieShowingMgmtDto(
                     movieShowing.getId(),
                     movieShowing.getShowtime(),
                     houseId,
@@ -193,7 +193,7 @@ public class CinemaService {
         return movieShowingDtos;
     }
 
-    public MovieShowingDto getMovieShowingById(Long movieShowingId) {
+    public MovieShowingMgmtDto getMovieShowingById(Long movieShowingId) {
         MovieShowing movieShowing = movieShowingRepository.findById(movieShowingId)
                 .orElseThrow(() -> new IllegalStateException(
                         "MovieShowing with id " + movieShowingId + " does not exists."));
@@ -217,7 +217,7 @@ public class CinemaService {
             nestedSeats.get(curRow).add(seats.get(i));
         }
 
-        return new MovieShowingDto(
+        return new MovieShowingMgmtDto(
                 movieShowing.getId(),
                 movieShowing.getShowtime(),
                 movieShowing.getHouse().getId(),
