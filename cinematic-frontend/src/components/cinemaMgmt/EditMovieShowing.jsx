@@ -55,7 +55,7 @@ function EditMovieShowing() {
           CinemaService.getHouseById(cinId, hseId),
         ]);
         console.log(res1, res2);
-        setShowtime(moment(res1.data.showtime, "DD-MM-YYYY HH:mm"));
+        setShowtime(moment(res1.data.showtime));
         setMovieId(res1.data.movieId);
         setSelectedMovie(
           res.data.find((movie) => movie.id === res1.data.movieId)

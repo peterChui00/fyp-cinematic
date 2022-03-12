@@ -15,6 +15,7 @@ public class MovieShowingDto {
     private Long id;
     private LocalDateTime showtime;
     private Long movieId;
+    private String movieTitle;
     private Long houseId;
     private Long cinemaId;
     private float occupancyRate;

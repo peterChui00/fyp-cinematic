@@ -184,6 +184,7 @@ public class MovieService {
                 MovieShowingDto movieShowingDto = new MovieShowingDto();
                 movieShowingDto.setId(movieShowing.getId());
                 movieShowingDto.setShowtime(movieShowing.getShowtime());
+                movieShowingDto.setHouseId(movieShowing.getHouse().getId());
                 movieShowingDto.setCinemaId(movieShowing.getHouse().getCinema().getId());
                 movieShowingDto.setMovieId(movieId);
                 movieShowingDto.setOccupancyRate(movieShowing.getoccupancyRate());

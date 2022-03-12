@@ -73,6 +73,12 @@ class CinemaService {
     );
   }
 
+  getMovieShowing(movieShowingId) {
+    return axios.get(
+      "http://localhost:8080/api/movieShowing/" + movieShowingId
+    );
+  }
+
   addMovieShowing(cinemaId, houseId, movieShowing) {
     return axios.post(
       CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId + "/movieShowing",

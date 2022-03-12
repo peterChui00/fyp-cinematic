@@ -32,5 +32,6 @@ public class Seat {
     private MovieShowing movieShowing;
 
     @OneToOne(mappedBy = "seat", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Ticket ticket;
 }

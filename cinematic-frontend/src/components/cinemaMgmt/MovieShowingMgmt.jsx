@@ -25,6 +25,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CinemaService from "../../services/CinemaService";
+import moment from "moment";
 
 function MovieShowingMgmt() {
   let history = useHistory();
@@ -112,7 +113,9 @@ function MovieShowingMgmt() {
         <TableRow key={index}>
           <TableCell>{movieShowing.id}</TableCell>
           <TableCell>{movieShowing.movieTitle}</TableCell>
-          <TableCell>{movieShowing.showtime}</TableCell>
+          <TableCell>
+            {moment(movieShowing.showtime).format("DD-MM-YYYY HH:mm")}
+          </TableCell>
           <TableCell>
             <Stack direction="row">
               <Tooltip title="Detail">

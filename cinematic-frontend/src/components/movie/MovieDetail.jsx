@@ -36,6 +36,7 @@ const initialState = {
     distributor: "",
     description: "",
     duration: "",
+    posterFileName: "",
     releaseDate: null,
   },
   movieShowing: [],

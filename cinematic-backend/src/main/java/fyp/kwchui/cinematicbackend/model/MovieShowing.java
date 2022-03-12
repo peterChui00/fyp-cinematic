@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -23,8 +22,7 @@ public class MovieShowing {
     @SequenceGenerator(name = "movie_showing_seq", sequenceName = "movie_showing_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_showing_seq")
     private Long id;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm", timezone = "GMT+8")
+    
     private LocalDateTime showtime;
 
     @ManyToOne
