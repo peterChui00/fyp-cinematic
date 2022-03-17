@@ -8,21 +8,21 @@ import {
   Tab,
 } from "@mui/material";
 import moment from "moment";
+import React from "react";
 import { CHANGE_TAB } from "./MovieDetail";
-/* import { useEffect } from "react"; */
+
 export default function MovieShowingTimetable({
   state,
   dispatch,
   purchaseTicket,
 }) {
-  const filteredMovieShowings = state.movieShowing.filter((ms) =>
-    moment(ms.showtime).isSame(state.dateForTab[state.tab], "day")
-  );
+  const { cinema, dateForTab } = state;
+
+  const filteredMovieShowings = state.movieShowing
+    .filter((ms) => moment(ms.showtime).isSame(dateForTab[state.tab], "day"))
+    .sort((a, b) => moment(a.showtime) - moment(b.showtime));
   const cinemaIds = [...new Set(filteredMovieShowings.map((d) => d.cinemaId))];
 
-  /* useEffect(() => {
-    console.log(filteredMovieShowings, cinemaIds);
-  }, [filteredMovieShowings, cinemaIds]); */
   return (
     <>
       {/* ------- Showtime tabs ------- */}
@@ -38,7 +38,7 @@ export default function MovieShowingTimetable({
           aria-label=""
           sx={{ mb: 1, maxWidth: "100%" }}
         >
-          {state.dateForTab.map((date, index) => {
+          {dateForTab.map((date, index) => {
             return <Tab label={moment(date).format("D MMM")} key={index} />;
           })}
         </Tabs>
@@ -48,22 +48,22 @@ export default function MovieShowingTimetable({
       <Box sx={{ mt: 2, mx: 1 }}>
         {cinemaIds.map((cinemaId) => {
           return (
-            <Box sx={{ my: 2 }}>
-              <Divider textAlign="left" sx={{ mb: 2 }} key={cinemaId}>
-                {state.cinema.find((c) => c.id === cinemaId).name}
+            <Box sx={{ my: 2 }} key={cinemaId}>
+              <Divider textAlign="left" sx={{ mb: 2 }}>
+                {cinema.find((c) => c.id === cinemaId).name}
               </Divider>
               <Grid container spacing={1}>
                 {filteredMovieShowings
                   .filter((fms) => fms.cinemaId === cinemaId)
                   .map((ms) => {
                     return (
-                      <>
+                      <React.Fragment key={ms.id}>
                         <Grid item xs={3}>
                           <CardActionArea>
                             <Box
                               sx={{
                                 bgcolor:
-                                  ms.occupancyRate >= 0.9
+                                  ms.occupancyRate >= 0.8
                                     ? "error.main"
                                     : ms.occupancyRate >= 0.7
                                     ? "warning.main"
@@ -79,13 +79,20 @@ export default function MovieShowingTimetable({
                                 variant="h3"
                                 sx={{ fontSize: "18px" }}
                               >
+                                {
+                                  cinema
+                                    .find((c) => c.id === cinemaId)
+                                    .houses.find((h) => h.id === ms.houseId)
+                                    .name
+                                }
+                                <br />
                                 {moment(ms.showtime).format("HH:mm") +
-                                  "\nHK$65"}
+                                  " | HK$65"}
                               </Typography>
                             </Box>
                           </CardActionArea>
                         </Grid>
-                      </>
+                      </React.Fragment>
                     );
                   })}
               </Grid>
