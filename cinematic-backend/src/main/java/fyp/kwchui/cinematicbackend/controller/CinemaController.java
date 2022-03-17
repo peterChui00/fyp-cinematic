@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import fyp.kwchui.cinematicbackend.dto.CinemaDto;
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
@@ -39,7 +40,7 @@ public class CinemaController {
     }
 
     @GetMapping(path = "/cinema/{cinemaId}")
-    public ResponseEntity<Cinema> getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
+    public ResponseEntity<CinemaDto> getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
         return ResponseEntity.ok(cinemaService.getCinemaById(cinemaId));
     }
 

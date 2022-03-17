@@ -40,7 +40,6 @@ import EditMovie from "./movieMgmt/EditMovie";
 import MovieList from "./movie/MovieList";
 import MovieManagement from "./movieMgmt/MovieManagement";
 import MovieDetail from "./movie/MovieDetail";
-import TicketingSeatSeletion from "./movie/TicketingSeatSeletion";
 import CinemaManagement from "./cinemaMgmt/CinemaManagement";
 import EditCinema from "./cinemaMgmt/EditCinema";
 import HouseMgmt from "./cinemaMgmt/HouseMgmt";
@@ -438,7 +437,7 @@ function ResponsiveDrawer(props) {
           flexGrow: 1,
           px: 2,
           pt: 7,
-          /*  width: { sm: `calc(100% - ${drawerWidth}px)` }, */
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
         {/* <Toolbar/> */}
@@ -448,15 +447,12 @@ function ResponsiveDrawer(props) {
             <Route path="/movie" exact component={MovieList} />
             <Route path="/movie/:movieId" exact component={MovieDetail} />
             <Route
-              path="/movie/:movieId/:movieShowingId"
-              exact
-              component={TicketingSeatSeletion}
-            />
-            <Route
               path="/movie/:movieId/movieShowing/:movieShowingId"
               exact
               component={MovieTicketPurchase}
             />
+
+            {/* Management routes */}
             <Route path="/movieMgmt" exact component={MovieManagement} />
             <Route path="/editMovie" exact component={EditMovie} />
             <Route path="/editMovie/:movieId" exact component={EditMovie} />

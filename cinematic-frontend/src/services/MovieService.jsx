@@ -8,7 +8,7 @@ class MovieService {
   }
 
   getMovieById(movieId) {
-    return axios.get(MOVIE_API_BASE_URL);
+    return axios.get(MOVIE_API_BASE_URL + movieId);
   }
 
   addMovie(movie) {

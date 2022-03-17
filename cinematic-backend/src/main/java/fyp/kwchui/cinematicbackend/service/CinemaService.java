@@ -3,10 +3,12 @@ package fyp.kwchui.cinematicbackend.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fyp.kwchui.cinematicbackend.dto.CinemaDto;
 import fyp.kwchui.cinematicbackend.dto.HouseDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
@@ -42,16 +44,20 @@ public class CinemaService {
     @Autowired
     MovieRepository movieRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /* --- Cinema functions --- */
 
     public List<Cinema> getCinemas() {
         return cinemaRepository.findAll();
     }
 
-    public Cinema getCinemaById(Long cinemaId) {
-        cinemaRepository.findById(cinemaId)
+    public CinemaDto getCinemaById(Long cinemaId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
-        return cinemaRepository.findById(cinemaId).get();
+        CinemaDto cinemaDto = modelMapper.map(cinema, CinemaDto.class);
+        return cinemaDto;
     }
 
     public Cinema addCinema(Cinema cinema) {
@@ -219,6 +225,7 @@ public class CinemaService {
         MovieShowingDto movieShowingDto = new MovieShowingDto();
         movieShowingDto.setId(movieShowing.getId());
         movieShowingDto.setShowtime(movieShowing.getShowtime());
+        movieShowingDto.setCinemaId(movieShowing.getHouse().getCinema().getId());
         movieShowingDto.setHouseId(movieShowing.getHouse().getId());
         movieShowingDto.setMovieId(movieShowing.getMovie().getId());
         movieShowingDto.setMovieTitle(movieShowing.getMovie().getTitle());

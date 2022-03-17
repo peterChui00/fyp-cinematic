@@ -21,6 +21,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CinemaService from "../../services/CinemaService";
 import clsx from "clsx";
+import '../styles.css';
 
 const alphabet = Array.from(Array(26))
   .map((e, i) => i + 65)
@@ -348,7 +349,17 @@ function EditHouse() {
             </Grid>
           </Stack>
         </Container>
-
+        <Box
+        sx={{
+          width: "100%",
+          mx: "auto",
+          my: 2,
+          color: "primary",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h5">Screen</Typography>
+      </Box>
         {defaultSeat.map((row, rowIndex) => {
           return (
             <Stack

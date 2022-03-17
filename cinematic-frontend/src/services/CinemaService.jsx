@@ -10,7 +10,7 @@ class CinemaService {
   }
 
   getCinemaById(cinemaId) {
-    return axios.get(CINEMA_API_BASE_URL, cinemaId);
+    return axios.get(CINEMA_API_BASE_URL + cinemaId);
   }
 
   addCinema(cinema) {

@@ -88,13 +88,12 @@ function EditMovieShowing() {
     console.log(
       seats,
       moment(showtime).format("YYYY-MM-DDTHH:mm"),
-      selectedMovie,
-     
+      selectedMovie
     );
   }, [cinId, hseId, id, movieId, seats, selectedMovie, showtime]);
 
   function getEditedMovieShowing() {
-    return{
+    return {
       showtime: moment(showtime).format("YYYY-MM-DDTHH:mm"),
       movieId: movieId,
     };
@@ -244,7 +243,9 @@ function EditMovieShowing() {
         typeof movieShowingId !== "undefined" && (
           <Box>
             <Divider sx={{ m: 2 }} />
-            <Typography variant="h6" component="div">Ticketing</Typography>
+            <Typography variant="h6" component="div">
+              Ticketing
+            </Typography>
             <Box>
               <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
                 <Grid
@@ -275,6 +276,18 @@ function EditMovieShowing() {
               </Stack>
             </Box>
 
+            <Box
+              sx={{
+                width: "100%",
+                mx: "auto",
+                my: 2,
+                color: "primary",
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="h5">Screen</Typography>
+            </Box>
+
             <Box>
               {seats.map((row, rowIndex) => {
                 return (
@@ -290,11 +303,16 @@ function EditMovieShowing() {
                         : rowIndex + 1}
                     </Box>
                     {row.map((seat, seatIndex) => {
-                      const isSelected = seat.available === false;
+                      const isAvailable = !seat.available;
+                      const isOccupied = seat.isOccupied;
                       return (
                         <Box
                           key={seatIndex}
-                          className={clsx("seat", isSelected && "unavailable")}
+                          className={clsx(
+                            "seat",
+                            isAvailable && "unavailable",
+                            isOccupied && "occupied"
+                          )}
                           sx={{ color: "black", textAlign: "center" }}
                         >
                           {seat.column + 1}

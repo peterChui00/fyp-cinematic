@@ -51,7 +51,7 @@
   grid-gap: 24px;
 }
 
-.Cinema .screen {
+.screen {
   height: 70px;
   background: white;
   width: 100%;
@@ -81,7 +81,7 @@
   transform: scale(1.2);
 }
 
-.seat:hover {
+.seat:not(.unavailable):hover {
   cursor: pointer;
   background: #c1eac5;
   transform: scale(1.2);
@@ -128,7 +128,8 @@
 }
 
 .seat.selected {
-  background: #81c9f8 !important;
+  /* background: #81c9f8 !important; */
+  background: #FFC46A !important;
 }
 
 .seat.unavailable {
