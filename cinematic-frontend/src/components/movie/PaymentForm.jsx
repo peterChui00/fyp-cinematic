@@ -1,5 +1,10 @@
 import React from "react";
-import { ADD_TICKET, CHANGE_STEP, REMOVE_TICKET } from "./MovieTicketPurchase";
+import {
+  ADD_TICKET,
+  REMOVE_TICKET,
+  /*   LOADING,
+  SUCCESS, */
+} from "./MovieTicketPurchase";
 import {
   Box,
   Button,
@@ -9,6 +14,8 @@ import {
   Typography,
   IconButton,
   Chip,
+  /*   Backdrop,
+  CircularProgress, */
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import AlarmIcon from "@mui/icons-material/Alarm";
@@ -19,8 +26,8 @@ import Countdown from "react-countdown";
 import moment from "moment";
 import { useHistory, useParams } from "react-router-dom";
 
-export default function PaymentForm({ state, dispatch }) {
-  const { selectedSeat, ticketType } = state;
+export default function PaymentForm({ state, dispatch, addOrder }) {
+  const { selectedSeat, ticketType /* , loading */ } = state;
 
   const getTotalTicket = () =>
     ticketType.reduce((prev, cur) => prev + cur.quantity, 0);
@@ -32,7 +39,10 @@ export default function PaymentForm({ state, dispatch }) {
   let { movieId } = useParams();
 
   const confirmPurchse = () => {
-    dispatch({ type: CHANGE_STEP, payload: 2 });
+    /*   dispatch({ type: LOADING, payload: true }); */
+    if (getTotalTicket() === selectedSeat.length) {
+      addOrder();
+    }
   };
 
   const cancelPurchase = () => {
@@ -62,8 +72,7 @@ export default function PaymentForm({ state, dispatch }) {
         icon={<AlarmIcon />}
         label={
           <Countdown
-            date={moment(Date.now()).add(0.2, "m").toDate()}
-            /* date={moment(Date.now()).add(15, "m").toDate()} */
+            date={moment(Date.now()).add(15, "m").toDate()}
             renderer={renderer}
           />
         }
@@ -201,6 +210,10 @@ export default function PaymentForm({ state, dispatch }) {
           </Button>
         </Grid>
       </Grid>
+
+      {/*       <Backdrop open={loading}>
+        <CircularProgress />
+      </Backdrop> */}
     </>
   );
 }

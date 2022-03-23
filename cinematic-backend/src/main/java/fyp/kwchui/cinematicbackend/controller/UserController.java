@@ -48,6 +48,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers());
     }
 
+    @GetMapping(path = "/user/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
     @PostMapping(path = "/user")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user").toUriString());

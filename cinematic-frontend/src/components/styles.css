@@ -74,14 +74,14 @@
   margin-right: 12px;
 }
 
-.Cinema .seats .seat:not(.occupied):hover,
-.Cinema .seats .seat:not(.occupied):focus {
+.Cinema .seats .seat:not(.occupied):not(.unavailable):hover,
+.Cinema .seats .seat:not(.occupied):not(.unavailable):focus {
   cursor: pointer;
   background: #c1eac5;
   transform: scale(1.2);
 }
 
-.seat:not(.unavailable):hover {
+.seat:not(.unavailable):not(.occupied):hover {
   cursor: pointer;
   background: #c1eac5;
   transform: scale(1.2);

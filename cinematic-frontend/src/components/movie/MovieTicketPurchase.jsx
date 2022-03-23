@@ -1,18 +1,22 @@
 import React, { useEffect, useReducer } from "react";
-import { /* useHistory, */ useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import {
   Box,
+  Button,
   CardMedia,
   Divider,
   Grid,
   Stack,
   Typography,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SeatSelection from "./SeatSelection";
 import PaymentForm from "./PaymentForm";
 import MovieService from "../../services/MovieService";
 import CinemaService from "../../services/CinemaService";
+import OrderService from "../../services/OrderService";
 import axios from "axios";
 
 const FETCH_DATA = "FETCH_DATA";
@@ -20,6 +24,10 @@ export const SELECT_SEAT = "SELECT_SEAT";
 export const CHANGE_STEP = "CHANGE_STEP";
 export const ADD_TICKET = "ADD_TICKET";
 export const REMOVE_TICKET = "REMOVE_TICKET";
+/* export const LOADING = "LOADING"; */
+const SUCCESS = "SUCCESS";
+const ERROR = "ERROR";
+const ADD_ORDER = "ADD_ORDER";
 
 const alphabet = Array.from(Array(26))
   .map((e, i) => i + 65)
@@ -43,7 +51,6 @@ const initialState = {
   cinema: { id: "", name: "" },
   house: { id: "", name: "" },
   movieShowing: { id: "", showtime: null, seats: [] },
-  step: 0,
   selectedSeat: [],
   ticketType: [
     { name: "Adult", price: 65, quantity: 0 },
@@ -51,6 +58,11 @@ const initialState = {
     { name: "Child", price: 55, quantity: 0 },
     { name: "Senior", price: 55, quantity: 0 },
   ],
+  step: 0,
+  /*   loading: false,*/
+  success: false,
+  error: false,
+  order: { id: "", orderTime: "" },
 };
 
 const reducer = (state, action) => {
@@ -69,7 +81,7 @@ const reducer = (state, action) => {
       if (state.selectedSeat.some((ss) => ss.id === payload.id)) {
         return {
           ...state,
-          selectedSeat: state.selectedSeat.filter((s) => s !== payload.id),
+          selectedSeat: state.selectedSeat.filter((s) => s.id !== payload.id),
         };
         // The seat is not selected before
       } else {
@@ -77,7 +89,13 @@ const reducer = (state, action) => {
           ...state,
           selectedSeat: [
             ...state.selectedSeat,
-            { id: payload.id, row: payload.row, column: payload.column },
+            {
+              id: payload.id,
+              row: payload.row,
+              column: payload.column,
+              available: payload.available,
+              occupied: payload.occupied,
+            },
           ],
         };
       }
@@ -101,6 +119,14 @@ const reducer = (state, action) => {
             : tt
         ),
       };
+    /* case LOADING:
+      return { ...state, loading: payload };*/
+    case SUCCESS:
+      return { ...state, success: payload };
+    case ERROR:
+      return { ...state, error: payload };
+    case ADD_ORDER:
+      return { ...state, order: payload };
     default:
       throw new Error();
   }
@@ -108,9 +134,18 @@ const reducer = (state, action) => {
 
 export default function MovieTicketPurchase() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { movie, cinema, house, movieShowing, selectedSeat, step } = state;
+  const {
+    movie,
+    cinema,
+    house,
+    movieShowing,
+    selectedSeat,
+    step,
+    success,
+    ticketType,
+  } = state;
 
-  /* let history = useHistory(); */
+  let history = useHistory();
   let { movieId, movieShowingId } = useParams();
 
   useEffect(() => {
@@ -159,6 +194,40 @@ export default function MovieTicketPurchase() {
   useEffect(() => {
     console.log(state);
   }, [state]);
+
+  const backToMovieList = () => {
+    history.push("/movie");
+  };
+
+  const occupySeats = async () => {
+    try {
+      const res = await OrderService.occupySeats(selectedSeat);
+      console.log(res);
+      dispatch({ type: CHANGE_STEP, payload: 1 });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const addOrder = async () => {
+    try {
+      const requestData = {
+        userId: 1,
+        orderTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
+        seats: selectedSeat,
+        ticketTypes: ticketType.filter((tt) => tt.quantity !== 0),
+      };
+      console.log(requestData);
+      const res = await OrderService.addOrder(requestData);
+      console.log(res);
+      dispatch({ type: ADD_ORDER, payload: res.data });
+      dispatch({ type: SUCCESS, payload: true });
+    } catch (err) {
+      console.error(err);
+      dispatch({ type: ERROR, payload: true });
+    }
+    dispatch({ type: CHANGE_STEP, payload: 2 });
+  };
 
   return (
     <Box>
@@ -306,11 +375,52 @@ export default function MovieTicketPurchase() {
       <Divider sx={{ my: 2 }} />
 
       {step === 0 ? (
-        <SeatSelection state={state} dispatch={dispatch} />
+        <SeatSelection
+          state={state}
+          dispatch={dispatch}
+          occupySeats={occupySeats}
+        />
       ) : step === 1 ? (
-        <PaymentForm state={state} dispatch={dispatch} />
+        <PaymentForm state={state} dispatch={dispatch} addOrder={addOrder} />
       ) : (
-        <Box />
+        <Box sx={{ mx: "auto", textAlign: "center" }}>
+          {success ? (
+            <>
+              <Stack
+                direction={"row"}
+                justifyContent="center"
+                spacing={1}
+                alignItems="center"
+              >
+                <CheckCircleOutlineIcon fontSize="large" />
+                <Typography variant="h4">Successfully ordered.</Typography>
+              </Stack>
+              <br />
+              <Typography variant="h5">Order ID: {state.order.id}</Typography>
+              <Typography variant="h5">
+                {"Order time: " +
+                  moment(state.order.orderTime).format("DD-MM-YYYY HH:mm:ss")}
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Typography variant="h4" color="error">
+                ERROR: Transaction failed.
+              </Typography>
+            </>
+          )}
+
+          <Button
+            size="medium"
+            variant="outlined"
+            startIcon={<ArrowBackIcon />}
+            color="primary"
+            sx={{ m: 3 }}
+            onClick={backToMovieList}
+          >
+            Back to Movie list
+          </Button>
+        </Box>
       )}
     </Box>
   );

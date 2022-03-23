@@ -44,6 +44,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).get();
     }
 
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).get();
+    }
+
     public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("Adding new user [{}]", user.getUsername());

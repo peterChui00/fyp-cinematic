@@ -8,7 +8,7 @@ const alphabet = Array.from(Array(26))
   .map((e, i) => i + 65)
   .map((x) => String.fromCharCode(x));
 
-export default function SeatSelection({ state, dispatch }) {
+export default function SeatSelection({ state, dispatch, occupySeats }) {
   const { movieShowing, house, selectedSeat } = state;
   return (
     <>
@@ -71,7 +71,7 @@ export default function SeatSelection({ state, dispatch }) {
               {row.map((seat, seatIndex) => {
                 const isSelected = selectedSeat.some((ss) => ss.id === seat.id);
                 const isAvailable = !seat.available;
-                const isOccupied = seat.isOccupied;
+                const isOccupied = seat.occupied;
                 return (
                   <Box
                     key={seatIndex}
@@ -83,7 +83,7 @@ export default function SeatSelection({ state, dispatch }) {
                     )}
                     sx={{ color: "black", textAlign: "center" }}
                     onClick={
-                      isAvailable
+                      !isAvailable && isOccupied
                         ? null
                         : () => {
                             dispatch({ type: SELECT_SEAT, payload: seat });
@@ -118,11 +118,7 @@ export default function SeatSelection({ state, dispatch }) {
             size="medium"
             variant="outlined"
             startIcon={<CheckCircleIcon />}
-            onClick={() =>
-              selectedSeat.length > 0
-                ? dispatch({ type: CHANGE_STEP, payload: 1 })
-                : null
-            }
+            onClick={() => (selectedSeat.length > 0 ? occupySeats() : null)}
             color="success"
           >
             Confirm
