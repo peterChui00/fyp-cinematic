@@ -75,7 +75,7 @@ export default function PaymentForm({ state, dispatch, addOrder, releaseSeats}) 
         icon={<AlarmIcon />}
         label={
           <Countdown
-            date={moment(Date.now()).add(15, "m").toDate()}
+            date={moment(Date.now()).add(10, "m").toDate()}
             renderer={renderer}
           />
         }

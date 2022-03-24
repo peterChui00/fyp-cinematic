@@ -31,7 +31,7 @@ public class TimerService {
                     }
                 }
             }
-        }, 900000);
+        }, 600000);
 
     }
 }
