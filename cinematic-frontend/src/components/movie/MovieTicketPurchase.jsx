@@ -6,9 +6,13 @@ import {
   Button,
   CardMedia,
   Divider,
+  Dialog,
   Grid,
   Stack,
   Typography,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -26,7 +30,7 @@ export const ADD_TICKET = "ADD_TICKET";
 export const REMOVE_TICKET = "REMOVE_TICKET";
 /* export const LOADING = "LOADING"; */
 const SUCCESS = "SUCCESS";
-const ERROR = "ERROR";
+export const ERROR = "ERROR";
 const ADD_ORDER = "ADD_ORDER";
 
 const alphabet = Array.from(Array(26))
@@ -142,6 +146,7 @@ export default function MovieTicketPurchase() {
     selectedSeat,
     step,
     success,
+    error,
     ticketType,
   } = state;
 
@@ -195,6 +200,7 @@ export default function MovieTicketPurchase() {
     console.log(state);
   }, [state]);
 
+  /*    Main functions    */
   const backToMovieList = () => {
     history.push("/movie");
   };
@@ -207,6 +213,15 @@ export default function MovieTicketPurchase() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const releaseSeats = async () => {
+    /* try {
+      const res = await OrderService.cancelPurchase(selectedSeat);
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    } */
   };
 
   const addOrder = async () => {
@@ -381,7 +396,12 @@ export default function MovieTicketPurchase() {
           occupySeats={occupySeats}
         />
       ) : step === 1 ? (
-        <PaymentForm state={state} dispatch={dispatch} addOrder={addOrder} />
+        <PaymentForm
+          state={state}
+          dispatch={dispatch}
+          addOrder={addOrder}
+          releaseSeats={releaseSeats}
+        />
       ) : (
         <Box sx={{ mx: "auto", textAlign: "center" }}>
           {success ? (
@@ -422,6 +442,16 @@ export default function MovieTicketPurchase() {
           </Button>
         </Box>
       )}
+
+      <Dialog open={error} maxWidth="xs" keepMounted>
+        <DialogTitle>Session Expired</DialogTitle>
+        <DialogContent>
+          Your purchase has taken more than 15 minutes. This session will end.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={backToMovieList}>OK</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

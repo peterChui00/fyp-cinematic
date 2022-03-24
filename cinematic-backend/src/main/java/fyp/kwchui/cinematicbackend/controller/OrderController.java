@@ -25,11 +25,17 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @PatchMapping(path = "/seat")
+    @PatchMapping(path = "/occupySeat")
     public ResponseEntity<?> occupySeats(@RequestBody List<Seat> seatsToBeOccupied) {
         orderService.occupySeats(seatsToBeOccupied);
         return ResponseEntity.ok().build();
     }
+
+   /*  @PatchMapping(path = "/releaseSeat")
+    public ResponseEntity<?> releaseSeats(@RequestBody List<Seat> seatsToBeReleased) {
+        orderService.releaseSeats(seatsToBeReleased);
+        return ResponseEntity.ok().build();
+    } */
 
     @PostMapping(path = "/order")
     public ResponseEntity<Order> addOrder(@RequestBody AddOrderDto addOrderDto) {

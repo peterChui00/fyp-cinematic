@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { SELECT_SEAT, CHANGE_STEP } from "./MovieTicketPurchase";
+import { SELECT_SEAT } from "./MovieTicketPurchase";
 import clsx from "clsx";
 import "../styles.css";
 

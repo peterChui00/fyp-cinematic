@@ -2,6 +2,7 @@ import React from "react";
 import {
   ADD_TICKET,
   REMOVE_TICKET,
+  ERROR,
   /*   LOADING,
   SUCCESS, */
 } from "./MovieTicketPurchase";
@@ -26,7 +27,7 @@ import Countdown from "react-countdown";
 import moment from "moment";
 import { useHistory, useParams } from "react-router-dom";
 
-export default function PaymentForm({ state, dispatch, addOrder }) {
+export default function PaymentForm({ state, dispatch, addOrder, releaseSeats}) {
   const { selectedSeat, ticketType /* , loading */ } = state;
 
   const getTotalTicket = () =>
@@ -46,6 +47,7 @@ export default function PaymentForm({ state, dispatch, addOrder }) {
   };
 
   const cancelPurchase = () => {
+    releaseSeats();
     history.push("/movie/" + movieId);
   };
 
@@ -54,6 +56,7 @@ export default function PaymentForm({ state, dispatch, addOrder }) {
     if (completed) {
       // Render a complete state
       console.log("Time up");
+      dispatch({ type: ERROR, payload: true });
       return "Time up!";
     } else {
       // Render a countdown

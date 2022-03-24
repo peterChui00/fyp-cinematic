@@ -3,7 +3,6 @@ package fyp.kwchui.cinematicbackend.service;
 import java.util.List;
 import java.util.UUID;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.transaction.Transactional;
 
@@ -35,13 +34,25 @@ public class OrderService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    TimerService timerService;
+
     public void occupySeats(List<Seat> seatsToBeOccupied) {
         for (Seat seatToBeOccupied : seatsToBeOccupied) {
-            Seat seat = seatRepository.findById(seatToBeOccupied.getId()).get();
+            Seat seat = seatRepository.getById(seatToBeOccupied.getId());
             seat.setOccupied(true);
             seatRepository.save(seat);
         }
+        timerService.releaseSeats(seatsToBeOccupied);
     }
+/* 
+    public void releaseSeats(List<Seat> seatsToBeReleased) {
+        for (Seat seatToBeReleased : seatsToBeReleased) {
+            Seat seat = seatRepository.getById(seatToBeReleased.getId());
+            seat.setOccupied(false);
+            seatRepository.save(seat);
+        }
+    } */
 
     public Order addOrder(AddOrderDto addOrderDto) {
         Order order = new Order();
@@ -76,6 +87,7 @@ public class OrderService {
             }
         }
         order.setTickets(ticketList);
+        log.info("New order by user {}#{}", user.getUsername(), user.getId());
         return orderRepository.save(order);
     }
 }
