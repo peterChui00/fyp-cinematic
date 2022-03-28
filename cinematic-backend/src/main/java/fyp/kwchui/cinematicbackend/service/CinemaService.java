@@ -1,5 +1,6 @@
 package fyp.kwchui.cinematicbackend.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -232,6 +233,25 @@ public class CinemaService {
         movieShowingDto.setSeats(nestedSeats);
         return movieShowingDto;
 
+    }
+
+    public List<MovieShowingDto> getRecentMovieShowings() {
+        List<MovieShowingDto> movieShowingDtos = new ArrayList<MovieShowingDto>();
+        LocalDateTime showtimeStart = LocalDateTime.now().plusMinutes(10);
+        LocalDateTime showtimeEnd = LocalDateTime.now().plusHours(1).plusMinutes(10);
+        List<MovieShowing> movieShowings = movieShowingRepository.findAllByShowtimeBetween(
+                showtimeStart, showtimeEnd);
+        for (MovieShowing movieShowing : movieShowings) {
+            MovieShowingDto movieShowingDto = new MovieShowingDto();
+            movieShowingDto.setShowtime(movieShowing.getShowtime());
+            movieShowingDto.setMovieId(movieShowing.getMovie().getId());
+            movieShowingDto.setMovieTitle(movieShowing.getMovie().getTitle());
+            movieShowingDto.setHouseId(movieShowing.getHouse().getId());
+            movieShowingDto.setCinemaId(movieShowing.getHouse().getCinema().getId());
+            movieShowingDto.setOccupancyRate(movieShowing.getoccupancyRate());
+            movieShowingDtos.add(movieShowingDto);
+        }
+        return movieShowingDtos;
     }
 
     public MovieShowing addMovieShowing(

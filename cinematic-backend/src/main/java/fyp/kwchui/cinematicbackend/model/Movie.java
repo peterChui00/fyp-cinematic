@@ -30,7 +30,6 @@ public class Movie {
     @Column(columnDefinition = "TEXT")
     private String description;
     private String posterFileName;
-    private String streamingUri;
     private LocalDate releaseDate;
     private float duration;
 

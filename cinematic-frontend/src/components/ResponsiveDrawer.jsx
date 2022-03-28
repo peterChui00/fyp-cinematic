@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { useState, useEffect, useCallback, useRef, createContext } from "react";
+import {
+  useHistory,
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
-import PropTypes from "prop-types";
 import {
   AppBar,
   Box,
@@ -24,17 +28,18 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-import MovieIcon from "@mui/icons-material/Movie";
-import MovieFilterIcon from "@mui/icons-material/MovieFilter";
-import CameraIndoorIcon from "@mui/icons-material/CameraIndoor";
-import CameraOutdoorIcon from "@mui/icons-material/CameraOutdoor";
-import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import MovieIcon from "@mui/icons-material/Movie";
 import GroupIcon from "@mui/icons-material/Group";
 import SearchIcon from "@mui/icons-material/Search";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import MovieFilterIcon from "@mui/icons-material/MovieFilter";
+import CameraIndoorIcon from "@mui/icons-material/CameraIndoor";
+import CameraOutdoorIcon from "@mui/icons-material/CameraOutdoor";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import PropTypes from "prop-types";
 import Home from "./Home";
 import EditMovie from "./movieMgmt/EditMovie";
 import MovieList from "./movie/MovieList";
@@ -47,12 +52,94 @@ import EditHouse from "./cinemaMgmt/EditHouse";
 import MovieShowingMgmt from "./cinemaMgmt/MovieShowingMgmt";
 import EditMovieShowing from "./cinemaMgmt/EditMovieShowing";
 import MovieTicketPurchase from "./movie/MovieTicketPurchase";
+import computeDistance from "../services/computeDistance";
+import CinemaService from "../services/CinemaService";
+import axios from "axios";
+import MovieService from "../services/MovieService";
 
 const drawerWidth = 184;
+export const Context = createContext();
 
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [cinemas, setCinemas] = useState([]);
+  const [recentShowings, setRecentShowings] = useState([]);
+  const [showingMovies, setShowingMovies] = useState([]);
+  const [notifications, setNotifications] = useState({
+    quantity: 0,
+    message: [],
+  });
+  const interval = useRef();
+  let history = useHistory();
+
+  const getUserGeoLocation = useCallback(() => {
+    return new Promise((resolve, error) =>
+      navigator.geolocation.getCurrentPosition(resolve, error)
+    );
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const position = await getUserGeoLocation();
+      console.log(position);
+      setUserLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+
+      const [res, res1, res2] = await axios.all([
+        CinemaService.getCinemas(),
+        CinemaService.getRecentMovieShowing(),
+        MovieService.getShowingMovies(),
+      ]);
+      console.log(res, res1, res2);
+      setRecentShowings(res1.data);
+      setCinemas(
+        res.data
+          .map((cinema) => {
+            return {
+              ...cinema,
+              distance: computeDistance(
+                cinema.latitude,
+                cinema.longitude,
+                position.coords.latitude,
+                position.coords.longitude,
+                "K"
+              ),
+            };
+          })
+          .sort((a, b) => a - b)
+      );
+    } catch (err) {
+      console.error(err);
+      clearInterval(interval.current);
+    }
+  }, [getUserGeoLocation]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      fetchData();
+      interval.current = setInterval(() => {
+        fetchData();
+      }, 17000);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (
+      cinemas.length > 0 &&
+      recentShowings.length > 0 &&
+      userLocation !== null
+    ) {
+      console.log("cinemas:", cinemas);
+      console.log(userLocation);
+      console.log("showings:", recentShowings);
+    }
+  }, [cinemas]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -235,16 +322,8 @@ function ResponsiveDrawer(props) {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       id={menuId}
       keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -349,19 +428,22 @@ function ResponsiveDrawer(props) {
               color="inherit"
               sx={{ mr: 1 }}
             >
-              <Badge badgeContent={1} color="error">
-                <ReceiptIcon />
-              </Badge>
+              <ReceiptIcon />
             </IconButton>
             <IconButton
               size="small"
               aria-label="show new notifications"
               color="inherit"
               sx={{ mr: 1 }}
+              onClick={handleProfileMenuOpen}
             >
-              <Badge badgeContent={2} color="error">
+              {notifications.quantity > 0 ? (
+                <Badge badgeContent={2} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              ) : (
                 <NotificationsIcon />
-              </Badge>
+              )}
             </IconButton>
             <IconButton
               size="small"
@@ -440,57 +522,63 @@ function ResponsiveDrawer(props) {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        {/* <Toolbar/> */}
-        <Router>
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/movie" exact component={MovieList} />
-            <Route path="/movie/:movieId" exact component={MovieDetail} />
-            <Route
-              path="/movie/:movieId/movieShowing/:movieShowingId"
-              exact
-              component={MovieTicketPurchase}
-            />
+        <Context.Provider value={{ userLocation: userLocation }}>
+          <Router>
+            <Switch>
+              <Route path="/" exact component={Home} />
 
-            {/* Management routes */}
-            <Route path="/movieMgmt" exact component={MovieManagement} />
-            <Route path="/editMovie" exact component={EditMovie} />
-            <Route path="/editMovie/:movieId" exact component={EditMovie} />
-            <Route path="/cinemaMgmt" exact component={CinemaManagement} />
-            <Route path="/editCinema" exact component={EditCinema} />
-            <Route path="/editCinema/:cinemaId" exact component={EditCinema} />
-            <Route
-              path="/cinemaMgmt/:cinemaId/houseMgmt"
-              exact
-              component={HouseMgmt}
-            />
-            <Route
-              path="/cinemaMgmt/:cinemaId/houseMgmt/editHouse"
-              exact
-              component={EditHouse}
-            />
-            <Route
-              path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/editHouse"
-              exact
-              component={EditHouse}
-            />
-            <Route
-              path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt"
-              exact
-              component={MovieShowingMgmt}
-            />
-            <Route
-              path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt/edit"
-              exact
-              component={EditMovieShowing}
-            />
-            <Route
-              path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt/:movieShowingId/edit"
-              exact
-              component={EditMovieShowing}
-            />
-          </Switch>
-        </Router>
+              <Route path="/movie" exact component={MovieList} />
+              <Route path="/movie/:movieId" exact component={MovieDetail} />
+              <Route
+                path="/movie/:movieId/movieShowing/:movieShowingId"
+                exact
+                component={MovieTicketPurchase}
+              />
+
+              {/* Management routes */}
+              <Route path="/movieMgmt" exact component={MovieManagement} />
+              <Route path="/editMovie" exact component={EditMovie} />
+              <Route path="/editMovie/:movieId" exact component={EditMovie} />
+              <Route path="/cinemaMgmt" exact component={CinemaManagement} />
+              <Route path="/editCinema" exact component={EditCinema} />
+              <Route
+                path="/editCinema/:cinemaId"
+                exact
+                component={EditCinema}
+              />
+              <Route
+                path="/cinemaMgmt/:cinemaId/houseMgmt"
+                exact
+                component={HouseMgmt}
+              />
+              <Route
+                path="/cinemaMgmt/:cinemaId/houseMgmt/editHouse"
+                exact
+                component={EditHouse}
+              />
+              <Route
+                path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/editHouse"
+                exact
+                component={EditHouse}
+              />
+              <Route
+                path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt"
+                exact
+                component={MovieShowingMgmt}
+              />
+              <Route
+                path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt/edit"
+                exact
+                component={EditMovieShowing}
+              />
+              <Route
+                path="/cinemaMgmt/:cinemaId/houseMgmt/:houseId/movieShowingMgmt/:movieShowingId/edit"
+                exact
+                component={EditMovieShowing}
+              />
+            </Switch>
+          </Router>
+        </Context.Provider>
       </Box>
     </Box>
   );

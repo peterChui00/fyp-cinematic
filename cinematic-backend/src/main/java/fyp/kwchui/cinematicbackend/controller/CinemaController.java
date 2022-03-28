@@ -118,6 +118,11 @@ public class CinemaController {
         return ResponseEntity.ok(cinemaService.getMovieShowingById(movieShowingId));
     }
 
+    @GetMapping(path = "/movieShowing/recent")
+    public ResponseEntity<List<MovieShowingDto>> getRecentMovieShowings() {
+        return ResponseEntity.ok(cinemaService.getRecentMovieShowings());
+    }
+
     @PostMapping(path = "/cinema/{cinemaId}/house/{houseId}/movieShowing")
     public ResponseEntity<MovieShowing> addMovieShowing(
             @PathVariable("houseId") Long houseId,

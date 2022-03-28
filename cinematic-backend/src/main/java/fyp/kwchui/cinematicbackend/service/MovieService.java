@@ -96,7 +96,7 @@ public class MovieService {
         // Get all the movie showings based on the type
         switch (type) {
             case "showing":
-                LocalDateTime showtimeStart = showtime.plusMinutes(15);
+                LocalDateTime showtimeStart = showtime.plusMinutes(10);
                 LocalDateTime showtimeEnd = showtime.plusWeeks(1);
                 movieShowings = movieShowingRepository.findAllByShowtimeBetween(
                         showtimeStart, showtimeEnd);
@@ -118,7 +118,7 @@ public class MovieService {
 
             // Check if the movie is only belongs to upcoming movie
             if (type == "upcoming") {
-                LocalDateTime showtimeStart = LocalDateTime.now().plusMinutes(15);
+                LocalDateTime showtimeStart = LocalDateTime.now().plusMinutes(10);
                 List<MovieShowing> mss = movieShowingRepository
                         .findAllByShowtimeBetween(showtimeStart, showtime);
                 for (MovieShowing ms : mss) {
@@ -177,7 +177,7 @@ public class MovieService {
     public MovieDetailDto getMovieDetail(Long movieId) {
         List<MovieShowingDto> movieShowingDtos = new ArrayList<>();
         List<MovieShowing> weekMovieShowings = movieShowingRepository.findAllByShowtimeBetween(
-                LocalDateTime.now().plusMinutes(15), LocalDateTime.now().plusWeeks(1));
+                LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusWeeks(1));
 
         for (MovieShowing movieShowing : weekMovieShowings) {
             if (movieShowing.getMovie().getId() == movieId) {

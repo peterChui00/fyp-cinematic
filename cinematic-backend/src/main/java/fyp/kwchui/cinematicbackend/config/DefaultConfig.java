@@ -85,7 +85,7 @@ public class DefaultConfig {
                         // Cinema
                         Cinema c1 = cinemaService.addCinema(new Cinema(null, "KINGSWOOD", "1515 5555",
                                         "Shop G87A, 1/F, G/F, +WOO Phase 2, 18 Tin Yan Road, Tin Shui Wai, Yuen Long, NT",
-                                        22.45734920690819, 114.00374591080308, new ArrayList<>()));
+                                        114.00361745432208, 22.46088827958333, new ArrayList<>()));
 
                         // House
                         cinemaService.addHouse(c1.getId(),
