@@ -1,4 +1,10 @@
-import { useState, useEffect, useCallback, useRef, createContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  createContext,
+} from "react";
 import {
   useHistory,
   BrowserRouter as Router,
@@ -8,8 +14,10 @@ import {
 import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
+  Avatar,
   Box,
   Badge,
+  Button,
   CssBaseline,
   Divider,
   Drawer,
@@ -25,10 +33,10 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Paper,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-import MoreIcon from "@mui/icons-material/MoreVert";
 import MovieIcon from "@mui/icons-material/Movie";
 import GroupIcon from "@mui/icons-material/Group";
 import SearchIcon from "@mui/icons-material/Search";
@@ -69,10 +77,16 @@ function ResponsiveDrawer(props) {
   const [showingMovies, setShowingMovies] = useState([]);
   const [notifications, setNotifications] = useState({
     quantity: 0,
-    message: [],
+    messages: [],
+    promotedCinemas: [],
+    promotedMovies: [],
   });
   const interval = useRef();
   let history = useHistory();
+
+  const moveToHome = () => {
+    history.push("/");
+  };
 
   const getUserGeoLocation = useCallback(() => {
     return new Promise((resolve, error) =>
@@ -96,8 +110,10 @@ function ResponsiveDrawer(props) {
       ]);
       console.log(res, res1, res2);
       setRecentShowings(res1.data);
+      const cinemaIds = [...new Set(res1.data.map((d) => d.cinemaId))];
       setCinemas(
         res.data
+          .filter((c) => cinemaIds.some((cinemaId) => cinemaId === c.id))
           .map((cinema) => {
             return {
               ...cinema,
@@ -110,7 +126,7 @@ function ResponsiveDrawer(props) {
               ),
             };
           })
-          .sort((a, b) => a - b)
+          .sort((a, b) => a.distance - b.distance)
       );
     } catch (err) {
       console.error(err);
@@ -123,7 +139,7 @@ function ResponsiveDrawer(props) {
       fetchData();
       interval.current = setInterval(() => {
         fetchData();
-      }, 17000);
+      }, 18000);
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
@@ -138,8 +154,43 @@ function ResponsiveDrawer(props) {
       console.log("cinemas:", cinemas);
       console.log(userLocation);
       console.log("showings:", recentShowings);
+      const movieIds = [...new Set(recentShowings.map((rs) => rs.movieId))];
+      let movieTitles = "";
+      let promotedMovieIds = [];
+      movieIds.forEach((mId, index) => {
+        if (!notifications.promotedMovies.includes(mId)) {
+          promotedMovieIds = [...promotedMovieIds, mId];
+          const movie = recentShowings.find((rs) => rs.movieId === mId);
+          index === 0
+            ? (movieTitles += movie.movieTitle)
+            : (movieTitles += " ," + movie.movieTitle);
+        }
+      });
+      if (promotedMovieIds.length > 0) {
+        setNotifications({
+          ...notifications,
+          quantity: notifications.quantity + 1,
+          messages: [
+            ...notifications.messages,
+            {
+              time: new Date(),
+              content:
+                "The following " +
+                promotedMovieIds.length +
+                "movies will be showing in cinemas near you within an hour: " +
+                movieTitles +
+                ".",
+            },
+          ],
+          promotedMovies: notifications.promotedMovies.concat(promotedMovieIds),
+        });
+      }
     }
   }, [cinemas]);
+
+  useEffect(() => {
+    console.log(notifications);
+  }, [notifications]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -164,6 +215,23 @@ function ResponsiveDrawer(props) {
   ];
   const linkList1 = ["/", "/movie", "/cinema", "/watch"];
   const linkList2 = ["/movieMgmt", "/cinemaMgmt", "/userMgmt"];
+
+  const drawerElement = [
+    {
+      common: {
+        icon: <HomeIcon />,
+        description: "Home",
+        link: "/",
+      },
+    },
+    {
+      management: {
+        icon: <MovieFilterIcon />,
+        description: "Movie Management",
+        link: "/movieMgmt",
+      },
+    },
+  ];
 
   const drawer = (
     <div>
@@ -295,44 +363,57 @@ function ResponsiveDrawer(props) {
     },
   }));
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [notifAnchorEl, setNotifAnchorEl] = useState(null);
+  const isNotifMenuOpen = Boolean(notifAnchorEl);
+  const [acAnchorEl, setAcAnchorEl] = useState(null);
+  const isAcMenuOpen = Boolean(acAnchorEl);
+  /* const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null); */
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  /* const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
+  }; */
+
+  const handleNotifMenuOpen = (event) => {
+    setNotifAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+  const handleNotifMenuClose = () => {
+    setNotifAnchorEl(null);
   };
 
-  const handleMobileMenuOpen = (event) => {
+  /*  const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
-  };
+  }; */
 
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
+  const notificationMenuId = "notification-menu";
+  const notificationMenu = (
     <Menu
-      anchorEl={anchorEl}
-      id={menuId}
+      anchorEl={notifAnchorEl}
+      id={notificationMenuId}
       keepMounted
-      open={isMenuOpen}
-      onClose={handleMenuClose}
+      open={isNotifMenuOpen}
+      onClose={handleNotifMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {notifications.messages.map((msg, index) => {
+        return (
+          <Paper key={index} sx={{ width: "320px", maxWidth: "80%" }}>
+            <MenuItem
+              onClick={() => {
+                handleNotifMenuClose();
+                moveToHome();
+              }}
+            >
+              {msg.content}
+            </MenuItem>
+          </Paper>
+        );
+      })}
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
+  /* const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -369,7 +450,7 @@ function ResponsiveDrawer(props) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -382,7 +463,7 @@ function ResponsiveDrawer(props) {
         <p>Profile</p>
       </MenuItem>
     </Menu>
-  );
+  ); */
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -435,29 +516,49 @@ function ResponsiveDrawer(props) {
               aria-label="show new notifications"
               color="inherit"
               sx={{ mr: 1 }}
-              onClick={handleProfileMenuOpen}
+              onClick={(e) => {
+                if (notifications.messages.size > 0) {
+                  handleNotifMenuOpen(e);
+                }
+              }}
             >
-              {notifications.quantity > 0 ? (
-                <Badge badgeContent={2} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              ) : (
+              <Badge badgeContent={notifications.quantity} color="error">
                 <NotificationsIcon />
-              )}
+              </Badge>
             </IconButton>
-            <IconButton
-              size="small"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+
+            {localStorage.getItem("uid") !== null ? (
+              <IconButton
+                size="small"
+                edge="end"
+                aria-label="user account setting button"
+                onClick={() => {
+                  history.push("/signin");
+                  localStorage.clear();
+                }}
+                color="inherit"
+              >
+                <Avatar sx={{ width: 32, height: 32 }}>
+                  {localStorage.getItem("uname").charAt(0).toUpperCase()}
+                </Avatar>
+              </IconButton>
+            ) : (
+              <Button
+                variant="outlined"
+                size="small"
+                edge="end"
+                aria-label="login button"
+                onClick={() => {
+                  history.push("/signin");
+                }}
+                color="primary"
+              >
+                <AccountCircle sx={{mr: 1}} />
+                Login
+              </Button>
+            )}
           </Box>
-          <Box
+          {/* <Box
             sx={{ display: { xs: "flex", md: "none" }, mb: { xs: 1, sm: 2 } }}
           >
             <IconButton
@@ -470,11 +571,11 @@ function ResponsiveDrawer(props) {
             >
               <MoreIcon />
             </IconButton>
-          </Box>
+          </Box> */}
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      {/*  {renderMobileMenu} */}
+      {notificationMenu}
 
       <Box
         component="nav"

@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useCallback } from "react";
 import { Context } from "./ResponsiveDrawer";
 import { useHistory } from "react-router-dom";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid, Divider } from "@mui/material";
 import CinemaService from "../services/CinemaService";
 import axios from "axios";
 import MovieService from "../services/MovieService";
@@ -24,7 +24,6 @@ function Home() {
       setRecentShowings(res1.data);
       const moiveIds = [...new Set(res1.data.map((d) => d.movieId))];
       const cinemaIds = [...new Set(res1.data.map((d) => d.cinemaId))];
-      console.log(cinemaIds);
       setShowingMovies(
         res2.data.filter((m) => moiveIds.some((moiveId) => moiveId === m.id))
       );
@@ -44,7 +43,8 @@ function Home() {
                 ),
               };
             })
-            .sort((a, b) => a - b)
+            .filter((c) => c.distance < 10)
+            .sort((a, b) => a.distance - b.distance)
         );
       }
     } catch (err) {
@@ -52,7 +52,7 @@ function Home() {
     }
   }, [globalState]);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (
       cinemas.length > 0 &&
       recentShowings.length > 0 &&
@@ -62,7 +62,7 @@ function Home() {
       console.log("Home showings:", recentShowings);
       console.log("Home movies:", showingMovies);
     }
-  }, [cinemas]);
+  }, [cinemas]); */
 
   useEffect(() => {
     fetchData();
@@ -72,29 +72,56 @@ function Home() {
     history.push("/movie/" + movieId);
   };
 
+  const PromotionBox = cinemas.map((cinema) => {
+    return (
+      <Box key={cinema.id}>
+        <Divider textAlign="left" sx={{ mb: 2 }}>
+          <Typography variant="h5" sx={{ my: 1, fontFamily: "Roboto" }}>
+            {cinemas.length > 0
+              ? cinema.name +
+                " - " +
+                Math.round(cinema.distance * 10) / 10 +
+                " km away"
+              : ""}
+          </Typography>
+        </Divider>
+        <Grid
+          container
+          spacing={1}
+          alignItems="stretch"
+          justifyContent="flex-start"
+        >
+          <MovieCard
+            movies={showingMovies.filter((sm) =>
+              recentShowings
+                .filter((rs) => rs.cinemaId === cinema.id)
+                .some((frs) => frs.movieId === sm.id)
+            )}
+            openMovieDetails={openMovieDetails}
+          />
+        </Grid>
+      </Box>
+    );
+  });
+
   return (
     <Box>
       <Typography variant="h4">Movies Showing Soon Near You</Typography>
-      <Typography variant="subtitle1" sx={{ my: 1 }}>
-        {globalState.userLocation !== null
-          ? cinemas.length > 0
-            ? globalState.userLocation.latitude +
-              ", " +
-              globalState.userLocation.longitude
-            : ""
-          : "Share your location to receive the promotions."}
-      </Typography>
-      <Typography variant="h5">
-        {cinemas.length > 0 ? cinemas[0].name : ""}
-      </Typography>
-      <Grid
-        container
-        spacing={1}
-        alignItems="stretch"
-        justifyContent="space-evenly"
-      >
-        <MovieCard movies={showingMovies} openMovieDetails={openMovieDetails} />
-      </Grid>
+
+      {globalState.userLocation !== null ? (
+        recentShowings.length > 0 ? (
+          PromotionBox
+        ) : (
+          <Typography variant="subtitle1" sx={{ my: 1 }}>
+            Sorry! No movies are about to show in cinemas around you in the
+            coming hour.
+          </Typography>
+        )
+      ) : (
+        <Typography variant="subtitle1" sx={{ my: 1 }}>
+          Share your location to receive the promotions.
+        </Typography>
+      )}
     </Box>
   );
 }

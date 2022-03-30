@@ -1,4 +1,4 @@
-package fyp.kwchui.cinematicbackend.security;
+/* package fyp.kwchui.cinematicbackend.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,3 +74,4 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     }
 
 }
+ */

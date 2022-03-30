@@ -1,4 +1,4 @@
-package fyp.kwchui.cinematicbackend.security;
+/*package fyp.kwchui.cinematicbackend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+ @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecutiryConfig extends WebSecurityConfigurerAdapter {
@@ -34,11 +34,11 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-       /*  http.authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/login/**", "api/token/refresh/**").permitAll();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().anyRequest().authenticated(); */
+        http.authorizeRequests().anyRequest().authenticated();
         http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(
@@ -56,3 +56,4 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 }
+ */

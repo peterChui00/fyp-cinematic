@@ -1,4 +1,4 @@
-package fyp.kwchui.cinematicbackend.security;
+/* package fyp.kwchui.cinematicbackend.security;
 
 import java.io.IOException;
 import java.util.Date;
@@ -71,8 +71,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withClaim("roles",
                         user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
-        /* response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token); */
+        // response.setHeader("access_token", access_token);
+       // response.setHeader("refresh_token", refresh_token); 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
@@ -81,3 +81,4 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     }
 }
+ */
