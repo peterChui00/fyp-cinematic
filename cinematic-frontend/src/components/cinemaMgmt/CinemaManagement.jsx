@@ -79,7 +79,9 @@ function CinemaManagement() {
         <TableRow key={index}>
           <TableCell>{cinema.id}</TableCell>
           <TableCell>{cinema.name}</TableCell>
-          <TableCell sx={{whiteSpace: "nowrap"}}>{cinema.phoneNumber}</TableCell>
+          <TableCell sx={{ whiteSpace: "nowrap" }}>
+            {cinema.phoneNumber}
+          </TableCell>
           <TableCell>{cinema.address}</TableCell>
           <TableCell>{cinema.latitude + ", " + cinema.longitude}</TableCell>
           <TableCell>
@@ -120,7 +122,7 @@ function CinemaManagement() {
   };
 
   return (
-    <Box>
+    <Box sx={{ width: "100%" }}>
       <Grid
         container
         spacing={2}

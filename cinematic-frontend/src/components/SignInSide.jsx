@@ -95,6 +95,7 @@ export default function SignInSide() {
       );
       localStorage.setItem("uid", res.data.id);
       localStorage.setItem("uname", res.data.username);
+      localStorage.setItem("roles", res.data.roles.toString());
       dispatch({ type: "SUCCESS" });
       await new Promise((res) => setTimeout(() => res("p1"), 2000));
       history.push("/");
@@ -102,7 +103,7 @@ export default function SignInSide() {
       if (err.response) {
         dispatch({ type: "ERROR", payload: err.response.data.message });
       } else {
-        dispatch({ type: "ERROR", payload: err.message});
+        dispatch({ type: "ERROR", payload: err.message });
       }
     }
   };
@@ -193,6 +194,7 @@ export default function SignInSide() {
               fullWidth
               variant="contained"
               onClick={login}
+              onKeyDown={(e) => (e.key === "Enter" ? login() : null)}
               sx={{ mt: 3, mb: 2, height: "50px" }}
             >
               {isLoading ? (

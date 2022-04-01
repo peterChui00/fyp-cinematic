@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useCallback } from "react";
-import { Context } from "./ResponsiveDrawer";
+import { Context } from "../App";
 import { useHistory } from "react-router-dom";
 import { Box, Typography, Grid, Divider } from "@mui/material";
 import CinemaService from "../services/CinemaService";

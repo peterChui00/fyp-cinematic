@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import { Box, CircularProgress, Grid, Tabs, Tab } from "@mui/material";
 import MovieCard from "./MovieCard";
 import MovieService from "../../services/MovieService";
 
@@ -60,14 +54,15 @@ function MovieList() {
   };
 
   return (
-    <Box>
+    <Box sx={{ width: "100%", bgcolor: 'background.paper' }}>
       <Tabs
         value={tab}
         onChange={handleTabChange}
         indicatorColor="primary"
         textColor="inherit"
         variant="fullWidth"
-        allowScrollButtonsMobile
+       
+        centered
         sx={{ mb: 2, width: "100%" }}
       >
         <Tab label="Now Showing" />
@@ -80,7 +75,7 @@ function MovieList() {
           <CircularProgress />
         </Box>
       ) : (
-        <Box>
+        <Box >
           {/* Now Showing movies */}
           <Box hidden={tab !== 0}>
             <Grid

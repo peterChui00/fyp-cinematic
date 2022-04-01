@@ -73,7 +73,6 @@ public class DefaultConfig {
                         // User & Role
                         userService.addRole(new Role(null, "MEMBER"));
                         userService.addRole(new Role(null, "CINEMA_COMPANY"));
-                        userService.addRole(new Role(null, "STREAMING_PROVIDER"));
                         userService.addRole(new Role(null, "ADMIN"));
 
                         userService.addUser(
