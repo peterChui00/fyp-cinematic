@@ -11,16 +11,21 @@ import EditHouse from "./cinemaMgmt/EditHouse";
 import MovieShowingMgmt from "./cinemaMgmt/MovieShowingMgmt";
 import EditMovieShowing from "./cinemaMgmt/EditMovieShowing";
 import MovieTicketPurchase from "./movie/MovieTicketPurchase";
+import MovieReview from "./movie/MovieReview";
 
 export default function Routing() {
-
   return (
     <>
       <Switch>
+        {/* Common routes */}
         <Route path="/" exact component={Home} />
-
         <Route path="/movie" exact component={MovieList} />
         <Route path="/movie/:movieId" exact component={MovieDetail} />
+        <Route
+          path="/movie/:movieId/movieReview"
+          exact
+          component={MovieReview}
+        />
         <Route
           path="/movie/:movieId/movieShowing/:movieShowingId"
           exact
@@ -31,6 +36,7 @@ export default function Routing() {
         <Route path="/movieMgmt" exact component={MovieManagement} />
         <Route path="/editMovie" exact component={EditMovie} />
         <Route path="/editMovie/:movieId" exact component={EditMovie} />
+
         <Route path="/cinemaMgmt" exact component={CinemaManagement} />
         <Route path="/editCinema" exact component={EditCinema} />
         <Route path="/editCinema/:cinemaId" exact component={EditCinema} />

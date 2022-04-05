@@ -76,10 +76,15 @@ public class DefaultConfig {
                         userService.addRole(new Role(null, "ADMIN"));
 
                         userService.addUser(
-                                        new User(null, "peter@cinematic.com", "Peter", "peterpw", new ArrayList<>(),
+                                        new User(null, "peter@cinematic.com.hk", "Peter", "peterpw", new ArrayList<>(),
                                                         new ArrayList<>(), new ArrayList<>()));
                         userService.addRoleToUser("Peter", "MEMBER");
-                        userService.addRoleToUser("Peter", "ADMIN");
+
+                        userService.addUser(
+                                        new User(null, "admin@cinematic.com.hk", "Admin", "adminpw", new ArrayList<>(),
+                                                        new ArrayList<>(), new ArrayList<>()));
+                        userService.addRoleToUser("Admin", "MEMBER");
+                        userService.addRoleToUser("Admin", "ADMIN");
 
                         // Cinema
                         Cinema c1 = cinemaService.addCinema(new Cinema(null, "KINGSWOOD", "1515 5555",

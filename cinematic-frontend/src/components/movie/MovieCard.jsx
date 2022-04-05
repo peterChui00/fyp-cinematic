@@ -1,5 +1,6 @@
 import {
   Grid,
+  Box,
   Typography,
   CardMedia,
   CardActionArea,
@@ -7,6 +8,7 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import CommentIcon from "@mui/icons-material/Comment";
+import { display, maxWidth } from "@mui/system";
 
 export default function MovieCard({ movies, openMovieDetails }) {
   return movies.map((movie, index) => {
@@ -28,9 +30,23 @@ export default function MovieCard({ movies, openMovieDetails }) {
             alt={movie.title + " poster"}
           />
           <Stack sx={{ px: 1, mb: 1 }}>
-            <Typography variant="h6" component="div">
-              {movie.title}
-            </Typography>
+            <Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  width: "100%",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  display: "inline-block",
+                  maxWidth: "100%",
+                  wordBreak: "normal",
+                }}
+              >
+                {movie.title}
+              </Typography>
+            </Box>
+
             <Stack
               direction="row"
               sx={{

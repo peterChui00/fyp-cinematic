@@ -38,8 +38,8 @@ function Copyright(props) {
 }
 
 const initialState = {
-  username: "",
-  password: "",
+  username: "Admin",
+  password: "adminpw",
   isLoading: false,
   success: false,
   error: "",
@@ -84,18 +84,22 @@ export default function SignInSide() {
   const { username, password, isLoading, success, error } = state;
   let history = useHistory();
 
-  const login = async () => {
+  const login = async (e) => {
+    e.preventDefault();
     dispatch({ type: "SUBMIT" });
     try {
       const loginInfo = { username: username, password: password };
-      console.log(loginInfo);
       const res = await axios.post(
         "http://localhost:8080/api/login",
         loginInfo
       );
+      console.log(res);
       localStorage.setItem("uid", res.data.id);
       localStorage.setItem("uname", res.data.username);
-      localStorage.setItem("roles", res.data.roles.toString());
+      localStorage.setItem(
+        "roles",
+        res.data.roles.map((r) => r.name).toString()
+      );
       dispatch({ type: "SUCCESS" });
       await new Promise((res) => setTimeout(() => res("p1"), 2000));
       history.push("/");
@@ -130,6 +134,7 @@ export default function SignInSide() {
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
+          component="form"
           sx={{
             my: 6,
             mx: 4,
@@ -152,7 +157,6 @@ export default function SignInSide() {
           <Box sx={{ mt: 1 }}>
             <TextField
               margin="normal"
-              required
               fullWidth
               name="username"
               label="Username"
@@ -170,12 +174,12 @@ export default function SignInSide() {
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
+              value={password}
               autoComplete="current-password"
               onChange={(e) =>
                 dispatch({
@@ -186,15 +190,19 @@ export default function SignInSide() {
               }
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox value="remember" color="primary" checked={true} />
+              }
               label="Remember me"
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              onClick={login}
-              onKeyDown={(e) => (e.key === "Enter" ? login() : null)}
+              onClick={(e) => {
+                login(e);
+              }}
+              onKeyDown={(e) => (e.key === "Enter" ? login(e) : null)}
               sx={{ mt: 3, mb: 2, height: "50px" }}
             >
               {isLoading ? (

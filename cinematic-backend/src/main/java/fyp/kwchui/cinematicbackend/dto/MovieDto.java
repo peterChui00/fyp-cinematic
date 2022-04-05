@@ -20,7 +20,7 @@ public class MovieDto {
     private String distributor;
     private String description;
     private String posterFileName;
-    private String streamingUri;
     private LocalDate releaseDate;
     private float duration;
+    private float avgRating;
 }

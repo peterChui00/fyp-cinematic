@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ORDER_API_BASE_URL = "http://localhost:8080/api/order/";
-const SEAT_API_BASE_URL = "http://localhost:8080/api/seat/";
+/* const SEAT_API_BASE_URL = "http://localhost:8080/api/seat/"; */
 
 class OrderService {
   occupySeats(seats) {

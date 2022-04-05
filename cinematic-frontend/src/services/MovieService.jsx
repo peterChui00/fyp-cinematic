@@ -46,5 +46,13 @@ class MovieService {
   getMovieDetail(movieId) {
     return axios.get(MOVIE_API_BASE_URL + movieId + "/detail");
   }
+
+  getMovieReviewsByMovieId(movieId) {
+    return axios.get(MOVIE_API_BASE_URL + movieId + "/movieReview");
+  }
+
+  addMovieReview(movieId, movieReview) {
+    return axios.post(MOVIE_API_BASE_URL + movieId + "/movieReview", movieReview);
+  }
 }
 export default new MovieService();

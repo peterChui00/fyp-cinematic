@@ -21,8 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 /* import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder; */
+import org.springframework.http.MediaType; */
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,11 +70,9 @@ public class UserController {
 
     @PostMapping(path = "/user")
     public ResponseEntity<User> addUser(@RequestBody User user) {
-        /*
-         * URI uri =
-         * URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(
-         * "/api/user").toUriString());
-         */
+
+        /* URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(
+                "/api/user").toUriString()); */
         /* return ResponseEntity.created(uri).body(userService.addUser(user)); */
         return new ResponseEntity<User>(
                 userService.addUser(user), HttpStatus.CREATED);

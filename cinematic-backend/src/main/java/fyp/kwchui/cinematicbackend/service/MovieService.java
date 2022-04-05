@@ -18,12 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 import fyp.kwchui.cinematicbackend.dto.MovieDetailDto;
 import fyp.kwchui.cinematicbackend.dto.MovieDto;
 import fyp.kwchui.cinematicbackend.dto.MovieListDto;
+import fyp.kwchui.cinematicbackend.dto.MovieReviewDto;
 import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.MovieReview;
 import fyp.kwchui.cinematicbackend.model.MovieShowing;
+import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
+import fyp.kwchui.cinematicbackend.repository.MovieReviewRepository;
 import fyp.kwchui.cinematicbackend.repository.MovieShowingRepository;
+import fyp.kwchui.cinematicbackend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -37,14 +41,24 @@ public class MovieService {
     MovieShowingRepository movieShowingRepository;
 
     @Autowired
+    MovieReviewRepository movieReviewRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     public List<Movie> getMovies() {
         return movieRepository.findAll();
     }
 
-    public Movie getMovieById(Long movieId) {
-        return movieRepository.findById(movieId).get();
+    public MovieDto getMovieById(Long movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalStateException("Movie with ID " + movieId + " does not exists."));
+        MovieDto movieDto = modelMapper.map(movie, MovieDto.class);
+        movieDto.setAvgRating(getAvgRating(movie.getMovieReviews()));
+        return movieDto;
     }
 
     public void addMovie(Movie movie) {
@@ -200,4 +214,30 @@ public class MovieService {
         return movieDetailDto;
     }
 
+    // *** Movie review operations ***
+    public List<MovieReviewDto> getMovieReviewByMovieId(Long movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalStateException("Movie with ID " + movieId + " does not exists."));
+        List<MovieReview> movieReviews = movie.getMovieReviews();
+        List<MovieReviewDto> movieReviewDtos = new ArrayList<>();
+        for (MovieReview movieReview : movieReviews) {
+            MovieReviewDto movieReviewDto = modelMapper.map(movieReview, MovieReviewDto.class);
+            movieReviewDto.setUserId(movieReview.getUser().getId());
+            movieReviewDto.setUsername(movieReview.getUser().getUsername());
+            movieReviewDtos.add(movieReviewDto);
+        }
+        return movieReviewDtos;
+    }
+
+    public MovieReviewDto addMovieReview(Long movieId, MovieReviewDto movieReviewDto) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalStateException("Movie does not exists."));
+        User user = userRepository.findByUsername(movieReviewDto.getUsername())
+                .orElseThrow(() -> new IllegalStateException("User does not exists."));
+        MovieReview movieReview = modelMapper.map(movieReviewDto, MovieReview.class);
+        movieReview.setMovie(movie);
+        movieReview.setUser(user);
+        movieReviewRepository.save(movieReview);
+        return movieReviewDto;
+    }
 }

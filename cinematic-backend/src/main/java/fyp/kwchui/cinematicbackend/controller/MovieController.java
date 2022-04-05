@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fyp.kwchui.cinematicbackend.dto.MovieDetailDto;
+import fyp.kwchui.cinematicbackend.dto.MovieDto;
 import fyp.kwchui.cinematicbackend.dto.MovieListDto;
+import fyp.kwchui.cinematicbackend.dto.MovieReviewDto;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.service.MovieService;
 
@@ -38,7 +41,7 @@ public class MovieController {
     }
 
     @GetMapping(path = "/movie/{movieId}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable("movieId") Long movieId) {
+    public ResponseEntity<MovieDto> getMovieById(@PathVariable("movieId") Long movieId) {
         return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
 
@@ -69,6 +72,8 @@ public class MovieController {
 
     }
 
+    // *** Advanced operations ***
+
     @GetMapping(path = "/movie/showing")
     public ResponseEntity<List<MovieListDto>> getShowingMovies() {
         return ResponseEntity.ok(movieService.getMoviesForMovieList("showing"));
@@ -90,4 +95,18 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovieDetail(movieId));
     }
 
+    // *** Movie review operations ***
+    
+    @GetMapping(path = "/movie/{movieId}/movieReview")
+    public ResponseEntity<List<MovieReviewDto>> getMovieReviewByMovieId(@PathVariable("movieId") Long movieId) {
+        return ResponseEntity.ok(movieService.getMovieReviewByMovieId(movieId));
+    }
+
+    @PostMapping(path = "/movie/{movieId}/movieReview")
+    public ResponseEntity<MovieReviewDto> addMovieReview(
+            @PathVariable("movieId") Long movieId,
+            @RequestBody MovieReviewDto movieReviewDto) {
+        return new ResponseEntity<MovieReviewDto>(
+                movieService.addMovieReview(movieId, movieReviewDto), HttpStatus.CREATED);
+    }
 }

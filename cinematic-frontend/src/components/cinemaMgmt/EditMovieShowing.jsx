@@ -304,7 +304,7 @@ function EditMovieShowing() {
                     </Box>
                     {row.map((seat, seatIndex) => {
                       const isAvailable = !seat.available;
-                      const isOccupied = seat.isOccupied;
+                      const isOccupied = seat.occupied;
                       return (
                         <Box
                           key={seatIndex}

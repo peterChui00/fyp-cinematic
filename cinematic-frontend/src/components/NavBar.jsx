@@ -171,12 +171,17 @@ export default function NavBar({ handleDrawerToggle }) {
             <Button onClick={() => history.push("/")}>Home</Button>
             <Button onClick={() => history.push("/movie")}>Movie</Button>
             <Button onClick={() => history.push("/cinema")}>Cinema</Button>
-            <Button onClick={() => history.push("/movieMgmt")}>
-              Movie Mgmt
-            </Button>
-            <Button onClick={() => history.push("/cinemaMgmt")}>
-              Cinema Mgmt
-            </Button>
+            {localStorage.getItem("roles") !== null &&
+            localStorage.getItem("roles").includes("ADMIN") ? (
+              <>
+                <Button onClick={() => history.push("/movieMgmt")}>
+                  Movie Mgmt
+                </Button>
+                <Button onClick={() => history.push("/cinemaMgmt")}>
+                  Cinema Mgmt
+                </Button>
+              </>
+            ) : null}
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />

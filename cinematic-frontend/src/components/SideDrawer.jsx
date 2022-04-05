@@ -23,14 +23,10 @@ export default function SideDrawer() {
     <HomeIcon />,
     <MovieIcon />,
     <CameraIndoorIcon />,
-    <OndemandVideoIcon />,
   ];
   const iconList2 = [<MovieFilterIcon />, <CameraOutdoorIcon />, <GroupIcon />];
-  const nameList1 = ["Home", "Movie", "Cinema", "Watch"];
-  const nameList2 = [
-    "Movie Management",
-    "Cinema Management",
-  ];
+  const nameList1 = ["Home", "Movie", "Cinema"];
+  const nameList2 = ["Movie Management", "Cinema Management"];
   const linkList1 = ["/", "/movie", "/cinema", "/watch"];
   const linkList2 = ["/movieMgmt", "/cinemaMgmt"];
 
@@ -86,27 +82,33 @@ export default function SideDrawer() {
         ))}
       </List>
       <Divider />
-      <List>
-        {nameList2.map((text, index) => (
-          <Link
-            href={linkList2[index]}
-            underline="none"
-            color="inherit"
-            key={index}
-          >
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index < iconList2.length ? iconList2[index] : <HomeIcon />}
-              </ListItemIcon>
-              <ListItemText
-                primary={text}
-                primaryTypographyProps={{ fontSize: "0.9em" }}
-              />
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-      <Divider />
+      {localStorage.getItem("roles") !== null &&
+      localStorage.getItem("roles").includes("ADMIN") ? (
+        <>
+          <List>
+            {nameList2.map((text, index) => (
+              <Link
+                href={linkList2[index]}
+                underline="none"
+                color="inherit"
+                key={index}
+              >
+                <ListItem button key={text}>
+                  <ListItemIcon>
+                    {index < iconList2.length ? iconList2[index] : <HomeIcon />}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    primaryTypographyProps={{ fontSize: "0.9em" }}
+                  />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+          <Divider />
+        </>
+      ) : null}
+
       <Stack
         sx={{ py: 1, px: 2, fontSize: "9px", color: "text.disabled" }}
         spacing={1}

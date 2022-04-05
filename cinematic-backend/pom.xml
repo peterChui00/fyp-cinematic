@@ -12,7 +12,7 @@
 	<artifactId>cinematic-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cinematic-backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Final Year project by Peter CHUI</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -38,7 +38,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -49,35 +48,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
-  			<groupId>org.springframework.boot</groupId>
-  			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>-->
-		<!-- <dependency>
-  			<groupId>org.springframework.security</groupId>
-  			<artifactId>spring-security-test</artifactId>
-  			<scope>test</scope>
-		</dependency> -->
-	<!-- 	<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>3.18.2</version>
-		</dependency>  -->
-
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-
-		<!-- Swagger
-			https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
-		<dependency>
-    		<groupId>io.springfox</groupId>
-    		<artifactId>springfox-boot-starter</artifactId>
-    		<version>3.0.0</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>

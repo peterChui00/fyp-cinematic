@@ -38,9 +38,9 @@ const initialState = {
     duration: "",
     posterFileName: "",
     releaseDate: null,
+    movieReview: [],
   },
   movieShowing: [],
-  movieReview: [],
   dateForTab: [],
   cinema: [],
   tab: 0,
@@ -92,7 +92,6 @@ function MovieDetail() {
             type: FETCH_DATA,
             payload: {
               movie: res1.data.movie,
-              movieReview: resData1.movieReviews,
               movieShowing: resData1.movieShowings,
               cinema: resData2,
             },
@@ -119,7 +118,7 @@ function MovieDetail() {
         <Grid item xs={9} sm={3}>
           <CardMedia
             component="img"
-            sx={{ width: 1, borderRadius: 3 }}
+            sx={{ width: 1, borderRadius: 3, maxWidth: "250px" }}
             image={process.env.PUBLIC_URL + "/assets/" + movie.posterFileName}
             alt={movie.title + " poster"}
           />
@@ -132,7 +131,11 @@ function MovieDetail() {
                 <IconButton>
                   <BookmarkBorderIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={() => {
+                    history.push("/movie/" + movieId + "/movieReview");
+                  }}
+                >
                   <CommentIcon />
                 </IconButton>
               </Stack>
