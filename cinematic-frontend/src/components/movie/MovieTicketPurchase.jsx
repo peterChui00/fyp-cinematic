@@ -65,7 +65,7 @@ const initialState = {
   step: 0,
   /*   loading: false,*/
   success: false,
-  error: false,
+  error: "",
   order: { id: "", orderTime: "" },
 };
 
@@ -227,7 +227,7 @@ export default function MovieTicketPurchase() {
   const addOrder = async () => {
     try {
       const requestData = {
-        userId: 1,
+        userId: localStorage.getItem("uid"),
         orderTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
         seats: selectedSeat,
         ticketTypes: ticketType.filter((tt) => tt.quantity !== 0),
@@ -239,7 +239,7 @@ export default function MovieTicketPurchase() {
       dispatch({ type: SUCCESS, payload: true });
     } catch (err) {
       console.error(err);
-      dispatch({ type: ERROR, payload: true });
+      dispatch({ type: ERROR, payload: "FAIL" });
     }
     dispatch({ type: CHANGE_STEP, payload: 2 });
   };
@@ -443,13 +443,40 @@ export default function MovieTicketPurchase() {
         </Box>
       )}
 
-      <Dialog open={error} maxWidth="xs" keepMounted>
+      <Dialog open={error === "TIMEOUT"} maxWidth="xs" keepMounted>
         <DialogTitle>Session Expired</DialogTitle>
         <DialogContent>
           Your purchase has taken more than 15 minutes. This session will end.
         </DialogContent>
         <DialogActions>
           <Button onClick={backToMovieList}>OK</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={error === "UNAUTHENTICATED"}
+        maxWidth="xs"
+        onClose={() => {
+          dispatch({ type: ERROR, payload: "" });
+        }}
+      >
+        <DialogTitle>Unauthenticated</DialogTitle>
+        <DialogContent>Please signin before selecting seats.</DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              dispatch({ type: ERROR, payload: "" });
+            }}
+          >
+            CANCEL
+          </Button>
+          <Button
+            onClick={() => {
+              history.push("/signin");
+            }}
+          >
+            SIGNIN
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

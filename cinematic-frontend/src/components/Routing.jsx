@@ -12,6 +12,8 @@ import MovieShowingMgmt from "./cinemaMgmt/MovieShowingMgmt";
 import EditMovieShowing from "./cinemaMgmt/EditMovieShowing";
 import MovieTicketPurchase from "./movie/MovieTicketPurchase";
 import MovieReview from "./movie/MovieReview";
+import NotFound from "./NotFound";
+import Order from "./user/Order";
 
 export default function Routing() {
   return (
@@ -31,6 +33,8 @@ export default function Routing() {
           exact
           component={MovieTicketPurchase}
         />
+        <Route path="/order" exact component={Order} />
+        {/* <Route path="/setting" /> */}
 
         {/* Management routes */}
         <Route path="/movieMgmt" exact component={MovieManagement} />
@@ -70,6 +74,9 @@ export default function Routing() {
           exact
           component={EditMovieShowing}
         />
+
+        {/* Page Not Found route */}
+        <Route component={NotFound} />
       </Switch>
     </>
   );

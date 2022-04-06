@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { SELECT_SEAT } from "./MovieTicketPurchase";
+import { ERROR, SELECT_SEAT } from "./MovieTicketPurchase";
 import clsx from "clsx";
 import "../styles.css";
 
@@ -118,7 +118,13 @@ export default function SeatSelection({ state, dispatch, occupySeats }) {
             size="medium"
             variant="outlined"
             startIcon={<CheckCircleIcon />}
-            onClick={() => (selectedSeat.length > 0 ? occupySeats() : null)}
+            onClick={() =>
+              selectedSeat.length > 0
+                ? localStorage.getItem("uid") !== null
+                  ? occupySeats()
+                  : dispatch({ type: ERROR, payload: "UNAUTHENTICATED" })
+                : null
+            }
             color="success"
           >
             Confirm

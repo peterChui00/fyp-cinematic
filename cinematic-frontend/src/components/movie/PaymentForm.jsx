@@ -56,7 +56,7 @@ export default function PaymentForm({ state, dispatch, addOrder, releaseSeats}) 
     if (completed) {
       // Render a complete state
       console.log("Time up");
-      dispatch({ type: ERROR, payload: true });
+      dispatch({ type: ERROR, payload: "TIMEOUT" });
       return "Time up!";
     } else {
       // Render a countdown

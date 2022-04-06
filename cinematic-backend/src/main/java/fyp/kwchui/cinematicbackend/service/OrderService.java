@@ -45,14 +45,15 @@ public class OrderService {
         }
         timerService.releaseSeats(seatsToBeOccupied);
     }
-/* 
-    public void releaseSeats(List<Seat> seatsToBeReleased) {
-        for (Seat seatToBeReleased : seatsToBeReleased) {
-            Seat seat = seatRepository.getById(seatToBeReleased.getId());
-            seat.setOccupied(false);
-            seatRepository.save(seat);
-        }
-    } */
+    /*
+     * public void releaseSeats(List<Seat> seatsToBeReleased) {
+     * for (Seat seatToBeReleased : seatsToBeReleased) {
+     * Seat seat = seatRepository.getById(seatToBeReleased.getId());
+     * seat.setOccupied(false);
+     * seatRepository.save(seat);
+     * }
+     * }
+     */
 
     public Order addOrder(AddOrderDto addOrderDto) {
         Order order = new Order();
@@ -90,4 +91,10 @@ public class OrderService {
         log.info("New order by user {}#{}", user.getUsername(), user.getId());
         return orderRepository.save(order);
     }
+
+    public List<Order> getOrderByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User does not exists."));
+        return user.getOrders();
+    };
 }

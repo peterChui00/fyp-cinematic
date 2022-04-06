@@ -15,6 +15,8 @@ import {
   ListItemText,
   ListItem,
   Divider,
+  Tooltip,
+  ListItemIcon,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -22,6 +24,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
 import moment from "moment";
 import { Context } from "../App";
 
@@ -50,7 +54,15 @@ export default function NavBar({ handleDrawerToggle }) {
     setNotifAnchorEl(null);
   };
 
-  const notificationMenu = (
+  const handleAcMenuOpen = (event) => {
+    setAcAnchorEl(event.currentTarget);
+  };
+
+  const handleAcMenuClose = () => {
+    setAcAnchorEl(null);
+  };
+
+  const NotificationMenu = (
     <Menu
       anchorEl={notifAnchorEl}
       id="notification-menu"
@@ -86,6 +98,49 @@ export default function NavBar({ handleDrawerToggle }) {
           <Box sx={{ my: 1 }}>No Notification</Box>
         </MenuItem>
       )}
+    </Menu>
+  );
+
+  const AcMenu = (
+    <Menu
+      anchorEl={acAnchorEl}
+      id="notification-menu"
+      keepMounted
+      open={isAcMenuOpen}
+      onClose={handleAcMenuClose}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      MenuListProps={{
+        "aria-labelledby": "long-button",
+      }}
+    >
+      <MenuItem
+        onClick={() => {
+          history.push("/setting");
+        }}
+      >
+        <ListItemIcon>
+          <SettingsIcon fontSize="small" />
+        </ListItemIcon>
+        Settings
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          history.push("/signin");
+          localStorage.clear();
+        }}
+      >
+        <ListItemIcon>
+          <LogoutIcon fontSize="small" />
+        </ListItemIcon>
+        Logout
+      </MenuItem>
     </Menu>
   );
 
@@ -188,52 +243,54 @@ export default function NavBar({ handleDrawerToggle }) {
 
           <Box sx={{ display: { xs: "none", md: "flex" }, mb: 1 }}>
             {localStorage.getItem("uid") !== null ? (
+              <Tooltip title="Orders">
+                <IconButton
+                  size="small"
+                  aria-label="show orders"
+                  color="inherit"
+                  sx={{ mr: 1 }}
+                  onClick={() => history.push("/order")}
+                >
+                  <ReceiptIcon />
+                </IconButton>
+              </Tooltip>
+            ) : null}
+            <Tooltip title="Notifications">
               <IconButton
                 size="small"
-                aria-label="show orders"
+                aria-label="show new notifications"
                 color="inherit"
-                sx={{ mr: 1 }}
-                onClick={() => history.push("/order")}
+                sx={{ mr: 2 }}
+                onClick={(e) => {
+                  handleNotifMenuOpen(e);
+                  if (notifications.messages.length > 0) {
+                    globalState.setNotifications({
+                      ...notifications,
+                      quantity: 0,
+                    });
+                  }
+                }}
               >
-                <ReceiptIcon />
+                <Badge badgeContent={notifications.quantity} color="error">
+                  <NotificationsIcon />
+                </Badge>
               </IconButton>
-            ) : null}
-
-            <IconButton
-              size="small"
-              aria-label="show new notifications"
-              color="inherit"
-              sx={{ mr: 2 }}
-              onClick={(e) => {
-                handleNotifMenuOpen(e);
-                if (notifications.messages.length > 0) {
-                  globalState.setNotifications({
-                    ...notifications,
-                    quantity: 0,
-                  });
-                }
-              }}
-            >
-              <Badge badgeContent={notifications.quantity} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            </Tooltip>
 
             {localStorage.getItem("uid") !== null ? (
-              <IconButton
-                size="small"
-                edge="end"
-                aria-label="user account setting button"
-                onClick={() => {
-                  history.push("/signin");
-                  localStorage.clear();
-                }}
-                color="inherit"
-              >
-                <Avatar sx={{ width: 32, height: 32 }}>
-                  {localStorage.getItem("uname").charAt(0).toUpperCase()}
-                </Avatar>
-              </IconButton>
+              <Tooltip title="Account">
+                <IconButton
+                  size="small"
+                  edge="end"
+                  aria-label="user account setting button"
+                  onClick={handleAcMenuOpen}
+                  color="inherit"
+                >
+                  <Avatar sx={{ width: 32, height: 32 }}>
+                    {localStorage.getItem("uname").charAt(0).toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
             ) : (
               <Button
                 variant="outlined"
@@ -252,7 +309,8 @@ export default function NavBar({ handleDrawerToggle }) {
           </Box>
         </Toolbar>
       </AppBar>
-      {notificationMenu}
+      {NotificationMenu}
+      {AcMenu}
     </>
   );
 }
