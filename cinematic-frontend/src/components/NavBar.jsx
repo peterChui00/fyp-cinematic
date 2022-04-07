@@ -222,17 +222,48 @@ export default function NavBar({ handleDrawerToggle }) {
             />
           </Search>
 
-          <Box sx={{ display: { xs: "none", md: "flex" }, mb: 1 }}>
-            <Button onClick={() => history.push("/")}>Home</Button>
-            <Button onClick={() => history.push("/movie")}>Movie</Button>
-            <Button onClick={() => history.push("/cinema")}>Cinema</Button>
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mb: 1,
+            }}
+          >
+            <Button
+              sx={{ color: "white" }}
+              variant="text"
+              onClick={() => history.push("/")}
+            >
+              Home
+            </Button>
+            <Button
+              sx={{ color: "white" }}
+              variant="text"
+              onClick={() => history.push("/movie")}
+            >
+              Movie
+            </Button>
+            <Button
+              sx={{ color: "white" }}
+              variant="text"
+              onClick={() => history.push("/cinema")}
+            >
+              Cinema
+            </Button>
             {localStorage.getItem("roles") !== null &&
             localStorage.getItem("roles").includes("ADMIN") ? (
               <>
-                <Button onClick={() => history.push("/movieMgmt")}>
+                <Button
+                  sx={{ color: "white" }}
+                  variant="text"
+                  onClick={() => history.push("/movieMgmt")}
+                >
                   Movie Mgmt
                 </Button>
-                <Button onClick={() => history.push("/cinemaMgmt")}>
+                <Button
+                  sx={{ color: "white" }}
+                  variant="text"
+                  onClick={() => history.push("/cinemaMgmt")}
+                >
                   Cinema Mgmt
                 </Button>
               </>

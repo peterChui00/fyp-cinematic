@@ -11,6 +11,10 @@ class OrderService {
   addOrder(order) {
     return axios.post(ORDER_API_BASE_URL, order);
   }
+
+  getOrdersByUserId(userId) {
+    return axios.get("http://localhost:8080/api/user/" + userId + "/order");
+  }
 }
 
 export default new OrderService();

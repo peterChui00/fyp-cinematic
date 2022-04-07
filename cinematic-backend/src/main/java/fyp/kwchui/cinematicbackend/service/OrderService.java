@@ -6,11 +6,17 @@ import java.util.ArrayList;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fyp.kwchui.cinematicbackend.dto.AddOrderDto;
+import fyp.kwchui.cinematicbackend.dto.MovieShowingDto;
+import fyp.kwchui.cinematicbackend.dto.OrderDto;
+import fyp.kwchui.cinematicbackend.dto.SeatDto;
+import fyp.kwchui.cinematicbackend.dto.TicketDto;
 import fyp.kwchui.cinematicbackend.dto.TicketTypeDto;
+import fyp.kwchui.cinematicbackend.model.MovieShowing;
 import fyp.kwchui.cinematicbackend.model.Order;
 import fyp.kwchui.cinematicbackend.model.Seat;
 import fyp.kwchui.cinematicbackend.model.Ticket;
@@ -36,6 +42,9 @@ public class OrderService {
 
     @Autowired
     TimerService timerService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public void occupySeats(List<Seat> seatsToBeOccupied) {
         for (Seat seatToBeOccupied : seatsToBeOccupied) {
@@ -92,9 +101,39 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public List<Order> getOrderByUserId(Long userId) {
+    public List<OrderDto> getOrderByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User does not exists."));
-        return user.getOrders();
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Order order : user.getOrders()) {
+            OrderDto orderDto = new OrderDto();
+            List<TicketDto> ticketDtos = new ArrayList<>();
+            for (Ticket ticket : order.getTickets()) {
+                Seat seat = ticket.getSeat();
+                MovieShowing movieShowing = seat.getMovieShowing();
+
+                MovieShowingDto movieShowingDto = new MovieShowingDto();
+                movieShowingDto.setId(movieShowing.getId());
+                movieShowingDto.setShowtime(movieShowing.getShowtime());
+                movieShowingDto.setMovieTitle(movieShowing.getMovie().getTitle());
+
+                SeatDto seatDto = modelMapper.map(seat, SeatDto.class);
+                seatDto.setCinemaName(movieShowing.getHouse().getCinema().getName());
+                seatDto.setHouseName(movieShowing.getHouse().getName());
+                seatDto.setRowStyle(movieShowing.getHouse().getRowStyle());
+                seatDto.setMovieShowingDto(movieShowingDto);
+
+                TicketDto ticketDto = modelMapper.map(ticket, TicketDto.class);
+                ticketDto.setSeatDto(seatDto);
+                ticketDtos.add(ticketDto);
+            }
+
+            orderDto.setId(order.getId());
+            orderDto.setOrderTime(order.getOrderTime());
+            orderDto.setPaymentMethod(order.getPaymentMethod());
+            orderDto.setTickets(ticketDtos);
+            orderDtos.add(orderDto);
+        }
+        return orderDtos;
     };
 }
