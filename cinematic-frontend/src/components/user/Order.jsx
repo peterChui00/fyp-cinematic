@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   CardMedia,
-  Stack,
 } from "@mui/material";
 
 import { useState, useEffect, useCallback } from "react";
@@ -64,7 +63,7 @@ export default function Order() {
               <Typography>Type</Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography>Price</Typography>
+              <Typography>Price (HKD$)</Typography>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -103,7 +102,7 @@ export default function Order() {
               Total
             </TableCell>
             <TableCell align="right">
-              {tickets.map(({ price }) => price).reduce((sum, i) => sum + i, 0)}
+              HKD${tickets.map(({ price }) => price).reduce((sum, i) => sum + i, 0)}
             </TableCell>
           </TableRow>
         </TableBody>

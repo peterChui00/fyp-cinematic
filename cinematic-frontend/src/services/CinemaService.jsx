@@ -9,6 +9,10 @@ class CinemaService {
     return axios.get(CINEMA_API_BASE_URL);
   }
 
+  getCinemasByUsername(username) {
+    return axios.get("http://localhost:8080/api/user/" + username + "/cinema");
+  }
+
   getCinemaById(cinemaId) {
     return axios.get(CINEMA_API_BASE_URL + cinemaId);
   }

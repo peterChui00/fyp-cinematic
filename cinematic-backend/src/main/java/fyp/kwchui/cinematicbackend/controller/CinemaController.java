@@ -39,15 +39,21 @@ public class CinemaController {
         return ResponseEntity.ok(cinemaService.getCinemas());
     }
 
+    @GetMapping(path = "user/{username}/cinema")
+    public ResponseEntity<List<Cinema>> getCinemasByUsername(
+            @PathVariable("username") String username) {
+        return ResponseEntity.ok(cinemaService.getCinemasByUsername(username));
+    }
+
     @GetMapping(path = "/cinema/{cinemaId}")
     public ResponseEntity<CinemaDto> getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
         return ResponseEntity.ok(cinemaService.getCinemaById(cinemaId));
     }
 
     @PostMapping(path = "/cinema")
-    public ResponseEntity<Cinema> addCinema(@RequestBody Cinema cinema) {
+    public ResponseEntity<Cinema> addCinema(@RequestBody CinemaDto cinemaDto) {
         return new ResponseEntity<Cinema>(
-                cinemaService.addCinema(cinema), HttpStatus.CREATED);
+                cinemaService.addCinema(cinemaDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/cinema/{cinemaId}")
@@ -58,7 +64,7 @@ public class CinemaController {
 
     @PutMapping(path = "/cinema/{cinemaId}")
     public ResponseEntity<Cinema> updateCinema(
-            @PathVariable("cinemaId") Long cinemaId, @RequestBody Cinema newCinema) {
+            @PathVariable("cinemaId") Long cinemaId, @RequestBody CinemaDto newCinema) {
         return ResponseEntity.ok(cinemaService.updateCinema(cinemaId, newCinema));
     }
 

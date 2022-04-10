@@ -14,4 +14,5 @@ public class CinemaDto {
     private String address;
     private Double longitude;
     private Double latitude;
+    private String username;
 }

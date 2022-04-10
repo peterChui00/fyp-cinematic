@@ -81,6 +81,10 @@ function EditCinema() {
       address: address,
       longitude: longitude,
       latitude: latitude,
+      username:
+        localStorage.getItem("uname") !== null
+          ? localStorage.getItem("uname")
+          : "",
     };
   }
 

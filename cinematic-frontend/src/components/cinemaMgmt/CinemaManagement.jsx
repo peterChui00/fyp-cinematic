@@ -16,10 +16,8 @@ import {
   IconButton,
   Paper,
   CircularProgress,
-  /* useMediaQuery, */
   Tooltip,
 } from "@mui/material";
-/* import { useTheme } from "@mui/material/styles"; */
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -30,8 +28,6 @@ import CinemaService from "../../services/CinemaService";
 function CinemaManagement() {
   const [cinemas, setCinemas] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  /* const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md")); */
 
   let history = useHistory();
 
@@ -42,7 +38,9 @@ function CinemaManagement() {
   const getCinemas = async () => {
     try {
       setLoading(true);
-      const res = await CinemaService.getCinemas();
+      const res = await CinemaService.getCinemasByUsername(
+        localStorage.getItem("uname")
+      );
       console.log(res);
       console.log(res.data);
       setCinemas(res.data);
@@ -131,7 +129,7 @@ function CinemaManagement() {
       >
         <Grid item>
           <Typography variant="h5" gutterBottom component="div">
-            Cinema Management
+            {"Cinema Management - " + localStorage.getItem("uname")}
           </Typography>
         </Grid>
         <Grid item>

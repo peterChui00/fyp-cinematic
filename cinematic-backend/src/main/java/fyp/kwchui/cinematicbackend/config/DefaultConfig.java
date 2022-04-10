@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import fyp.kwchui.cinematicbackend.dto.CinemaDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.model.Movie;
@@ -77,19 +78,20 @@ public class DefaultConfig {
 
                         userService.addUser(
                                         new User(null, "peter@cinematic.com.hk", "Peter", "peterpw", new ArrayList<>(),
-                                                        new ArrayList<>(), new ArrayList<>()));
+                                                        new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
                         userService.addRoleToUser("Peter", "MEMBER");
 
                         userService.addUser(
                                         new User(null, "admin@cinematic.com.hk", "Admin", "adminpw", new ArrayList<>(),
-                                                        new ArrayList<>(), new ArrayList<>()));
+                                                        new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
                         userService.addRoleToUser("Admin", "MEMBER");
+                        userService.addRoleToUser("Admin", "CINEMA_COMPANY");
                         userService.addRoleToUser("Admin", "ADMIN");
 
                         // Cinema
-                        Cinema c1 = cinemaService.addCinema(new Cinema(null, "KINGSWOOD", "1515 5555",
+                        Cinema c1 = cinemaService.addCinema(new CinemaDto(null, "KINGSWOOD", "1515 5555",
                                         "Shop G87A, 1/F, G/F, +WOO Phase 2, 18 Tin Yan Road, Tin Shui Wai, Yuen Long, NT",
-                                        114.00361745432208, 22.46088827958333, new ArrayList<>()));
+                                        114.00361745432208, 22.46088827958333, "Admin"));
 
                         // House
                         cinemaService.addHouse(c1.getId(),

@@ -14,6 +14,8 @@ import MovieTicketPurchase from "./movie/MovieTicketPurchase";
 import MovieReview from "./movie/MovieReview";
 import NotFound from "./NotFound";
 import Order from "./user/Order";
+import Setting from "./user/Setting";
+import CinemaList from "./cinema/CinemaList";
 
 export default function Routing() {
   return (
@@ -33,8 +35,9 @@ export default function Routing() {
           exact
           component={MovieTicketPurchase}
         />
+        <Route path="/cinema" exact component={CinemaList} />
         <Route path="/order" exact component={Order} />
-        {/* <Route path="/setting" /> */}
+        <Route path="/setting" exact component={Setting} />
 
         {/* Management routes */}
         <Route path="/movieMgmt" exact component={MovieManagement} />

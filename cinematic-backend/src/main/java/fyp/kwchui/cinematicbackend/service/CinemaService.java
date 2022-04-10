@@ -18,11 +18,13 @@ import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.MovieShowing;
 import fyp.kwchui.cinematicbackend.model.Seat;
 import fyp.kwchui.cinematicbackend.model.SeatingPlanSeat;
+import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.repository.CinemaRepository;
 import fyp.kwchui.cinematicbackend.repository.HouseRepository;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
 import fyp.kwchui.cinematicbackend.repository.MovieShowingRepository;
 import fyp.kwchui.cinematicbackend.repository.SeatingPlanSeatRepository;
+import fyp.kwchui.cinematicbackend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -46,22 +48,45 @@ public class CinemaService {
     MovieRepository movieRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     ModelMapper modelMapper;
 
     /* --- Cinema functions --- */
 
     public List<Cinema> getCinemas() {
-        return cinemaRepository.findAll();
+        List<Cinema> cinemas = cinemaRepository.findAll();
+        for (Cinema cinema : cinemas) {
+            cinema.setUsername(cinema.getUser().getUsername());
+        }
+        return cinemas;
+    }
+
+    public List<Cinema> getCinemasByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User does not exists."));
+        List<Cinema> cinemas = user.getCinemas();
+        for (Cinema cinema : cinemas) {
+            cinema.setUsername(username);
+        }
+        return cinemas;
     }
 
     public CinemaDto getCinemaById(Long cinemaId) {
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
         CinemaDto cinemaDto = modelMapper.map(cinema, CinemaDto.class);
+        cinemaDto.setUsername(cinema.getUser().getUsername());
         return cinemaDto;
     }
 
-    public Cinema addCinema(Cinema cinema) {
+    public Cinema addCinema(CinemaDto cinemaDto) {
+        Cinema cinema = modelMapper.map(cinemaDto, Cinema.class);
+        String username = cinemaDto.getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User does not exists."));
+        cinema.setUser(user);
         return cinemaRepository.save(cinema);
     }
 
@@ -72,7 +97,7 @@ public class CinemaService {
         cinemaRepository.deleteById(cinemaId);
     }
 
-    public Cinema updateCinema(Long cinemaId, Cinema newCinema) {
+    public Cinema updateCinema(Long cinemaId, CinemaDto newCinema) {
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalStateException("Cinema with id " + cinemaId + " does not exists."));
         cinema.setName(newCinema.getName());
