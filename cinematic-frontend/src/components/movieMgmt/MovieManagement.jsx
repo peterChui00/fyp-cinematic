@@ -63,7 +63,9 @@ function MovieManagement() {
           <TableCell>{movie.id}</TableCell>
           <TableCell>{movie.title}</TableCell>
           <TableCell>{movie.genre}</TableCell>
-          <TableCell>{movie.releaseDate}</TableCell>
+          <TableCell sx={{ whiteSpace: "nowrap" }}>
+            {movie.releaseDate}
+          </TableCell>
           <TableCell>{movie.language}</TableCell>
           <TableCell>{movie.category}</TableCell>
           <TableCell>{movie.duration}</TableCell>

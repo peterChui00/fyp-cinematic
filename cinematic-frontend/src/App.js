@@ -12,7 +12,6 @@ import CinemaService from "./services/CinemaService";
 import ResponsiveDrawer from "./components/ResponsiveDrawer";
 import SignInSide from "./components/SignInSide";
 import axios from "axios";
-import moment from "moment";
 
 export const Context = createContext();
 function App() {
@@ -166,6 +165,7 @@ function App() {
                 userLocation: userLocation,
                 notification: notifications,
                 setNotifications: setNotifications,
+                colorMode: colorMode,
                 setColorMode: setColorMode,
               }}
             >

@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import CommentIcon from "@mui/icons-material/Comment";
-import { display, maxWidth } from "@mui/system";
 
 export default function MovieCard({ movies, openMovieDetails }) {
   return movies.map((movie, index) => {
