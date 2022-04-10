@@ -12,10 +12,10 @@ import CinemaService from "./services/CinemaService";
 import ResponsiveDrawer from "./components/ResponsiveDrawer";
 import SignInSide from "./components/SignInSide";
 import axios from "axios";
+import moment from "moment";
 
 export const Context = createContext();
 function App() {
- 
   const [colorMode, setColorMode] = React.useState("dark");
   const [userLocation, setUserLocation] = useState(null);
   const [cinemas, setCinemas] = useState([]);
@@ -69,6 +69,7 @@ function App() {
               ),
             };
           })
+          .filter((c) => c.distance < 10)
           .sort((a, b) => a.distance - b.distance)
       );
       setRecentShowings(res1.data);
@@ -95,8 +96,15 @@ function App() {
       recentShowings.length > 0 &&
       userLocation !== null
     ) {
-      console.log("noti")
-      const movieIds = [...new Set(recentShowings.map((rs) => rs.movieId))];
+      const movieIds = [
+        ...new Set(
+          recentShowings
+            .filter((rs) =>
+              cinemas.some((c) => c.id === rs.cinemaId && c.distance < 10)
+            )
+            .map((rs) => rs.movieId)
+        ),
+      ];
       let movieTitles = "";
       let promotedMovieIds = [];
       movieIds.forEach((mId) => {
@@ -136,14 +144,14 @@ function App() {
               time: time,
               content: content,
             },
-          ],
+          ].sort((a, b) => b.time - a.time),
           promotedMovies: notifications.promotedMovies.concat(promotedMovieIds),
         });
       }
     }
   }, [recentShowings]);
 
-   useEffect(() => {
+  useEffect(() => {
     console.log(notifications);
   }, [notifications]);
 
