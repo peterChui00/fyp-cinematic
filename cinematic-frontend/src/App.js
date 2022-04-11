@@ -12,6 +12,7 @@ import CinemaService from "./services/CinemaService";
 import ResponsiveDrawer from "./components/ResponsiveDrawer";
 import SignInSide from "./components/SignInSide";
 import axios from "axios";
+import SignUpSide from "./components/SideUpSide";
 
 export const Context = createContext();
 function App() {
@@ -160,6 +161,7 @@ function App() {
         <Router>
           <Switch>
             <Route path="/signin" exact component={SignInSide} />
+            <Route path="/signup" exact component={SignUpSide} />
             <Context.Provider
               value={{
                 userLocation: userLocation,

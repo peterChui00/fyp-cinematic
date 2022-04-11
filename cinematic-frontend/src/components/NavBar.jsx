@@ -250,7 +250,7 @@ export default function NavBar({ handleDrawerToggle }) {
               Cinema
             </Button>
             {localStorage.getItem("roles") !== null &&
-            localStorage.getItem("roles").includes("ADMIN") ? (
+            localStorage.getItem("roles").includes("CINEMA_COMPANY") ? (
               <>
                 <Button
                   sx={{ color: "white" }}

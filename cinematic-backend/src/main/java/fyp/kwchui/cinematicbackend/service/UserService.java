@@ -1,7 +1,9 @@
 package fyp.kwchui.cinematicbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 /* import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder; */
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fyp.kwchui.cinematicbackend.dto.SignUpDto;
 import fyp.kwchui.cinematicbackend.model.Role;
 import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.repository.RoleRepository;
@@ -27,6 +30,9 @@ public class UserService/* implements UserDetailsService */ {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     /*
      * @Autowired
@@ -48,7 +54,7 @@ public class UserService/* implements UserDetailsService */ {
     }
 
     public User login(User loginInfo) throws Exception {
-        User user = userRepository.findByUsername(loginInfo.getUsername().toLowerCase())
+        User user = userRepository.findByUsername(loginInfo.getUsername())
                 .orElseThrow(() -> new IllegalStateException("User does not exists."));
         if (user.getUsername().toLowerCase().equals(loginInfo.getUsername().toLowerCase()) &&
                 user.getPassword().equals(loginInfo.getPassword())) {
@@ -59,9 +65,28 @@ public class UserService/* implements UserDetailsService */ {
 
     }
 
-    public User addUser(User user) {
+    public User addUser(SignUpDto signUpDto) {
         /* user.setPassword(passwordEncoder.encode(user.getPassword())); */
-        log.info("Adding new user [{}]", user.getUsername());
+
+        if (userRepository.findByUsername(signUpDto.getUsername().toLowerCase()).isPresent()) {
+            throw new IllegalStateException(
+                    "User with username \"" + signUpDto.getUsername() + "\" already exists.");
+        }
+        if (userRepository.findByEmail(signUpDto.getEmail()).isPresent()) {
+            throw new IllegalStateException(
+                    "Email address\"" + signUpDto.getEmail() + "\"has already registered.");
+        }
+
+        User user = modelMapper.map(signUpDto, User.class);
+        List<Role> roles = new ArrayList<>();
+        Role member = roleRepository.findByName("MEMBER").orElseThrow();
+        roles.add(member);
+        if (signUpDto.getRole().equals("CINEMA_COMPANY")) {
+            Role cinema_company = roleRepository.findByName("CINEMA_COMPANY").orElseThrow();
+            roles.add(cinema_company);
+        }
+        user.setRoles(roles);
+        log.info("Adding new user [{}] with roles [{}]", user.getUsername(), user.getRoles().toString());
         return userRepository.save(user);
     }
 

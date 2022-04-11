@@ -16,8 +16,8 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import DoneIcon from "@mui/icons-material/Done";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
+import UserService from "../services/UserService";
 
 function Copyright(props) {
   return (
@@ -89,10 +89,7 @@ export default function SignInSide() {
     dispatch({ type: "SUBMIT" });
     try {
       const loginInfo = { username: username, password: password };
-      const res = await axios.post(
-        "http://localhost:8080/api/login",
-        loginInfo
-      );
+      const res = await UserService.login(loginInfo);
       console.log(res);
       localStorage.setItem("uid", res.data.id);
       localStorage.setItem("uname", res.data.username);
@@ -223,7 +220,11 @@ export default function SignInSide() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="" variant="body2" sx={{ textDecoration: "none" }}>
+                <Link
+                  href="/signup"
+                  variant="body2"
+                  sx={{ textDecoration: "none" }}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

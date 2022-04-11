@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import fyp.kwchui.cinematicbackend.dto.CinemaDto;
+import fyp.kwchui.cinematicbackend.dto.SignUpDto;
 import fyp.kwchui.cinematicbackend.model.Cinema;
 import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.Role;
-import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
 import fyp.kwchui.cinematicbackend.service.CinemaService;
 import fyp.kwchui.cinematicbackend.service.UserService;
@@ -76,17 +76,12 @@ public class DefaultConfig {
                         userService.addRole(new Role(null, "CINEMA_COMPANY"));
                         userService.addRole(new Role(null, "ADMIN"));
 
-                        userService.addUser(
-                                        new User(null, "peter@cinematic.com.hk", "Peter", "peterpw", new ArrayList<>(),
-                                                        new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-                        userService.addRoleToUser("Peter", "MEMBER");
-
-                        userService.addUser(
-                                        new User(null, "admin@cinematic.com.hk", "Admin", "adminpw", new ArrayList<>(),
-                                                        new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+                        userService.addUser(new SignUpDto("admin@cinematic.com.hk", "Admin", "adminpw", "ADMIN"));
                         userService.addRoleToUser("Admin", "MEMBER");
                         userService.addRoleToUser("Admin", "CINEMA_COMPANY");
                         userService.addRoleToUser("Admin", "ADMIN");
+
+                        userService.addUser(new SignUpDto("peter@cinematic.com.hk", "Peter", "peterpw", "MEMBER"));
 
                         // Cinema
                         Cinema c1 = cinemaService.addCinema(new CinemaDto(null, "KINGSWOOD", "1515 5555",

@@ -22,9 +22,7 @@ export default function CinemaCard({ cinema }) {
                 justifyContent="space-between"
                 sx={{ mb: 1 }}
               >
-                <Typography variant="h6">
-                  {cinema.username + " - " + cinema.name}
-                </Typography>
+                <Typography variant="h6">{cinema.name}</Typography>
                 <Typography variant="h6">
                   {cinema.distance >= 0 && cinema.distance !== 999999
                     ? Math.round(cinema.distance * 10) / 10 + " km"

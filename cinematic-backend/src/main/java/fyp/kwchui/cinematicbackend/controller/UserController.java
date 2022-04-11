@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import fyp.kwchui.cinematicbackend.dto.SignUpDto;
 import fyp.kwchui.cinematicbackend.model.Role;
 import fyp.kwchui.cinematicbackend.model.User;
 import fyp.kwchui.cinematicbackend.service.UserService;
@@ -59,23 +60,21 @@ public class UserController {
         try {
             return ResponseEntity.ok().body(userService.login(loginInfo));
         } catch (Exception e) {
-            if (e instanceof IllegalStateException) {
-                throw new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED, e.getMessage(), e);
-            }
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED, e.getMessage(), e);
         }
     }
 
     @PostMapping(path = "/user")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-
-        /* URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(
-                "/api/user").toUriString()); */
+    public ResponseEntity<User> addUser(@RequestBody SignUpDto signUpDto) {
+        /*
+         * URI uri =
+         * URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(
+         * "/api/user").toUriString());
+         */
         /* return ResponseEntity.created(uri).body(userService.addUser(user)); */
         return new ResponseEntity<User>(
-                userService.addUser(user), HttpStatus.CREATED);
+                userService.addUser(signUpDto), HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/role")
