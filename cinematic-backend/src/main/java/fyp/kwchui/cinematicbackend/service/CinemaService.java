@@ -260,6 +260,26 @@ public class CinemaService {
 
     }
 
+    public List<MovieShowingDto> getWeeklyMovieShowingsByCinemaId(Long cinemaId) {
+        List<MovieShowingDto> movieShowingDtos = new ArrayList<>();
+        List<MovieShowing> weekMovieShowings = movieShowingRepository.findAllByShowtimeBetween(
+                LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusWeeks(1));
+        for (MovieShowing movieShowing : weekMovieShowings) {
+            if (movieShowing.getHouse().getCinema().getId() == cinemaId) {
+                MovieShowingDto movieShowingDto = new MovieShowingDto();
+                movieShowingDto.setId(movieShowing.getId());
+                movieShowingDto.setShowtime(movieShowing.getShowtime());
+                movieShowingDto.setHouseId(movieShowing.getHouse().getId());
+                movieShowingDto.setCinemaId(movieShowing.getHouse().getCinema().getId());
+                movieShowingDto.setMovieId(movieShowing.getMovie().getId());
+                movieShowingDto.setMovieTitle(movieShowing.getMovie().getTitle());
+                movieShowingDto.setOccupancyRate(movieShowing.getoccupancyRate());
+                movieShowingDtos.add(movieShowingDto);
+            }
+        }
+        return movieShowingDtos;
+    }
+
     public List<MovieShowingDto> getRecentMovieShowings() {
         List<MovieShowingDto> movieShowingDtos = new ArrayList<MovieShowingDto>();
         LocalDateTime showtimeStart = LocalDateTime.now().plusMinutes(10);

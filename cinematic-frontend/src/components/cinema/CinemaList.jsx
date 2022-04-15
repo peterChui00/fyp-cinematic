@@ -4,11 +4,9 @@ import {
   Grid,
   Typography,
   IconButton,
-  Tooltip,
   Snackbar,
   Alert,
 } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CloseIcon from "@mui/icons-material/Close";
 import CinemaService from "../../services/CinemaService";
 import CinemaCard from "./CinemaCard";

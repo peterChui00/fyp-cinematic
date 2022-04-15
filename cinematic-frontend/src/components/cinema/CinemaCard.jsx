@@ -9,12 +9,19 @@ import {
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import PhoneIcon from "@mui/icons-material/Phone";
+import { useHistory } from "react-router-dom";
 
 export default function CinemaCard({ cinema }) {
+  let history = useHistory();
+
   return (
     <>
       <Grid item xs={12} lg={6}>
-        <Card>
+        <Card
+          onClick={() => {
+            history.push("/cinema/" + cinema.id);
+          }}
+        >
           <CardActionArea>
             <CardContent>
               <Stack

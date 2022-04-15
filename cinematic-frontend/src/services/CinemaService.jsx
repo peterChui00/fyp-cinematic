@@ -60,6 +60,10 @@ class CinemaService {
 
   // *** Movie Showing functions ***
 
+  getWeeklyMovieShowingsByCinemaId(cinemaId) {
+    return axios.get(CINEMA_API_BASE_URL + cinemaId + "/movieShowing/week");
+  }
+
   getMovieShowingsByHouseId(cinemaId, houseId) {
     return axios.get(
       CINEMA_API_BASE_URL + cinemaId + "/house/" + houseId + "/movieShowing"

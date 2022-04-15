@@ -309,7 +309,7 @@ export default function NavBar({ handleDrawerToggle }) {
             </Tooltip>
 
             {localStorage.getItem("uid") !== null ? (
-              <Tooltip title="Account">
+              <Tooltip title={localStorage.getItem("uname")}>
                 <IconButton
                   size="small"
                   edge="end"

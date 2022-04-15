@@ -16,6 +16,7 @@ import NotFound from "./NotFound";
 import Order from "./user/Order";
 import Setting from "./user/Setting";
 import CinemaList from "./cinema/CinemaList";
+import CinemaDetail from "./cinema/CinemaDetail";
 
 export default function Routing() {
   return (
@@ -36,6 +37,7 @@ export default function Routing() {
           component={MovieTicketPurchase}
         />
         <Route path="/cinema" exact component={CinemaList} />
+        <Route path="/cinema/:cinemaId" exact component={CinemaDetail} />
         <Route path="/order" exact component={Order} />
         <Route path="/setting" exact component={Setting} />
 
