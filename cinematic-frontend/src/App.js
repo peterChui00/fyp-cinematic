@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import computeDistance from "./services/computeDistance";
 import CinemaService from "./services/CinemaService";
-import ResponsiveDrawer from "./components/ResponsiveDrawer";
+import Main from "./components/Main";
 import SignInSide from "./components/SignInSide";
 import axios from "axios";
 import SignUpSide from "./components/SideUpSide";
@@ -171,7 +171,7 @@ function App() {
                 setColorMode: setColorMode,
               }}
             >
-              <Route path="/" component={ResponsiveDrawer} />
+              <Route path="/" component={Main} />
             </Context.Provider>
           </Switch>
         </Router>

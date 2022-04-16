@@ -72,6 +72,7 @@ export default function CinemaTimetable({ state, setState, purchaseTicket }) {
                                 sx={{ fontSize: "18px" }}
                               >
                                 {ms.movieTitle}
+                                <br />
                                 {moment(ms.showtime).format("HH:mm") +
                                   " | HK$65"}
                               </Typography>

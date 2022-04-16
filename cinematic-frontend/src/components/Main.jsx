@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Routing from "./Routing";
 import Navigation from "./Navigation";
 
-function ResponsiveDrawer(props) {
+function Main(props) {
   const { window } = props;
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -20,8 +20,8 @@ function ResponsiveDrawer(props) {
   );
 }
 
-ResponsiveDrawer.propTypes = {
+Main.propTypes = {
   window: PropTypes.func,
 };
 
-export default ResponsiveDrawer;
+export default Main;

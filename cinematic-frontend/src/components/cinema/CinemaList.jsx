@@ -54,13 +54,13 @@ export default function CinemaList() {
     fetchData();
   }, [fetchData]);
 
-  const getUserGeoLocation = useCallback(() => {
+  /* const getUserGeoLocation = useCallback(() => {
     return new Promise((resolve, error) =>
       navigator.geolocation.getCurrentPosition(resolve, error)
     );
   }, []);
 
-  const shareLocation = async () => {
+ const shareLocation = async () => {
     try {
       const position = await getUserGeoLocation();
       setCinemas(
@@ -86,7 +86,7 @@ export default function CinemaList() {
       console.error(err);
       setOpenSnackbar(true);
     }
-  };
+  }; */
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

@@ -17,6 +17,7 @@ import Order from "./user/Order";
 import Setting from "./user/Setting";
 import CinemaList from "./cinema/CinemaList";
 import CinemaDetail from "./cinema/CinemaDetail";
+import MovieSearch from "./movie/MovieSearch";
 
 export default function Routing() {
   return (
@@ -40,6 +41,7 @@ export default function Routing() {
         <Route path="/cinema/:cinemaId" exact component={CinemaDetail} />
         <Route path="/order" exact component={Order} />
         <Route path="/setting" exact component={Setting} />
+        <Route path="/results" component={MovieSearch} />
 
         {/* Management routes */}
         <Route path="/movieMgmt" exact component={MovieManagement} />

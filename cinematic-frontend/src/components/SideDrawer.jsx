@@ -9,47 +9,51 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
+import { useHistory } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import MovieIcon from "@mui/icons-material/Movie";
-import GroupIcon from "@mui/icons-material/Group";
 import MovieFilterIcon from "@mui/icons-material/MovieFilter";
 import CameraIndoorIcon from "@mui/icons-material/CameraIndoor";
 import CameraOutdoorIcon from "@mui/icons-material/CameraOutdoor";
-import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 
-export default function SideDrawer() {
-  // --- Define drawer ---
-  const iconList1 = [
-    <HomeIcon />,
-    <MovieIcon />,
-    <CameraIndoorIcon />,
-  ];
-  const iconList2 = [<MovieFilterIcon />, <CameraOutdoorIcon />, <GroupIcon />];
-  const nameList1 = ["Home", "Movie", "Cinema"];
-  const nameList2 = ["Movie Management", "Cinema Management"];
-  const linkList1 = ["/", "/movie", "/cinema", "/watch"];
-  const linkList2 = ["/movieMgmt", "/cinemaMgmt"];
-
-  const drawerElement = {
-    common: {
+const drawerElement = {
+  common: [
+    {
       icon: <HomeIcon />,
       description: "Home",
       link: "/",
     },
-    management: {
+    {
+      icon: <MovieIcon />,
+      description: "Movie",
+      link: "/movie",
+    },
+    {
+      icon: <CameraIndoorIcon />,
+      description: "Cinema",
+      link: "/cinema",
+    },
+  ],
+  management: [
+    {
       icon: <MovieFilterIcon />,
       description: "Movie Management",
       link: "/movieMgmt",
     },
-  };
+    {
+      icon: <CameraOutdoorIcon />,
+      description: "Cinema Management",
+      link: "/cinemaMgmt",
+    },
+  ],
+};
+
+export default function SideDrawer() {
+  let history = useHistory();
 
   return (
     <div>
-      <List
-        sx={{
-          mt: { md: 4 },
-        }}
-      >
+      <List>
         <ListItem>
           <Typography
             variant="h6"
@@ -62,48 +66,53 @@ export default function SideDrawer() {
           </Typography>
         </ListItem>
 
-        {nameList1.map((text, index) => (
-          <Link
-            href={linkList1[index]}
-            underline="none"
-            color="inherit"
-            key={index}
-          >
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index < iconList1.length ? iconList1[index] : <HomeIcon />}
-              </ListItemIcon>
+        <ListItem>
+          <Stack
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="center"
+            spacing={1}
+          ></Stack>
+        </ListItem>
+
+        {drawerElement.common.map((c, index) => {
+          return (
+            <ListItem
+              button
+              onClick={() => {
+                history.push(c.link);
+              }}
+            >
+              <ListItemIcon>{c.icon}</ListItemIcon>
               <ListItemText
-                primary={text}
+                primary={c.description}
                 primaryTypographyProps={{ fontSize: "0.9em" }}
               />
             </ListItem>
-          </Link>
-        ))}
+          );
+        })}
       </List>
       <Divider />
       {localStorage.getItem("roles") !== null &&
-      localStorage.getItem("roles").includes("ADMIN") ? (
+      localStorage.getItem("roles").includes("CINEMA_COMPANY") ? (
         <>
           <List>
-            {nameList2.map((text, index) => (
-              <Link
-                href={linkList2[index]}
-                underline="none"
-                color="inherit"
-                key={index}
-              >
-                <ListItem button key={text}>
-                  <ListItemIcon>
-                    {index < iconList2.length ? iconList2[index] : <HomeIcon />}
-                  </ListItemIcon>
+            {drawerElement.management.map((m, index) => {
+              return (
+                <ListItem
+                  button
+                  onClick={() => {
+                    history.push(m.link);
+                  }}
+                >
+                  <ListItemIcon>{m.icon}</ListItemIcon>
                   <ListItemText
-                    primary={text}
+                    primary={m.description}
                     primaryTypographyProps={{ fontSize: "0.9em" }}
                   />
                 </ListItem>
-              </Link>
-            ))}
+              );
+            })}
           </List>
           <Divider />
         </>

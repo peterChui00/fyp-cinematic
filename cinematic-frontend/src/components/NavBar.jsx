@@ -11,12 +11,8 @@ import {
   Toolbar,
   Typography,
   Menu,
-  MenuItem,
-  ListItemText,
-  ListItem,
-  Divider,
   Tooltip,
-  ListItemIcon,
+  Stack,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -24,10 +20,38 @@ import SearchIcon from "@mui/icons-material/Search";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
-import moment from "moment";
+import MoreIcon from "@mui/icons-material/MoreVert";
 import { Context } from "../App";
+import NotifMenuContent from "./navbar/NotifMenuContent";
+import AcMenuContent from "./navbar/AcMenuContent";
+import MobileMenuContent from "./navbar/MobileMenuContent";
+
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("md")]: {
+    marginLeft: theme.spacing(2),
+    width: "100%",
+  },
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    /* padding: theme.spacing(0, 0, 0, 0), */
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(0)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+  },
+}));
 
 export default function NavBar({ handleDrawerToggle }) {
   const globalState = useContext(Context);
@@ -41,10 +65,14 @@ export default function NavBar({ handleDrawerToggle }) {
         }
       : globalState.notification;
 
+  const [keyword, setKeyword] = useState("");
   const [notifAnchorEl, setNotifAnchorEl] = useState(null);
   const isNotifMenuOpen = Boolean(notifAnchorEl);
   const [acAnchorEl, setAcAnchorEl] = useState(null);
   const isAcMenuOpen = Boolean(acAnchorEl);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [mobileMenuType, setMobileMenuType] = useState("MOBILE");
 
   const handleNotifMenuOpen = (event) => {
     setNotifAnchorEl(event.currentTarget);
@@ -62,6 +90,14 @@ export default function NavBar({ handleDrawerToggle }) {
     setAcAnchorEl(null);
   };
 
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
   const NotificationMenu = (
     <Menu
       anchorEl={notifAnchorEl}
@@ -69,35 +105,19 @@ export default function NavBar({ handleDrawerToggle }) {
       keepMounted
       open={isNotifMenuOpen}
       onClose={handleNotifMenuClose}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "center",
+        horizontal: "right",
+      }}
       MenuListProps={{
         "aria-labelledby": "long-button",
       }}
     >
-      <ListItem divider>
-        <ListItemText>
-          <Typography variant="h6">Notifications</Typography>
-        </ListItemText>
-      </ListItem>
-
-      {notifications.messages.length > 0 ? (
-        notifications.messages.map((msg, index) => {
-          return (
-            <MenuItem key={index} sx={{ whiteSpace: "normal" }} divider>
-              <Box sx={{ my: 1 }}>
-                {msg.content}
-                <Box sx={{ fontSize: "0.8em", mt: 1 }}>
-                  {moment(msg.time).fromNow()}
-                </Box>
-              </Box>
-              <Divider />
-            </MenuItem>
-          );
-        })
-      ) : (
-        <MenuItem sx={{ whiteSpace: "normal" }} divider>
-          <Box sx={{ my: 1 }}>No Notification</Box>
-        </MenuItem>
-      )}
+      <NotifMenuContent notifications={notifications} />
     </Menu>
   );
 
@@ -110,79 +130,45 @@ export default function NavBar({ handleDrawerToggle }) {
       onClose={handleAcMenuClose}
       anchorOrigin={{
         vertical: "bottom",
-        horizontal: "left",
+        horizontal: "right",
       }}
       transformOrigin={{
         vertical: "top",
-        horizontal: "left",
+        horizontal: "right",
       }}
       MenuListProps={{
         "aria-labelledby": "long-button",
       }}
     >
-      <MenuItem
-        onClick={() => {
-          history.push("/setting");
-        }}
-      >
-        <ListItemIcon>
-          <SettingsIcon fontSize="small" />
-        </ListItemIcon>
-        Settings
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          history.push("/signin");
-          localStorage.clear();
-        }}
-      >
-        <ListItemIcon>
-          <LogoutIcon fontSize="small" />
-        </ListItemIcon>
-        Logout
-      </MenuItem>
+      <AcMenuContent history={history} />
     </Menu>
   );
 
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "100%",
-      },
-    },
-  }));
+  const MobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id="mobile-menu"
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MobileMenuContent
+        history={history}
+        globalState={globalState}
+        mobileMenuType={mobileMenuType}
+        notifications={notifications}
+        setMobileMenuType={setMobileMenuType}
+      />
+    </Menu>
+  );
 
   return (
     <>
@@ -193,7 +179,7 @@ export default function NavBar({ handleDrawerToggle }) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, mb: 1, display: { md: "none" } }}
+            sx={{ mr: 2, mb: { sm: 1 }, display: { md: "none" } }}
           >
             <MenuIcon />
           </IconButton>
@@ -212,20 +198,41 @@ export default function NavBar({ handleDrawerToggle }) {
           >
             CINEMATIC
           </Typography>
-          <Search sx={{ mb: { xs: 1, md: 2 } }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search Movies"
-              inputProps={{ "aria-label": "search" }}
-            />
+
+          <Search sx={{ mb: { xs: 0, sm: 2, md: 2 } }}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <StyledInputBase
+                placeholder="Search Movies"
+                inputProps={{ "aria-label": "search" }}
+                value={keyword}
+                onChange={(e) => {
+                  setKeyword(e.target.value);
+                }}
+              />
+              <IconButton
+                type="submit"
+                onClick={() => {
+                  if (keyword.length > 0) {
+                    history.push("/results?search_query=" + keyword);
+                  }
+                }}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Stack>
           </Search>
 
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
-              mb: 1,
+              mb: 1.5,
+              ml: "auto",
+              mr: 6,
             }}
           >
             <Button
@@ -338,10 +345,25 @@ export default function NavBar({ handleDrawerToggle }) {
               </Button>
             )}
           </Box>
+          <Box sx={{ display: { xs: "flex", md: "none" }, mb: { sm: 1 } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-controls={"mobile-menu"}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <Badge badgeContent={notifications.quantity} color="error">
+                <MoreIcon />
+              </Badge>
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
       {NotificationMenu}
       {AcMenu}
+      {MobileMenu}
     </>
   );
 }
