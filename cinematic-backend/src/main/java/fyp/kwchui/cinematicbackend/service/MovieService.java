@@ -214,6 +214,18 @@ public class MovieService {
         return movieDetailDto;
     }
 
+    public List<MovieListDto> searchMovie(String query) {
+        List<MovieListDto> results = new ArrayList<>();
+        List<Movie> movies = movieRepository.searchMoive(query);
+        for (Movie movie : movies) {
+            MovieListDto movieListDto = modelMapper.map(movie, MovieListDto.class);
+            movieListDto.setAvgRating(getAvgRating(movie.getMovieReviews()));
+            movieListDto.setNumOfMovieReviews(movie.getMovieReviews().size());
+            results.add(movieListDto);
+        }
+        return results;
+    }
+
     // *** Movie review operations ***
     public List<MovieReviewDto> getMovieReviewByMovieId(Long movieId) {
         Movie movie = movieRepository.findById(movieId)

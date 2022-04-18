@@ -78,6 +78,7 @@ export default function SideDrawer() {
         {drawerElement.common.map((c, index) => {
           return (
             <ListItem
+              key={index}
               button
               onClick={() => {
                 history.push(c.link);
@@ -100,6 +101,7 @@ export default function SideDrawer() {
             {drawerElement.management.map((m, index) => {
               return (
                 <ListItem
+                  key={index}
                   button
                   onClick={() => {
                     history.push(m.link);

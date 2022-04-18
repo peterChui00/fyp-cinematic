@@ -95,8 +95,15 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovieDetail(movieId));
     }
 
+    @GetMapping(path = "/movie/results")
+    public ResponseEntity<List<MovieListDto>> searchMovie(
+            @RequestParam("search_query") String query) {
+
+        return ResponseEntity.ok(movieService.searchMovie(query));
+    }
+
     // *** Movie review operations ***
-    
+
     @GetMapping(path = "/movie/{movieId}/movieReview")
     public ResponseEntity<List<MovieReviewDto>> getMovieReviewByMovieId(@PathVariable("movieId") Long movieId) {
         return ResponseEntity.ok(movieService.getMovieReviewByMovieId(movieId));

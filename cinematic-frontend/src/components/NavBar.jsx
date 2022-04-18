@@ -12,7 +12,6 @@ import {
   Typography,
   Menu,
   Tooltip,
-  Stack,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -21,13 +20,13 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { Context } from "../App";
 import NotifMenuContent from "./navbar/NotifMenuContent";
 import AcMenuContent from "./navbar/AcMenuContent";
 import MobileMenuContent from "./navbar/MobileMenuContent";
 
 const Search = styled("div")(({ theme }) => ({
-  position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   "&:hover": {
@@ -140,7 +139,7 @@ export default function NavBar({ handleDrawerToggle }) {
         "aria-labelledby": "long-button",
       }}
     >
-      <AcMenuContent history={history} />
+      <AcMenuContent history={history} handleAcMenuClose={handleAcMenuClose} />
     </Menu>
   );
 
@@ -166,6 +165,7 @@ export default function NavBar({ handleDrawerToggle }) {
         mobileMenuType={mobileMenuType}
         notifications={notifications}
         setMobileMenuType={setMobileMenuType}
+        handleAcMenuClose={handleAcMenuClose}
       />
     </Menu>
   );
@@ -200,18 +200,24 @@ export default function NavBar({ handleDrawerToggle }) {
           </Typography>
 
           <Search sx={{ mb: { xs: 0, sm: 2, md: 2 } }}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+              }}
             >
               <StyledInputBase
+                sx={{ flexGrow: 1 }}
                 placeholder="Search Movies"
                 inputProps={{ "aria-label": "search" }}
                 value={keyword}
                 onChange={(e) => {
                   setKeyword(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && keyword.length > 0) {
+                    history.push("/results?search_query=" + keyword);
+                  }
                 }}
               />
               <IconButton
@@ -224,7 +230,7 @@ export default function NavBar({ handleDrawerToggle }) {
               >
                 <SearchIcon />
               </IconButton>
-            </Stack>
+            </Box>
           </Search>
 
           <Box
@@ -236,21 +242,21 @@ export default function NavBar({ handleDrawerToggle }) {
             }}
           >
             <Button
-              sx={{ color: "white" }}
+              sx={{ color: "white", height: "100%", alignSelf: "center" }}
               variant="text"
               onClick={() => history.push("/")}
             >
               Home
             </Button>
             <Button
-              sx={{ color: "white" }}
+              sx={{ color: "white", height: "100%", alignSelf: "center" }}
               variant="text"
               onClick={() => history.push("/movie")}
             >
               Movie
             </Button>
             <Button
-              sx={{ color: "white" }}
+              sx={{ color: "white", height: "100%", alignSelf: "center" }}
               variant="text"
               onClick={() => history.push("/cinema")}
             >
@@ -260,14 +266,14 @@ export default function NavBar({ handleDrawerToggle }) {
             localStorage.getItem("roles").includes("CINEMA_COMPANY") ? (
               <>
                 <Button
-                  sx={{ color: "white" }}
+                  sx={{ color: "white", height: "100%", alignSelf: "center" }}
                   variant="text"
                   onClick={() => history.push("/movieMgmt")}
                 >
                   Movie Mgmt
                 </Button>
                 <Button
-                  sx={{ color: "white" }}
+                  sx={{ color: "white", height: "100%", alignSelf: "center" }}
                   variant="text"
                   onClick={() => history.push("/cinemaMgmt")}
                 >
@@ -281,17 +287,30 @@ export default function NavBar({ handleDrawerToggle }) {
 
           <Box sx={{ display: { xs: "none", md: "flex" }, mb: 1 }}>
             {localStorage.getItem("uid") !== null ? (
-              <Tooltip title="Orders">
-                <IconButton
-                  size="small"
-                  aria-label="show orders"
-                  color="inherit"
-                  sx={{ mr: 1 }}
-                  onClick={() => history.push("/order")}
-                >
-                  <ReceiptIcon />
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title="Tickets">
+                  <IconButton
+                    size="small"
+                    aria-label="show tickets"
+                    color="inherit"
+                    sx={{ mr: 1 }}
+                    onClick={() => history.push("/ticketRepo")}
+                  >
+                    <ConfirmationNumberIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Orders">
+                  <IconButton
+                    size="small"
+                    aria-label="show orders"
+                    color="inherit"
+                    sx={{ mr: 1 }}
+                    onClick={() => history.push("/order")}
+                  >
+                    <ReceiptIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
             ) : null}
             <Tooltip title="Notifications">
               <IconButton

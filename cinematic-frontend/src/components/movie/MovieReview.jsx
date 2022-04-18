@@ -75,6 +75,7 @@ export default function MovieReview() {
     };
     await MovieService.addMovieReview(movieId, movieReview);
     handleClose();
+    fetchData();
   };
 
   return (

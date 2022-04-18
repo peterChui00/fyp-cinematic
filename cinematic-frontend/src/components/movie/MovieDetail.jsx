@@ -12,6 +12,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 /* import BookmarkIcon from "@mui/icons-material/Bookmark"; */
@@ -128,15 +129,17 @@ function MovieDetail() {
             <Grid item xs={12}>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Typography variant="h3">{movie.title}</Typography>
-                <IconButton>
+                {/* <IconButton>
                   <BookmarkBorderIcon />
-                </IconButton>
+                </IconButton> */}
                 <IconButton
                   onClick={() => {
                     history.push("/movie/" + movieId + "/movieReview");
                   }}
                 >
-                  <CommentIcon />
+                  <Tooltip title="Movie Reviews">
+                    <CommentIcon />
+                  </Tooltip>
                 </IconButton>
               </Stack>
             </Grid>

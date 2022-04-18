@@ -15,6 +15,10 @@ class OrderService {
   getOrdersByUserId(userId) {
     return axios.get("http://localhost:8080/api/user/" + userId + "/order");
   }
+
+  getTicketsByUserId(userId) {
+    return axios.get("http://localhost:8080/api/user/" + userId + "/ticket");
+  }
 }
 
 export default new OrderService();

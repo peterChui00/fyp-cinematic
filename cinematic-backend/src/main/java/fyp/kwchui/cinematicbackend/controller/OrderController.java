@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fyp.kwchui.cinematicbackend.dto.AddOrderDto;
 import fyp.kwchui.cinematicbackend.dto.OrderDto;
+import fyp.kwchui.cinematicbackend.dto.TicketDto;
 import fyp.kwchui.cinematicbackend.model.Order;
 import fyp.kwchui.cinematicbackend.model.Seat;
 import fyp.kwchui.cinematicbackend.service.OrderService;
@@ -51,5 +52,10 @@ public class OrderController {
     @GetMapping(path = "/user/{userId}/order")
     public ResponseEntity<List<OrderDto>> getOrdersByUserId(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(orderService.getOrderByUserId(userId));
+    }
+
+    @GetMapping(path = "/user/{userId}/ticket")
+    public ResponseEntity<List<TicketDto>> getTicketsByUserId(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(orderService.getTicketsByUserId(userId));
     }
 }

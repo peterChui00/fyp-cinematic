@@ -136,4 +136,33 @@ public class OrderService {
         }
         return orderDtos;
     };
+
+    public List<TicketDto> getTicketsByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User does not exists."));
+
+        List<TicketDto> ticketDtos = new ArrayList<>();
+        for (Order order : user.getOrders()) {
+            for (Ticket ticket : order.getTickets()) {
+                Seat seat = ticket.getSeat();
+                MovieShowing movieShowing = seat.getMovieShowing();
+
+                MovieShowingDto movieShowingDto = new MovieShowingDto();
+                movieShowingDto.setId(movieShowing.getId());
+                movieShowingDto.setShowtime(movieShowing.getShowtime());
+                movieShowingDto.setMovieTitle(movieShowing.getMovie().getTitle());
+
+                SeatDto seatDto = modelMapper.map(seat, SeatDto.class);
+                seatDto.setCinemaName(movieShowing.getHouse().getCinema().getName());
+                seatDto.setHouseName(movieShowing.getHouse().getName());
+                seatDto.setRowStyle(movieShowing.getHouse().getRowStyle());
+                seatDto.setMovieShowingDto(movieShowingDto);
+
+                TicketDto ticketDto = modelMapper.map(ticket, TicketDto.class);
+                ticketDto.setSeatDto(seatDto);
+                ticketDtos.add(ticketDto);
+            }
+        }
+        return ticketDtos;
+    };
 }

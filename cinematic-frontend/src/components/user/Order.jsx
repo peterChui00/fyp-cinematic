@@ -102,7 +102,8 @@ export default function Order() {
               Total
             </TableCell>
             <TableCell align="right">
-              HKD${tickets.map(({ price }) => price).reduce((sum, i) => sum + i, 0)}
+              HKD$
+              {tickets.map(({ price }) => price).reduce((sum, i) => sum + i, 0)}
             </TableCell>
           </TableRow>
         </TableBody>
@@ -125,48 +126,50 @@ export default function Order() {
           <Divider sx={{ borderBottomWidth: 5, mb: 1 }} />
         </Grid>
 
-        {order.map((o) => (
-          <Grid item xs={12} sx={{ my: 1 }} key={o.id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5">{"#" + o.id}</Typography>
-                <Grid container spacing={3} alignItems="center">
-                  <Grid item xs={6}>
-                    <Typography>
-                      {"Order Time: " +
-                        moment(o.orderTime).format("DD-MM-YYYY HH:mm:ss")}
-                    </Typography>
+        {order
+          .sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime))
+          .map((o) => (
+            <Grid item xs={12} sx={{ my: 1 }} key={o.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5">{"#" + o.id}</Typography>
+                  <Grid container spacing={3} alignItems="center">
+                    <Grid item xs={6}>
+                      <Typography>
+                        {"Order Time: " +
+                          moment(o.orderTime).format("DD-MM-YYYY HH:mm:ss")}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>
+                        {"Payment Method: " + o.paymentMethod}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>
+                        {"Cinema: " + o.tickets[0].seat.cinemaName}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>
+                        {"House: " + o.tickets[0].seat.houseName}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography>
+                        {"Showtime: " +
+                          moment(
+                            o.tickets[0].seat.movieShowing.showtime
+                          ).format("DD-MM-YYYY HH:mm")}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography>
-                      {"Payment Method: " + o.paymentMethod}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>
-                      {"Cinema: " + o.tickets[0].seat.cinemaName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>
-                      {"House: " + o.tickets[0].seat.houseName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography>
-                      {"Showtime: " +
-                        moment(o.tickets[0].seat.movieShowing.showtime).format(
-                          "DD-MM-YYYY HH:mm"
-                        )}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-              <Divider variant="middle" />
-              <TicketTable tickets={o.tickets} />
-            </Card>
-          </Grid>
-        ))}
+                </CardContent>
+                <Divider variant="middle" />
+                <TicketTable tickets={o.tickets} />
+              </Card>
+            </Grid>
+          ))}
       </Grid>
     </Box>
   );

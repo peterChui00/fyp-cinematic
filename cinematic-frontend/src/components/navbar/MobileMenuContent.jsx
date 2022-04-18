@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import LoginIcon from "@mui/icons-material/Login";
 import AcMenuContent from "./AcMenuContent";
 import NotifMenuContent from "./NotifMenuContent";
@@ -18,6 +20,7 @@ export default function MobileMenuContent({
   mobileMenuType,
   notifications,
   setMobileMenuType,
+  handleAcMenuClose,
 }) {
   return (
     <>
@@ -47,6 +50,34 @@ export default function MobileMenuContent({
 
           {localStorage.getItem("uid") !== null ? (
             <>
+              <MenuItem
+                divider
+                onClick={() => {
+                  history.push("/ticketRepo");
+                }}
+              >
+                <ListItemIcon>
+                  <ConfirmationNumberIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Typography>Tickets</Typography>
+                </ListItemText>
+              </MenuItem>
+
+              <MenuItem
+                divider
+                onClick={() => {
+                  history.push("/order");
+                }}
+              >
+                <ListItemIcon>
+                  <ReceiptIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Typography>Orders</Typography>
+                </ListItemText>
+              </MenuItem>
+
               <MenuItem>
                 <ListItemIcon>
                   <Avatar sx={{ width: 8, height: 8, p: 1.6 }}>
@@ -57,7 +88,10 @@ export default function MobileMenuContent({
                   <Typography>{localStorage.getItem("uname")}</Typography>
                 </ListItemText>
               </MenuItem>
-              <AcMenuContent history={history} />
+              <AcMenuContent
+                history={history}
+                handleAcMenuClose={handleAcMenuClose}
+              />
             </>
           ) : (
             <MenuItem
