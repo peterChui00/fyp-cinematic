@@ -100,6 +100,10 @@ function EditMovie() {
     }
   }, [movieId, id, getMovieToBeUpdated]);
 
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
+
   const backToMovieMgmt = () => {
     history.push("/movieMgmt");
   };
@@ -198,13 +202,16 @@ function EditMovie() {
       },
     });
 
-    const thumbs = files.map((file) => (
-      <div key={file.name}>
-        <div>
-          <img src={file.preview} alt="" width={"100px"} />
-        </div>
-      </div>
-    ));
+    const thumbs =
+      files.length > 0
+        ? files.map((file) => (
+            <div key={file.name}>
+              <div>
+                <img src={file.preview} alt="" width={"100px"} />
+              </div>
+            </div>
+          ))
+        : null;
 
     return (
       <section className="container">
@@ -422,7 +429,9 @@ function EditMovie() {
           />
         </Grid>
         <Grid item xs={6}>
-          <PosterDropzone />
+          <Box sx={{ m: 1, p: 1, border: "3px dotted", textAlign: "center" }}>
+            <PosterDropzone />
+          </Box>
         </Grid>
         <Grid item xs={6} sm={3}>
           {id == null ? (
@@ -467,7 +476,10 @@ function EditMovie() {
               size="medium"
               variant="outlined"
               startIcon={<RestartAltIcon />}
-              onClick={getMovieToBeUpdated}
+              onClick={() => {
+                resetForm();
+                getMovieToBeUpdated();
+              }}
               color="info"
             >
               Reset

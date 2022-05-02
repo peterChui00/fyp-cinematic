@@ -1,7 +1,6 @@
 package fyp.kwchui.cinematicbackend.config;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -10,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import fyp.kwchui.cinematicbackend.dto.CinemaDto;
 import fyp.kwchui.cinematicbackend.dto.SignUpDto;
-import fyp.kwchui.cinematicbackend.model.Cinema;
-import fyp.kwchui.cinematicbackend.model.House;
 import fyp.kwchui.cinematicbackend.model.Movie;
 import fyp.kwchui.cinematicbackend.model.Role;
 import fyp.kwchui.cinematicbackend.repository.MovieRepository;
@@ -84,14 +81,9 @@ public class DefaultConfig {
                         userService.addUser(new SignUpDto("peter@cinematic.com.hk", "Peter", "peterpw", "MEMBER"));
 
                         // Cinema
-                        Cinema c1 = cinemaService.addCinema(new CinemaDto(null, "KINGSWOOD", "1515 5555",
+                        cinemaService.addCinema(new CinemaDto(null, "KINGSWOOD", "1515 5555",
                                         "Shop G87A, 1/F, G/F, +WOO Phase 2, 18 Tin Yan Road, Tin Shui Wai, Yuen Long, NT",
                                         114.00361745432208, 22.46088827958333, "Admin"));
-
-                        // House
-                        cinemaService.addHouse(c1.getId(),
-                                        new House(null, "House1", "alphabet", 0, 0, c1, new ArrayList<>(),
-                                                        new ArrayList<>()));
                 };
         }
 }

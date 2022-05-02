@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import {
   Box,
+  Alert,
   Button,
   CardMedia,
   Divider,
@@ -13,6 +14,8 @@ import {
   DialogContent,
   DialogActions,
   DialogTitle,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -26,9 +29,10 @@ import axios from "axios";
 const FETCH_DATA = "FETCH_DATA";
 export const SELECT_SEAT = "SELECT_SEAT";
 export const CHANGE_STEP = "CHANGE_STEP";
+export const CHANGE_EMAIL = "CHANGE_EMAIL";
 export const ADD_TICKET = "ADD_TICKET";
 export const REMOVE_TICKET = "REMOVE_TICKET";
-/* export const LOADING = "LOADING"; */
+const LOADING = "LOADING";
 const SUCCESS = "SUCCESS";
 export const ERROR = "ERROR";
 const ADD_ORDER = "ADD_ORDER";
@@ -63,10 +67,11 @@ const initialState = {
     { name: "Senior", price: 55, quantity: 0 },
   ],
   step: 0,
-  /*   loading: false,*/
+  loading: false,
   success: false,
   error: "",
   order: { id: "", orderTime: "" },
+  email: "",
 };
 
 const reducer = (state, action) => {
@@ -105,6 +110,8 @@ const reducer = (state, action) => {
       }
     case CHANGE_STEP:
       return { ...state, step: payload };
+    case CHANGE_EMAIL:
+      return { ...state, email: payload };
     case ADD_TICKET:
       return {
         ...state,
@@ -123,8 +130,8 @@ const reducer = (state, action) => {
             : tt
         ),
       };
-    /* case LOADING:
-      return { ...state, loading: payload };*/
+    case LOADING:
+      return { ...state, loading: payload };
     case SUCCESS:
       return { ...state, success: payload };
     case ERROR:
@@ -148,6 +155,8 @@ export default function MovieTicketPurchase() {
     success,
     error,
     ticketType,
+    email,
+    loading,
   } = state;
 
   let history = useHistory();
@@ -225,12 +234,14 @@ export default function MovieTicketPurchase() {
   };
 
   const addOrder = async () => {
+    dispatch({ type: LOADING, payload: true });
     try {
       const requestData = {
         userId: localStorage.getItem("uid"),
         orderTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
         seats: selectedSeat,
         ticketTypes: ticketType.filter((tt) => tt.quantity !== 0),
+        email: email,
       };
       console.log(requestData);
       const res = await OrderService.addOrder(requestData);
@@ -241,6 +252,7 @@ export default function MovieTicketPurchase() {
       console.error(err);
       dispatch({ type: ERROR, payload: "FAIL" });
     }
+    dispatch({ type: LOADING, payload: false });
     dispatch({ type: CHANGE_STEP, payload: 2 });
   };
 
@@ -443,6 +455,7 @@ export default function MovieTicketPurchase() {
         </Box>
       )}
 
+      {/* Dialog */}
       <Dialog open={error === "TIMEOUT"} maxWidth="xs" keepMounted>
         <DialogTitle>Session Expired</DialogTitle>
         <DialogContent>
@@ -479,6 +492,24 @@ export default function MovieTicketPurchase() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Loader */}
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+      
+         
+          <Alert severity="info">
+          <Stack direction="column" spacing={2} alignItems="center">
+            <Typography variant="h5" sx={{ textAlign: "center" }}>
+              Transaction processing. Please wait.
+            </Typography>
+            <CircularProgress color="secondary" sx={{ textAlign: "center" }} />
+            </Stack>
+          </Alert>
+       
+      </Backdrop>
     </Box>
   );
 }

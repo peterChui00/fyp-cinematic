@@ -16,4 +16,5 @@ public class AddOrderDto {
     private LocalDateTime orderTime;
     private List<Seat> seats;
     private List<TicketTypeDto> ticketTypes;
+    private String email;
 }

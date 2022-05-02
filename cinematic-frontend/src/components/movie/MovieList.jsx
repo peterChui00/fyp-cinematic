@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, CircularProgress, Grid, Tabs, Tab } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  Tabs,
+  Tab,
+  Typography,
+  Alert,
+} from "@mui/material";
 import MovieCard from "./MovieCard";
 import MovieService from "../../services/MovieService";
 
@@ -54,14 +62,13 @@ function MovieList() {
   };
 
   return (
-    <Box sx={{ width: "100%", bgcolor: 'background.paper' }}>
+    <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
       <Tabs
         value={tab}
         onChange={handleTabChange}
         indicatorColor="primary"
         textColor="inherit"
         variant="fullWidth"
-       
         centered
         sx={{ mb: 2, width: "100%" }}
       >
@@ -75,7 +82,7 @@ function MovieList() {
           <CircularProgress />
         </Box>
       ) : (
-        <Box >
+        <Box>
           {/* Now Showing movies */}
           <Box hidden={tab !== 0}>
             <Grid
@@ -84,10 +91,16 @@ function MovieList() {
               alignItems="stretch"
               justifyContent="space-evenly"
             >
-              <MovieCard
-                movies={showingMovies}
-                openMovieDetails={openMovieDetails}
-              />
+              {showingMovies.length > 0 ? (
+                <MovieCard
+                  movies={showingMovies}
+                  openMovieDetails={openMovieDetails}
+                />
+              ) : (
+                <Alert severity="warning" sx={{ my: 2 }}>
+                  <Typography>No Available Movies</Typography>
+                </Alert>
+              )}
             </Grid>
           </Box>
 
@@ -99,10 +112,16 @@ function MovieList() {
               alignItems="stretch"
               justifyContent="space-evenly"
             >
-              <MovieCard
-                movies={upcomingMovies}
-                openMovieDetails={openMovieDetails}
-              />
+              {upcomingMovies.length > 0 ? (
+                <MovieCard
+                  movies={upcomingMovies}
+                  openMovieDetails={openMovieDetails}
+                />
+              ) : (
+                <Alert severity="warning" sx={{ my: 2 }}>
+                  <Typography>No Available Movies</Typography>
+                </Alert>
+              )}
             </Grid>
           </Box>
 
@@ -114,10 +133,16 @@ function MovieList() {
               alignItems="stretch"
               justifyContent="space-evenly"
             >
-              <MovieCard
+              {otherMovies.length > 0 ? (
+                <MovieCard
                 movies={otherMovies}
                 openMovieDetails={openMovieDetails}
               />
+              ) : (
+                <Alert severity="warning" sx={{ my: 2 }}>
+                  <Typography>No Available Movies</Typography>
+                </Alert>
+              )}
             </Grid>
           </Box>
         </Box>

@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState, useCallback } from "react";
-import { Box, Divider, Grid, Typography, Stack } from "@mui/material";
+import { Box, Grid, Alert, AlertTitle } from "@mui/material";
 import { useLocation, useHistory } from "react-router-dom";
 import MovieCard from "./MovieCard";
 import MovieService from "../../services/MovieService";
@@ -34,13 +34,15 @@ export default function MovieSearch() {
 
   return (
     <Box>
-      <Grid
-        container
-        spacing={1}
-        alignItems="stretch"
-        justifyContent="flex-start"
-      >
-        <MovieCard movies={movie} openMovieDetails={openMovieDetails} />
+      <Grid container spacing={1} alignItems="stretch" justifyContent="center">
+        {movie.length > 0 ? (
+          <MovieCard movies={movie} openMovieDetails={openMovieDetails} />
+        ) : (
+          <Alert severity="warning" sx={{ my: 2 }}>
+            <AlertTitle>Results Not Found</AlertTitle>
+            Try to use other keywords to search moives
+          </Alert>
+        )}
       </Grid>
     </Box>
   );

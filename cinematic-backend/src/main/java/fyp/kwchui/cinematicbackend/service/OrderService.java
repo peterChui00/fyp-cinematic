@@ -54,16 +54,7 @@ public class OrderService {
         }
         timerService.releaseSeats(seatsToBeOccupied);
     }
-    /*
-     * public void releaseSeats(List<Seat> seatsToBeReleased) {
-     * for (Seat seatToBeReleased : seatsToBeReleased) {
-     * Seat seat = seatRepository.getById(seatToBeReleased.getId());
-     * seat.setOccupied(false);
-     * seatRepository.save(seat);
-     * }
-     * }
-     */
-
+   
     public Order addOrder(AddOrderDto addOrderDto) {
         Order order = new Order();
         User user = userRepository.getById(addOrderDto.getUserId());

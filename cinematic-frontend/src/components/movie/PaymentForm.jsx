@@ -3,6 +3,7 @@ import {
   ADD_TICKET,
   REMOVE_TICKET,
   ERROR,
+  CHANGE_EMAIL,
   /*   LOADING,
   SUCCESS, */
 } from "./MovieTicketPurchase";
@@ -15,8 +16,6 @@ import {
   Typography,
   IconButton,
   Chip,
-  /*   Backdrop,
-  CircularProgress, */
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import AlarmIcon from "@mui/icons-material/Alarm";
@@ -27,8 +26,13 @@ import Countdown from "react-countdown";
 import moment from "moment";
 import { useHistory, useParams } from "react-router-dom";
 
-export default function PaymentForm({ state, dispatch, addOrder, releaseSeats}) {
-  const { selectedSeat, ticketType /* , loading */ } = state;
+export default function PaymentForm({
+  state,
+  dispatch,
+  addOrder,
+  releaseSeats,
+}) {
+  const { selectedSeat, ticketType, email /* , loading */ } = state;
 
   const getTotalTicket = () =>
     ticketType.reduce((prev, cur) => prev + cur.quantity, 0);
@@ -68,14 +72,16 @@ export default function PaymentForm({ state, dispatch, addOrder, releaseSeats}) 
       );
     }
   };
-
+  const startDate = React.useRef(moment(Date.now()).add(10, "m").toDate());
   return (
     <>
       <Chip
         icon={<AlarmIcon />}
         label={
           <Countdown
-            date={moment(Date.now()).add(10, "m").toDate()}
+            date={
+              /* moment(Date.now()).add(10, "m").toDate() */ startDate.current
+            }
             renderer={renderer}
           />
         }
@@ -184,6 +190,21 @@ export default function PaymentForm({ state, dispatch, addOrder, releaseSeats}) 
             fullWidth
             autoComplete="cc-csc"
             variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            id="email"
+            label="Email"
+            fullWidth
+            autoComplete="email"
+            variant="standard"
+            helperText="Email address for receiving order confirmation."
+            value={email}
+            onChange={(e) => {
+              dispatch({ type: CHANGE_EMAIL, payload: e.target.value });
+            }}
           />
         </Grid>
         <Grid item xs={12} sx={{ textAlign: "center", mb: 3 }}>

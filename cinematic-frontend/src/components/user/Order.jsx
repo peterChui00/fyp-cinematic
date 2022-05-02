@@ -133,6 +133,10 @@ export default function Order() {
               <Card>
                 <CardContent>
                   <Typography variant="h5">{"#" + o.id}</Typography>
+                  <Typography variant="h4" sx={{ my: 2 }}>
+                    {o.tickets[0].seat.movieShowing.movieTitle}
+                  </Typography>
+
                   <Grid container spacing={3} alignItems="center">
                     <Grid item xs={6}>
                       <Typography>
