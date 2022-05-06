@@ -4,8 +4,6 @@ import {
   REMOVE_TICKET,
   ERROR,
   CHANGE_EMAIL,
-  /*   LOADING,
-  SUCCESS, */
 } from "./MovieTicketPurchase";
 import {
   Box,
@@ -32,7 +30,7 @@ export default function PaymentForm({
   addOrder,
   releaseSeats,
 }) {
-  const { selectedSeat, ticketType, email /* , loading */ } = state;
+  const { selectedSeat, ticketType, email } = state;
 
   const getTotalTicket = () =>
     ticketType.reduce((prev, cur) => prev + cur.quantity, 0);
@@ -44,7 +42,6 @@ export default function PaymentForm({
   let { movieId } = useParams();
 
   const confirmPurchse = () => {
-    /*   dispatch({ type: LOADING, payload: true }); */
     if (getTotalTicket() === selectedSeat.length) {
       addOrder();
     }
@@ -77,14 +74,7 @@ export default function PaymentForm({
     <>
       <Chip
         icon={<AlarmIcon />}
-        label={
-          <Countdown
-            date={
-              /* moment(Date.now()).add(10, "m").toDate() */ startDate.current
-            }
-            renderer={renderer}
-          />
-        }
+        label={<Countdown date={startDate.current} renderer={renderer} />}
         variant="outlined"
         color="warning"
         sx={{ fontSize: "1rem" }}
@@ -234,10 +224,6 @@ export default function PaymentForm({
           </Button>
         </Grid>
       </Grid>
-
-      {/*       <Backdrop open={loading}>
-        <CircularProgress />
-      </Backdrop> */}
     </>
   );
 }
