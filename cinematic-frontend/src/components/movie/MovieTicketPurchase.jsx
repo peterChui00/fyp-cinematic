@@ -224,15 +224,6 @@ export default function MovieTicketPurchase() {
     }
   };
 
-  const releaseSeats = async () => {
-    /* try {
-      const res = await OrderService.cancelPurchase(selectedSeat);
-      console.log(res);
-    } catch (err) {
-      console.error(err);
-    } */
-  };
-
   const addOrder = async () => {
     dispatch({ type: LOADING, payload: true });
     try {
@@ -412,7 +403,6 @@ export default function MovieTicketPurchase() {
           state={state}
           dispatch={dispatch}
           addOrder={addOrder}
-          releaseSeats={releaseSeats}
         />
       ) : (
         <Box sx={{ mx: "auto", textAlign: "center" }}>
@@ -459,10 +449,10 @@ export default function MovieTicketPurchase() {
       <Dialog open={error === "TIMEOUT"} maxWidth="xs" keepMounted>
         <DialogTitle>Session Expired</DialogTitle>
         <DialogContent>
-          Your purchase has taken more than 15 minutes. This session will end.
+          Your purchase has taken more than 10 minutes. This session will end.
         </DialogContent>
         <DialogActions>
-          <Button onClick={backToMovieList}>OK</Button>
+          <Button onClick={()=>{backToMovieList()}}>OK</Button>
         </DialogActions>
       </Dialog>
 

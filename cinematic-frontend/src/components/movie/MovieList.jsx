@@ -36,6 +36,7 @@ function MovieList() {
           break;
         case 2:
           res = await MovieService.getOtherMovies();
+          /* res = await MovieService.getMovies(); */
           setOtherMovies(res.data);
           break;
         default:
@@ -135,9 +136,9 @@ function MovieList() {
             >
               {otherMovies.length > 0 ? (
                 <MovieCard
-                movies={otherMovies}
-                openMovieDetails={openMovieDetails}
-              />
+                  movies={otherMovies}
+                  openMovieDetails={openMovieDetails}
+                />
               ) : (
                 <Alert severity="warning" sx={{ my: 2 }}>
                   <Typography>No Available Movies</Typography>

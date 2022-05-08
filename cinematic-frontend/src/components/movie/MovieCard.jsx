@@ -24,7 +24,7 @@ export default function MovieCard({ movies, openMovieDetails }) {
         <CardActionArea sx={{ borderRadius: 3 }}>
           <CardMedia
             component="img"
-            sx={{ width: 1, borderRadius: 3 }}
+            sx={{ width: 1, borderRadius: 3, height: "295px" }}
             image={"./assets/" + movie.posterFileName}
             alt={movie.title + " poster"}
           />

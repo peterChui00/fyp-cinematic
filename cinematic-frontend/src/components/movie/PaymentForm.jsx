@@ -28,7 +28,6 @@ export default function PaymentForm({
   state,
   dispatch,
   addOrder,
-  releaseSeats,
 }) {
   const { selectedSeat, ticketType, email } = state;
 
@@ -48,7 +47,6 @@ export default function PaymentForm({
   };
 
   const cancelPurchase = () => {
-    releaseSeats();
     history.push("/movie/" + movieId);
   };
 
@@ -57,7 +55,6 @@ export default function PaymentForm({
     if (completed) {
       // Render a complete state
       console.log("Time up");
-      dispatch({ type: ERROR, payload: "TIMEOUT" });
       return "Time up!";
     } else {
       // Render a countdown
@@ -69,12 +66,22 @@ export default function PaymentForm({
       );
     }
   };
+
   const startDate = React.useRef(moment(Date.now()).add(10, "m").toDate());
+
   return (
     <>
       <Chip
         icon={<AlarmIcon />}
-        label={<Countdown date={startDate.current} renderer={renderer} />}
+        label={
+          <Countdown
+            date={startDate.current}
+            renderer={renderer}
+            onComplete={() => {
+              dispatch({ type: ERROR, payload: "TIMEOUT" });
+            }}
+          />
+        }
         variant="outlined"
         color="warning"
         sx={{ fontSize: "1rem" }}

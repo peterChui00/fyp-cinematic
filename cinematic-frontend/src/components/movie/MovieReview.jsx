@@ -57,6 +57,10 @@ export default function MovieReview() {
     fetchData();
   }, [fetchData]);
 
+  useEffect(() => {
+    console.log(rating);
+  }, [rating]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -141,8 +145,8 @@ export default function MovieReview() {
         >
           {movieReview.map((mr) => {
             return (
-              <Grid item xs={12}>
-                <MovieReviewCard key={mr.id} movieReview={mr} />
+              <Grid item xs={12} key={mr.id}>
+                <MovieReviewCard movieReview={mr} />
               </Grid>
             );
           })}
@@ -158,17 +162,13 @@ export default function MovieReview() {
       >
         <DialogTitle>Review {movie.title}</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText> */}
           <Typography component="legend">Rating</Typography>
           <Rating
-            name="half-rating"
+            name="movie-rating"
             value={rating}
-            precision={0.5}
             size="large"
             onChange={(event, newValue) => {
+              console.log("new", newValue);
               setRating(newValue);
             }}
           />

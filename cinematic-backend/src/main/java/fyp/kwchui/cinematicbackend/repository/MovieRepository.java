@@ -14,6 +14,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     String searchQuery = "SELECT * from cinematic.Movie m WHERE m.title LIKE %?1% OR " +
             "m.genre LIKE %?1% OR " +
+            "m.language LIKE %?1% OR " +
+            "m.category LIKE %?1% OR " +
             "m.description LIKE %?1% OR " +
             "m.director LIKE %?1% OR " +
             "m.starring LIKE %?1% OR " +
