@@ -38,8 +38,8 @@ function Copyright(props) {
 }
 
 const initialState = {
-  username: "Admin",
-  password: "adminpw",
+  username: "",
+  password: "",
   isLoading: false,
   success: false,
   error: "",
