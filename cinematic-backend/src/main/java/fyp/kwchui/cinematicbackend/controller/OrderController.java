@@ -42,7 +42,10 @@ public class OrderController {
     @PostMapping(path = "/order")
     public ResponseEntity<Order> addOrder(@RequestBody AddOrderDto addOrderDto) {
         Order order = orderService.addOrder(addOrderDto);
-        emailService.sendOrderConfirmationEmail(order, addOrderDto.getEmail());
+        if (addOrderDto.getEmail().length() > 0) {
+            emailService.sendOrderConfirmationEmail(order, addOrderDto.getEmail());
+        }
+
         ResponseEntity<Order> orderResponse = new ResponseEntity<Order>(
                 order, HttpStatus.CREATED);
         return orderResponse;

@@ -54,40 +54,6 @@ export default function CinemaList() {
     fetchData();
   }, [fetchData]);
 
-  /* const getUserGeoLocation = useCallback(() => {
-    return new Promise((resolve, error) =>
-      navigator.geolocation.getCurrentPosition(resolve, error)
-    );
-  }, []);
-
- const shareLocation = async () => {
-    try {
-      const position = await getUserGeoLocation();
-      setCinemas(
-        cinemas
-          .map((c) => {
-            return {
-              ...c,
-              distance:
-                c.latitude !== null && c.longitude !== null
-                  ? computeDistance(
-                      c.latitude,
-                      c.longitude,
-                      position.coords.latitude,
-                      position.coords.longitude,
-                      "K"
-                    )
-                  : 999999,
-            };
-          })
-          .sort((a, b) => a.distance - b.distance)
-      );
-    } catch (err) {
-      console.error(err);
-      setOpenSnackbar(true);
-    }
-  }; */
-
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -106,17 +72,6 @@ export default function CinemaList() {
       >
         <Grid item>
           <Typography variant="h5">Cinema</Typography>
-        </Grid>
-        <Grid item>
-          {/* <Tooltip title="Share Location" placement="left">
-            <IconButton
-              onClick={() => {
-                shareLocation();
-              }}
-            >
-              <LocationOnIcon />
-            </IconButton>
-          </Tooltip> */}
         </Grid>
       </Grid>
 

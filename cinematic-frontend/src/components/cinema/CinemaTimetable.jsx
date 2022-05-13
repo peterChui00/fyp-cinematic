@@ -42,7 +42,7 @@ export default function CinemaTimetable({ state, setState, purchaseTicket }) {
           return (
             <Box sx={{ my: 2 }} key={houseId}>
               <Divider textAlign="left" sx={{ mb: 2 }}>
-                {houseId}
+                {state.house.find((h) => h.id === houseId).name}
               </Divider>
               <Grid container spacing={1}>
                 {filteredMovieShowings

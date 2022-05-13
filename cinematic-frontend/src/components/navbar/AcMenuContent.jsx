@@ -18,7 +18,7 @@ export default function AcMenuContent({ history, handleAcMenuClose }) {
       </MenuItem>
       <MenuItem
         onClick={() => {
-          history.push("/signin");
+          handleAcMenuClose();
           localStorage.clear();
         }}
       >

@@ -348,7 +348,7 @@ export default function NavBar({ handleDrawerToggle }) {
               </Tooltip>
             ) : (
               <Button
-                variant="outlined"
+                variant="contained"
                 size="small"
                 edge="end"
                 aria-label="login button"
