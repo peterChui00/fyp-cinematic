@@ -1,7 +1,7 @@
 # fyp-cinematic
 Final Year Project - CINEMATIC (Movie Ticket Booking Web App)
 
-# DEMO Video Link
+# DEMO Video Links
 
 [YouTube](https://youtu.be/4-mrqc6Am7s)
 
