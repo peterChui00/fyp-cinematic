@@ -15,8 +15,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-/* import BookmarkIcon from "@mui/icons-material/Bookmark"; */
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CommentIcon from "@mui/icons-material/Comment";
 import MovieShowingTimetable from "./MovieShowingTimetable";
 import MovieService from "../../services/MovieService";
@@ -60,7 +58,7 @@ const reducer = (state, action) => {
           ...new Set(
             payload.movieShowing.map((data) =>
               moment(data.showtime).format("YYYY-MM-DD")
-            )
+            ).sort((a, b) => moment(a) - moment(b))
           ),
         ],
         cinema: payload.cinema,
@@ -129,9 +127,7 @@ function MovieDetail() {
             <Grid item xs={12}>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Typography variant="h3">{movie.title}</Typography>
-                {/* <IconButton>
-                  <BookmarkBorderIcon />
-                </IconButton> */}
+
                 <IconButton
                   onClick={() => {
                     history.push("/movie/" + movieId + "/movieReview");

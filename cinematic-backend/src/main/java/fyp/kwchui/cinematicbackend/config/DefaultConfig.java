@@ -81,7 +81,7 @@ public class DefaultConfig {
                         userService.addUser(new SignUpDto("peter@cinematic.com.hk", "Peter", "peterpw", "MEMBER"));
 
                         // Cinema
-                        cinemaService.addCinema(new CinemaDto(null, "KINGSWOOD", "1515 5555",
+                        cinemaService.addCinema(new CinemaDto(null, "HK Cinema - Tin Shui Wai", "1515 5555",
                                         "Shop G87A, 1/F, G/F, +WOO Phase 2, 18 Tin Yan Road, Tin Shui Wai, Yuen Long, NT",
                                         114.00361745432208, 22.46088827958333, "Admin"));
                 };
